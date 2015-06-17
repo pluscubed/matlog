@@ -32,10 +32,10 @@ public class ShowRecordLogDialogActivity extends Activity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        
-		setContentView(R.layout.record_log_dialog);
-		
-		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+
+		setContentView(R.layout.dialog_record_log);
+
+		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		// grab the search suggestions, if any
 		final List<String> suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))

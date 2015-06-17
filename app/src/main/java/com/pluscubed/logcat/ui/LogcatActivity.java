@@ -131,6 +131,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private String currentlyOpenLog = null;
 
     private Handler handler = new Handler(Looper.getMainLooper());
+    private MenuItem mSearchViewMenuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
         log.d("initial collapsed mode is %s", collapsedMode);
+
+        mSearchSuggestionsAdapter = new SimpleCursorAdapter(this,
+                R.layout.simple_dropdown,
+                null,
+                new String[]{"suggestion"},
+                new int[]{android.R.id.text1},
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         registerForContextMenu(mListView);
         setUpWidgets();
@@ -429,28 +437,47 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void populateSuggestionsAdapter(String query) {
         final MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "suggestion"});
-        int index = 0;
-        List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
-        Collections.sort(suggestions, String.CASE_INSENSITIVE_ORDER);
-        if (query != null) {
-            for (String suggestion : suggestions) {
-                if (suggestion.toLowerCase().startsWith(query.toLowerCase())) {
-                    c.addRow(new Object[]{index, suggestion});
-                    index++;
-                }
-            }
+        List<String> suggestionsForQuery = getSuggestionsForQuery(query);
+        for (int i = 0, suggestionsForQuerySize = suggestionsForQuery.size(); i < suggestionsForQuerySize; i++) {
+            String suggestion = suggestionsForQuery.get(i);
+            c.addRow(new Object[]{i, suggestion});
         }
         mSearchSuggestionsAdapter.changeCursor(c);
     }
 
+    private List<String> getSuggestionsForQuery(String query) {
+        List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
+        Collections.sort(suggestions, String.CASE_INSENSITIVE_ORDER);
+        List<String> actualSuggestions = new ArrayList<>();
+        if (query != null) {
+            for (String suggestion : suggestions) {
+                if (suggestion.toLowerCase().startsWith(query.toLowerCase())) {
+                    actualSuggestions.add(suggestion);
+                }
+            }
+        }
+        return actualSuggestions;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mSearchViewMenuItem.isActionViewExpanded()) {
+            mSearchViewMenuItem.collapseActionView();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        MenuItem search = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        //used to workaround issue where the search text is cleared on expanding the SearchView
+        final boolean[] triggerQuery = new boolean[]{true};
+
+        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -459,20 +486,34 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                log.d("filtering: %s", newText);
-                filter(newText);
-                populateSuggestionsAdapter(newText);
+                if (triggerQuery[0]) {
+                    log.d("filtering: %s", newText);
+                    filter(newText);
+                    populateSuggestionsAdapter(newText);
+                }
+                triggerQuery[0] = true;
                 return false;
             }
         });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
 
-        mSearchSuggestionsAdapter = new SimpleCursorAdapter(this,
-                R.layout.abc_simple_dropdown_hint,
-                null,
-                new String[]{"suggestion"},
-                new int[]{android.R.id.text1},
-                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+            @Override
+            public boolean onSuggestionClick(int position) {
+                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+                searchView.setQuery(suggestions.get(position), true);
+                return false;
+            }
+        });
         searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+        if (mSearchingString != null && !mSearchingString.isEmpty()) {
+            triggerQuery[0] = false;
+            mSearchViewMenuItem.expandActionView();
+            searchView.setQuery(mSearchingString, true);
+        }
 
         boolean showingMainLog = (mTask != null);
 
@@ -736,7 +777,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         // show suggestions as the user types
         List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
         SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<>(
-                this, R.layout.simple_dropdown_small, suggestions);
+                this, R.layout.simple_dropdown, suggestions);
         editText.setAdapter(suggestionAdapter);
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -1680,17 +1721,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         //TODO Something?
         // sets the search text without invoking autosuggestions, which are really only useful when typing
 
-        /*searchEditText.setFocusable(false);
-        searchEditText.setFocusableInTouchMode(false);
-        searchEditText.setText(text);
-        searchEditText.setFocusable(true);
-        searchEditText.setFocusableInTouchMode(true);*/
+        filter(text);
+        supportInvalidateOptionsMenu();
     }
 
-    private void filter(CharSequence filterText) {
+    private void filter(String filterText) {
         Filter filter = mLogListAdapter.getFilter();
         filter.filter(filterText, this);
-        mSearchingString = (String) filterText;
+        mSearchingString = filterText;
     }
 
     /*@Override
