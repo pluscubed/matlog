@@ -538,6 +538,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 return true;
             case R.id.menu_expand_all:
                 expandOrCollapseAll(true);
+                if (collapsedMode) {
+                    item.setIcon(R.drawable.ic_expand_more_white_24dp);
+                    item.setTitle("Expand All");
+                } else {
+                    item.setIcon(R.drawable.ic_expand_less_white_24dp);
+                    item.setTitle("Collapse All");
+                }
                 return true;
             case R.id.menu_clear:
                 if (mLogListAdapter != null) {
@@ -630,7 +637,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         new AlertDialog.Builder(this)
                 .setCancelable(true)
                 .setTitle(R.string.filter_choice)
-                .setIcon(R.drawable.ic_search_category_default)
+                .setIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
                 .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
 
                     @Override
