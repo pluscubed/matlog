@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/record_dialog_linear_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@android:dimen/app_icon_size"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="7dp">
+
+        <LinearLayout
+            android:id="@+id/title_template"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="6dip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/record_log" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/dark_divider"
+            android:gravity="fill_horizontal"
+            android:scaleType="fitXY"
+            android:visibility="visible" />
+        <!-- If the client uses a customTitle, it will be added here. -->
+    </LinearLayout>
+
+
+    <TextView
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/enter_filename" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <Button
+            android:id="@android:id/button1"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:minWidth="50dp"
+            android:text="@android:string/ok" />
+
+        <Button
+            android:id="@android:id/button2"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:minWidth="50dp"
+            android:text="@string/text_filter_ellipsis" />
+
+        <Button
+            android:id="@android:id/button3"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:minWidth="50dp"
+            android:text="@android:string/cancel" />
+    </LinearLayout>
+
+
+</LinearLayout>

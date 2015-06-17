@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:focusable="true"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:padding="1dp">
+
+    <LinearLayout
+        android:id="@+id/clickable_linear_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:drawSelectorOnTop="false"
+        android:focusable="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bubble"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="5dp">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher" />
+
+                <LinearLayout
+                    android:layout_width="@android:dimen/app_icon_size"
+                    android:layout_height="@android:dimen/app_icon_size"
+                    android:gravity="right|bottom">
+
+                    <ImageView
+                        android:id="@+id/record_badge_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/record_badge_smaller"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/widget_subtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/widget_start_recording"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
