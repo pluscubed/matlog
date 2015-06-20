@@ -469,51 +469,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-
-        //used to workaround issue where the search text is cleared on expanding the SearchView
-        final boolean[] triggerQuery = new boolean[]{true};
-
-        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (triggerQuery[0]) {
-                    log.d("filtering: %s", newText);
-                    filter(newText);
-                    populateSuggestionsAdapter(newText);
-                }
-                triggerQuery[0] = true;
-                return false;
-            }
-        });
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                searchView.setQuery(suggestions.get(position), true);
-                return false;
-            }
-        });
-        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
-        if (mSearchingString != null && !mSearchingString.isEmpty()) {
-            triggerQuery[0] = false;
-            mSearchViewMenuItem.expandActionView();
-            searchView.setQuery(mSearchingString, true);
-        }
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        invalidateDarkOrLightMenuItems(this, menu);
 
         boolean showingMainLog = (mTask != null);
 
@@ -567,6 +524,56 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
         partialSelectMenuItem.setEnabled(!partialSelectMode);
         partialSelectMenuItem.setVisible(!partialSelectMode);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
+        //used to workaround issue where the search text is cleared on expanding the SearchView
+        final boolean[] triggerQuery = new boolean[]{true};
+
+        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (triggerQuery[0]) {
+                    log.d("filtering: %s", newText);
+                    filter(newText);
+                    populateSuggestionsAdapter(newText);
+                }
+                triggerQuery[0] = true;
+                return false;
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+                searchView.setQuery(suggestions.get(position), true);
+                return false;
+            }
+        });
+        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+        if (mSearchingString != null && !mSearchingString.isEmpty()) {
+            triggerQuery[0] = false;
+            mSearchViewMenuItem.expandActionView();
+            searchView.setQuery(mSearchingString, true);
+        }
 
         return true;
     }
@@ -1800,12 +1807,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             populateSuggestionsAdapter(mSearchingString);
             //searchSuggestionsAdapter.add(trimmed);
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        invalidateDarkOrLightMenuItems(this, menu);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     public void invalidateDarkOrLightMenuItems(Context context, final Menu menu) {
