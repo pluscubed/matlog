@@ -31,12 +31,12 @@
 
 		<activity
 			android:name=".ui.AboutActivity"
-			android:theme="@style/Theme.AppCompat.Dialog.Alert" />
+			android:theme="@style/Theme.MatLog.AlertDialog" />
 
 
 		<activity
 			android:name=".ui.ShowRecordLogDialogActivity"
-			android:theme="@style/Theme.AppCompat.Dialog.Alert" />
+			android:theme="@style/Theme.MatLog.AlertDialog" />
 
 
 		<activity android:name=".ui.SettingsActivity" />

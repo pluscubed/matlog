@@ -2,7 +2,6 @@ package com.pluscubed.logcat.helper;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -22,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
@@ -38,11 +38,13 @@ public class DialogHelper {
 	
 	public static void startRecordingWithProgressDialog(final String filename, 
 			final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
-		
-		final ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
-		progressDialog.setMessage(context.getString(R.string.dialog_initializing_recorder));
-		progressDialog.setCancelable(false);
+
+        final MaterialDialog progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.dialog_please_wait)
+                .content(R.string.dialog_initializing_recorder)
+                .progress(true, -1)
+                .cancelable(false)
+                .build();
 
         final Handler handler = new Handler(Looper.getMainLooper());
         progressDialog.show();
@@ -198,8 +200,8 @@ public class DialogHelper {
 		
 	}
 
-	private static String createLogFilename() {
-		Date date = new Date();
+    public static String createLogFilename() {
+        Date date = new Date();
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
 		
@@ -212,16 +214,8 @@ public class DialogHelper {
 		String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
 		String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
 		String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		
-		stringBuilder.append(year).append("-").append(month).append("-")
-				.append(day).append("-").append(hour).append("-")
-				.append(minute).append("-").append(second);
-		
-		stringBuilder.append(".txt");
-		
-		return stringBuilder.toString();
-	}
+
+        return year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".txt";
+    }
 	
 }
