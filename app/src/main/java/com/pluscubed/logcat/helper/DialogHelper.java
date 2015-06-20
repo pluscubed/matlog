@@ -6,7 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -42,41 +43,34 @@ public class DialogHelper {
 		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
 		progressDialog.setMessage(context.getString(R.string.dialog_initializing_recorder));
 		progressDialog.setCancelable(false);
-		
-		new AsyncTask<Void, Void, Void>(){
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				progressDialog.show();
-			}
+        final Handler handler = new Handler(Looper.getMainLooper());
+        progressDialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        if (onPostExecute != null) {
+                            onPostExecute.run();
+                        }
+                    }
+                });
+            }
+        }).start();
 
-			@Override
-			protected Void doInBackground(Void... params) {
-				ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
-				return null;
-			}
-			
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
-				if (progressDialog != null && progressDialog.isShowing()) {
-					progressDialog.dismiss();
-				}
-				if (onPostExecute != null) {
-					onPostExecute.run();
-				}
-			}
-		}
-		.execute((Void)null);
-		
-	}
+    }
 	
 	public static boolean isInvalidFilename(CharSequence filename) {
-		
-		String filenameAsString = null;
-		
-		return TextUtils.isEmpty(filename)
+
+        String filenameAsString;
+
+        return TextUtils.isEmpty(filename)
 				|| (filenameAsString = filename.toString()).contains("/")
 				|| filenameAsString.contains(":")
 				|| filenameAsString.contains(" ")
