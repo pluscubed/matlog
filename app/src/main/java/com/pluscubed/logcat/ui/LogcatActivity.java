@@ -573,6 +573,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             triggerQuery[0] = false;
             mSearchViewMenuItem.expandActionView();
             searchView.setQuery(mSearchingString, true);
+            searchView.clearFocus();
         }
 
         return true;
@@ -1547,11 +1548,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         mLogListAdapter.setLogLevelLimit(logLevelLimit);
         logLevelChanged();
 
-        // silently change edit text without invoking filtering
-        /*searchEditText.removeTextChangedListener(this);
-        searchEditText.setText("");
-        searchEditText.addTextChangedListener(this);*/
-
     }
 
     private void showLogLevelDialog() {
@@ -1584,40 +1580,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void setUpWidgets() {
 
-        /*searchEditText = (AutoCompleteTextView) findViewById(R.id.main_edit_text);
-        searchEditText.addTextChangedListener(this);
-        searchEditText.setOnEditorActionListener(this);
-        searchEditText.setOnClickListener(this);
-
-        searchEditText.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-            }
-        });*/
-
-
-        /*searchEditText.setAdapter(searchSuggestionsAdapter);*/
-
         darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
         lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
 
         mRootLayout = findViewById(R.id.main_background);
 
-        /*clearButton = findViewById(R.id.main_clear_button);
-        expandButton = findViewById(R.id.main_more_button);
-        pauseButton = findViewById(R.id.main_pause_button);
-        expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
-        pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
-*/
-
-        /*for (View view : new View[]{clearButton, expandButton, pauseButton}) {
-            view.setOnClickListener(this);
-        }
-        clearButton.setOnLongClickListener(this);*/
 
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
