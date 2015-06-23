@@ -30,7 +30,7 @@
 		</activity>
 
 		<activity
-			android:name=".ui.AboutActivity"
+			android:name=".ui.AboutDialogActivity"
 			android:theme="@style/Theme.MatLog.AlertDialog" />
 
 

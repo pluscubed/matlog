@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/topPanel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -52,14 +51,14 @@
             android:gravity="fill_horizontal"
             android:scaleType="fitXY"
             android:visibility="visible" />
-        <!-- If the client uses a customTitle, it will be added here. -->
+        &lt;!&ndash; If the client uses a customTitle, it will be added here. &ndash;&gt;
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/aboutProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true" />
+        android:indeterminate="true" />-->
 
     <WebView
         android:id="@+id/aboutTextWebView"
@@ -67,19 +66,19 @@
         android:layout_height="wrap_content"
         android:layout_weight="1.0" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-
-        <Button
-            android:id="@+id/okButton"
-            android:layout_width="wrap_content"
+    <!--    <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minWidth="100dp"
-            android:text="@android:string/ok" />
-    </LinearLayout>
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="100dp"
+                android:text="@android:string/ok" />
+        </LinearLayout>-->
 </LinearLayout>
 

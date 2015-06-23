@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,9 +18,9 @@ import com.pluscubed.logcat.util.Callback;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShowRecordLogDialogActivity extends Activity {
-	
-	public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
+public class ShowRecordLogDialogActivity extends AppCompatActivity {
+
+    public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

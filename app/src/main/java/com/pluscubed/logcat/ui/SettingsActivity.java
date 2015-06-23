@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     // launch about activity
-                    Intent intent = new Intent(getActivity(), AboutActivity.class);
+                    Intent intent = new Intent(getActivity(), AboutDialogActivity.class);
                     startActivity(intent);
                     return true;
                 }
