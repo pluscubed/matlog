@@ -3,6 +3,7 @@ package com.pluscubed.logcat.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -46,6 +47,12 @@ public class ShowRecordLogDialogActivity extends AppCompatActivity {
             args.putStringArray(QUERY_SUGGESTIONS, suggestions);
             dialog.setArguments(args);
             return dialog;
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            super.onDismiss(dialog);
+            getActivity().finish();
         }
 
         @Override

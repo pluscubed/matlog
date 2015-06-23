@@ -2,6 +2,7 @@ package com.pluscubed.logcat.ui;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,10 +35,15 @@ public class AboutDialogActivity extends AppCompatActivity {
 
 	}
 
-
     public static class AboutDialog extends DialogFragment {
 
         private Handler handler = new Handler();
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            super.onDismiss(dialog);
+            getActivity().finish();
+        }
 
 
         public void initializeWebView(WebView view) {
