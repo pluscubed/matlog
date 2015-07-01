@@ -264,7 +264,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             TextView textView = (TextView) view.findViewById(R.id.first_run_text_view_2);
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             textView.setLinkTextColor(ColorStateList.valueOf(getResources().getColor(R.color.linkColorBlue)));
-            new AlertDialog.Builder(this)
+            AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.first_run_title)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok,
@@ -276,8 +276,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                                     doAfterInitialMessage(getIntent());
                                 }
                             })
-                    .setCancelable(false)
                     .setIcon(R.drawable.ic_launcher).show();
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
 
         } else {
             doAfterInitialMessage(getIntent());
@@ -1133,7 +1134,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                                       final SenderAppAdapter senderAppAdapter, final int which) {
 
         final AlertDialogWrapper.Builder getBodyProgressDialog = new AlertDialogWrapper.Builder(this);
-        getBodyProgressDialog.setCancelable(false);
 
         // do in the background to avoid jank
         AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
@@ -1149,6 +1149,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                     getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
                     getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
                     mDialog = (MaterialDialog) getBodyProgressDialog.show();
+                    mDialog.setCanceledOnTouchOutside(false);
+                    mDialog.setCancelable(false);
                 }
             }
 

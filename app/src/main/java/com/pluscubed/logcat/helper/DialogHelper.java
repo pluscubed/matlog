@@ -43,8 +43,10 @@ public class DialogHelper {
                 .title(R.string.dialog_please_wait)
                 .content(R.string.dialog_initializing_recorder)
                 .progress(true, -1)
-                .cancelable(false)
                 .build();
+
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         final Handler handler = new Handler(Looper.getMainLooper());
         progressDialog.show();

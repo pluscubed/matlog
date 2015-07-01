@@ -62,7 +62,7 @@
     <item
         android:id="@+id/menu_record_log"
         android:alphabeticShortcut="@string/start_recording_log"
-        android:icon="@drawable/ic_menu_record"
+        android:icon="@drawable/ic_record_white_24dp"
         android:title="@string/start_recording_log" />
 
     <item
