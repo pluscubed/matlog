@@ -41,14 +41,14 @@ public class SendLogDetails {
 		this.attachmentType = attachmentType;
 	}
 
-	public static enum AttachmentType {
+	public enum AttachmentType {
 		None("text/plain"),
 		Zip("application/zip"),
 		Text("application/*");
 
 		private String mimeType;
 
-		private AttachmentType(String mimeType) {
+		AttachmentType(String mimeType) {
 			this.mimeType = mimeType;
 		}
 

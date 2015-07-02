@@ -19,7 +19,7 @@ import com.pluscubed.logcat.util.Callback;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShowRecordLogDialogActivity extends AppCompatActivity {
+public class RecordLogDialogActivity extends AppCompatActivity {
 
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 	

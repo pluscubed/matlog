@@ -35,7 +35,7 @@
 
 
 		<activity
-			android:name=".ui.ShowRecordLogDialogActivity"
+			android:name=".ui.RecordLogDialogActivity"
 			android:theme="@style/Theme.MatLog.AlertDialog" />
 
 

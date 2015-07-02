@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.BaseColumns;
+import android.support.annotation.WorkerThread;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -62,7 +65,6 @@ import com.pluscubed.logcat.data.LogLineAdapter;
 import com.pluscubed.logcat.data.SavedLog;
 import com.pluscubed.logcat.data.SearchCriteria;
 import com.pluscubed.logcat.data.SendLogDetails;
-import com.pluscubed.logcat.data.SenderAppAdapter;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
 import com.pluscubed.logcat.data.TagAndProcessIdAdapter;
 import com.pluscubed.logcat.db.CatlogDBHelper;
@@ -133,6 +135,24 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private Handler handler = new Handler(Looper.getMainLooper());
     private MenuItem mSearchViewMenuItem;
 
+    public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
+
+        Intent actionSendIntent = new Intent(Intent.ACTION_SEND);
+
+        actionSendIntent.setType(attachmentType.getMimeType());
+        actionSendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (!body.isEmpty()) {
+            actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
+        }
+        if (attachment != null) {
+            Uri uri = Uri.fromFile(attachment);
+            log.d("uri is: %s", uri);
+            actionSendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        }
+
+        context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title)));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,7 +212,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         runUpdatesIfNecessaryAndShowInitialMessage();
     }
 
-
     private void runUpdatesIfNecessaryAndShowInitialMessage() {
 
         if (UpdateHelper.areUpdatesNecessary(this)) {
@@ -244,7 +263,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         }
 
     }
-
 
     private void showInitialMessageAndStartupLog() {
 
@@ -316,7 +334,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
         }
     }
-
 
     @Override
     public void onResume() {
@@ -718,8 +735,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         // start up the dialog-like activity
         String[] suggestions = ArrayUtil.toArray(new ArrayList<>(mSearchSuggestionsSet), String.class);
 
-        Intent intent = new Intent(LogcatActivity.this, ShowRecordLogDialogActivity.class);
-        intent.putExtra(ShowRecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
+        Intent intent = new Intent(LogcatActivity.this, RecordLogDialogActivity.class);
+        intent.putExtra(RecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
 
         startActivity(intent);
     }
@@ -941,7 +958,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
             mListView.setSelection(mListView.getCount() - 1);
 
-            // ... or that whatever was the previous first visible item is still the current first 
+            // ... or that whatever was the previous first visible item is still the current first
             // visible item after expanding/collapsing
 
         } else if (oldFirstVisibleItem != -1) {
@@ -951,7 +968,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
 
     }
-
 
     private void startDeleteSavedLogsDialog() {
 
@@ -1066,7 +1082,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void showSendLogDialog() {
 
-        CharSequence[] items = new CharSequence[]{getText(R.string.as_attachment), getText(R.string.as_text)};
+        String[] items = new String[]{(String) getText(R.string.as_attachment), (String) getText(R.string.as_text)};
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.include_device_info, null, false);
@@ -1086,10 +1102,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 .setTitle(R.string.send_log_title)
                 .setView(includeDeviceInfoView)
                 .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showSendLogToWhichAppDialogue(which == 1, includeDeviceInfoCheckBox.isChecked());
+                        sendLogToTargetApp(which == 1, includeDeviceInfoCheckBox.isChecked());
                         dialog.dismiss();
                     }
                 })
@@ -1097,84 +1112,53 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     }
 
-    private void showSendLogToWhichAppDialogue(final boolean asText, final boolean includeDeviceInfo) {
+    protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo) {
 
         if (!(currentlyOpenLog == null && asText) && !SaveLogHelper.checkSdCard(this)) {
             // if asText is false, then we need to check to make sure we can access the sdcard
             return;
         }
 
-        String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
-
-        // determine the attachment type
-        SendLogDetails.AttachmentType attachmentType = asText
-                ? SendLogDetails.AttachmentType.None
-                : (includeDeviceInfo
-                ? SendLogDetails.AttachmentType.Zip
-                : SendLogDetails.AttachmentType.Text);
-
-        final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, attachmentType);
-
-        new AlertDialog.Builder(LogcatActivity.this)
-                .setTitle(title)
-                .setCancelable(true)
-                .setSingleChoiceItems(senderAppAdapter, -1, new DialogInterface.OnClickListener() {
-
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.dismiss();
-                        sendLogToTargetApp(asText, includeDeviceInfo, senderAppAdapter, which);
-                    }
-                })
-                .show();
-
-
-    }
-
-    protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo,
-                                      final SenderAppAdapter senderAppAdapter, final int which) {
-
-        final AlertDialogWrapper.Builder getBodyProgressDialog = new AlertDialogWrapper.Builder(this);
-
-        // do in the background to avoid jank
-        AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
-
+        final Handler ui = new Handler(Looper.getMainLooper());
+        new Thread(new Runnable() {
             private MaterialDialog mDialog;
 
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-                if (asText || currentlyOpenLog == null || includeDeviceInfo) {
-
-                    getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
-                    getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
-                    mDialog = (MaterialDialog) getBodyProgressDialog.show();
-                    mDialog.setCanceledOnTouchOutside(false);
-                    mDialog.setCancelable(false);
-                }
+            public void run() {
+                ui.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (asText || currentlyOpenLog == null || includeDeviceInfo) {
+                            AlertDialogWrapper.Builder progressDialog = new AlertDialogWrapper.Builder(LogcatActivity.this);
+                            progressDialog.setTitle(R.string.dialog_please_wait);
+                            progressDialog.setMessage(getString(R.string.dialog_compiling_log));
+                            mDialog = (MaterialDialog) progressDialog.show();
+                            mDialog.setCanceledOnTouchOutside(false);
+                            mDialog.setCancelable(false);
+                        }
+                    }
+                });
+                final SendLogDetails sendLogDetails = getSendLogDetails(asText, includeDeviceInfo);
+                ui.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startChooser(LogcatActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
+                                sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
+                        if (mDialog != null && mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+                        if (asText && sendLogDetails.getBody().length() > 100000) {
+                            Snackbar.make(findViewById(android.R.id.content), getString(R.string.as_text_not_work), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
-
-            @Override
-            protected SendLogDetails doInBackground(Void... params) {
-                return getSendLogDetailsInBackground(asText, includeDeviceInfo);
-            }
-
-            @Override
-            protected void onPostExecute(SendLogDetails sendLogDetails) {
-                super.onPostExecute(sendLogDetails);
-
-                senderAppAdapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(),
-                        sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
-                if (mDialog != null && mDialog.isShowing()) {
-                    mDialog.dismiss();
-                }
-            }
-        };
-        getBodyTask.execute((Void) null);
+        }).start();
 
     }
 
-    private SendLogDetails getSendLogDetailsInBackground(boolean asText, boolean includeDeviceInfo) {
+    @WorkerThread
+    private SendLogDetails getSendLogDetails(boolean asText, boolean includeDeviceInfo) {
         SendLogDetails sendLogDetails = new SendLogDetails();
         StringBuilder body = new StringBuilder();
 
