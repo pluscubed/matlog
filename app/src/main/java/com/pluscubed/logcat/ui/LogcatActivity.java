@@ -1079,7 +1079,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         String[] items = new String[]{(String) getText(R.string.as_attachment), (String) getText(R.string.as_text)};
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.include_device_info, null, false);
+        @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
         final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
