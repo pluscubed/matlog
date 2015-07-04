@@ -76,6 +76,7 @@
     <string name="copy_to_clipboard">Copy to clipboard</string>
 
     <string name="default_in_parens">(Default)</string>
+    <string name="delete">Delete</string>
     <string name="delete_all">Delete All</string>
     <string name="delete_saved_log">Delete Saved Logs</string>
     <string name="delimiter">, </string>

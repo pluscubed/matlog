@@ -25,7 +25,7 @@ public class LogcatReaderLoader implements Parcelable {
 			return new LogcatReaderLoader[size];
 		}
 	};
-	private Map<String,String> lastLines = new HashMap<String, String>();
+	private Map<String, String> lastLines = new HashMap<>();
 	private boolean recordingMode;
 	private boolean multiple;
 	
@@ -50,8 +50,7 @@ public class LogcatReaderLoader implements Parcelable {
 
 	public static LogcatReaderLoader create(Context context, boolean recordingMode) {
 		List<String> buffers = PreferenceHelper.getBuffers(context);
-		LogcatReaderLoader loader = new LogcatReaderLoader(buffers, recordingMode);
-		return loader;
+		return new LogcatReaderLoader(buffers, recordingMode);
 	}
 	
 	public LogcatReader loadReader() throws IOException {

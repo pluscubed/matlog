@@ -92,10 +92,7 @@ public class SingleLogcatReader extends AbsLogcatReader {
 
 	@Override
 	public boolean readyToRecord() {
-		if (!recordingMode) {
-			return false;
-		}
-		return lastLine == null;
+		return recordingMode && lastLine == null;
 	}
 	
 	@Override

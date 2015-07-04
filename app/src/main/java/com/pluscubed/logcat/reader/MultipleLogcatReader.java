@@ -19,8 +19,8 @@ import java.util.concurrent.BlockingQueue;
  *
  */
 public class MultipleLogcatReader extends AbsLogcatReader {
-	
-	private static final String DUMMY_NULL = new String("");
+
+	private static final String DUMMY_NULL = "";
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 	private List<ReaderThread> readerThreads = new LinkedList<ReaderThread>();
 	private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
@@ -42,7 +42,7 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 		
 		try {
 			String value = queue.take();
-			if (value != DUMMY_NULL) {
+			if (!value.equals(DUMMY_NULL)) {
 				return value;
 			}
 		} catch (InterruptedException e) {
@@ -110,9 +110,7 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 				while (!killed && (line = reader.readLine()) != null && !killed) {
 					queue.put(line);
 				}
-			} catch (IOException e) {
-				log.d(e, "exception");
-			} catch (InterruptedException e) {
+			} catch (IOException | InterruptedException e) {
 				log.d(e, "exception");
 			}
 			log.d("thread died");
