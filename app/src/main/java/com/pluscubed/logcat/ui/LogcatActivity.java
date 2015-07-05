@@ -27,7 +27,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -109,12 +108,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 
-    private View mRootLayout, mMainFilenameLayout;
+    private View mRootLayout;
     private ProgressBar darkProgressBar, lightProgressBar;
     private LogLineAdapter mLogListAdapter;
     private LogReaderAsyncTask mTask;
-    private TextView filenameTextView;
-    private View borderView1, borderView2, borderView3, borderView4;
     private ListView mListView;
 
     private String mSearchingString;
@@ -1515,20 +1512,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void updateDisplayedFilename() {
-        mMainFilenameLayout.setVisibility(mCurrentlyOpenLog != null ? View.VISIBLE : View.GONE);
-        if (mCurrentlyOpenLog != null) {
-
-            filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
-            ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-            borderView1.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView2.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView3.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView4.setBackgroundColor(colorScheme.getForegroundColor(this));
-            filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
-            filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
-            filenameTextView.setText(mCurrentlyOpenLog);
-        }
-
+        //noinspection ConstantConditions
+        getSupportActionBar().setSubtitle(mCurrentlyOpenLog != null ? mCurrentlyOpenLog : "");
     }
 
     private void resetFilter() {
@@ -1570,20 +1555,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void setUpViews() {
-
         darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
         lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
 
         mRootLayout = findViewById(R.id.main_background);
-
-
-        filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
-        mMainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
-        borderView1 = findViewById(R.id.main_border_view_1);
-        borderView2 = findViewById(R.id.main_border_view_2);
-        borderView3 = findViewById(R.id.main_border_view_3);
-        borderView4 = findViewById(R.id.main_border_view_4);
-
     }
 
     private void setUpAdapter() {
