@@ -25,7 +25,7 @@
         android:layout_marginLeft="80dp"
         android:layout_marginRight="24dp"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:singleLine="true"

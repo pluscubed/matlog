@@ -25,7 +25,6 @@
         android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:paddingBottom="8dp"
         android:paddingTop="8dp" />
 
 </LinearLayout>

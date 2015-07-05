@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.pluscubed.logcat.R;
@@ -31,7 +32,7 @@ public class LogFileAdapter extends ArrayAdapter<CharSequence> {
 		if (multiMode) {
 			checkedItems = new boolean[objects.size()];
 		}
-        resId = multiMode ? R.layout.list_item_logfilename : R.layout.spinner_dropdown_filename;
+        resId = multiMode ? R.layout.list_item_logfilename_multi : R.layout.list_item_logfilename_single;
     }
 
 	@Override
@@ -45,6 +46,7 @@ public class LogFileAdapter extends ArrayAdapter<CharSequence> {
 		}
 
         CheckBox box = (CheckBox) view.findViewById(android.R.id.checkbox);
+        RadioButton button = (RadioButton) view.findViewById(android.R.id.button1);
         TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 		
@@ -56,7 +58,7 @@ public class LogFileAdapter extends ArrayAdapter<CharSequence> {
 		if (multiMode) {
             box.setChecked(checkedItems[position]);
         } else {
-            box.setChecked(checked == position);
+            button.setChecked(checked == position);
         }
 		
 		Date lastModified = SaveLogHelper.getLastModifiedDate(filename.toString());

@@ -1383,28 +1383,29 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             return;
         }
 
-
         int logToSelect = mCurrentlyOpenLog != null ? filenames.indexOf(mCurrentlyOpenLog) : -1;
+        ArrayAdapter<CharSequence> logFileAdapter = new LogFileAdapter(this, filenames, logToSelect, false);
 
-        ArrayAdapter<CharSequence> dropdownAdapter = new LogFileAdapter(
-                this, filenames, logToSelect, false);
+        ListView view = new ListView(this);
+        view.setAdapter(logFileAdapter);
+        view.setDivider(null);
+        view.setDividerHeight(0);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
+        builder.title(R.string.open_log)
+                .customView(view, false);
 
-        builder.setTitle(R.string.open_log)
-                .setCancelable(true)
-                .setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new DialogInterface.OnClickListener() {
+        final MaterialDialog dialog = builder.show();
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        String filename = filenames.get(which).toString();
-                        openLogFile(filename);
 
-                    }
-                });
-
-        builder.show();
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                String filename = filenames.get(position).toString();
+                openLogFile(filename);
+            }
+        });
 
     }
 
