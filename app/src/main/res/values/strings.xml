@@ -94,7 +94,7 @@
     <string name="files_deleted">%d file(s) deleted.</string>
 
     <string name="filter_choice">Search by</string>
-    <string name="filter_choice_pid">Process id</string>
+    <string name="filter_choice_pid">PID</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_text_colon">Filter text:</string>
 

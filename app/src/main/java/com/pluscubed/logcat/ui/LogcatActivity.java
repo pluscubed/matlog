@@ -67,7 +67,6 @@ import com.pluscubed.logcat.data.SavedLog;
 import com.pluscubed.logcat.data.SearchCriteria;
 import com.pluscubed.logcat.data.SendLogDetails;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
-import com.pluscubed.logcat.data.TagAndProcessIdAdapter;
 import com.pluscubed.logcat.db.CatlogDBHelper;
 import com.pluscubed.logcat.db.FilterItem;
 import com.pluscubed.logcat.helper.BuildHelper;
@@ -87,7 +86,6 @@ import com.pluscubed.logcat.util.UtilLogger;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -694,40 +692,52 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void showSearchByDialog(final LogLine logLine) {
-        List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
-        List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
-
         int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
 
-        TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
-
-        new AlertDialog.Builder(this)
-                .setCancelable(true)
-                .setTitle(R.string.filter_choice)
-                .setIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
-                .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        if (which == 0) { // tag
-                            // determine the right way to phrase this tag query - e.g.
-                            // tag:myTag or tag:"my tag"
-                            String tagQuery = (logLine.getTag().contains(" "))
-                                    ? ('"' + logLine.getTag() + '"')
-                                    : logLine.getTag();
-                            silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
-                        } else { // which == 1, i.e. process id
-                            silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
-                        }
-
-                        // put the cursor at the end
-                        /*searchEditText.setSelection(searchEditText.length());*/
-                        dialog.dismiss();
-
-                    }
-                })
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title(R.string.filter_choice)
+                .iconRes(R.drawable.abc_ic_search_api_mtrl_alpha)
+                .customView(R.layout.dialog_searchby, false)
                 .show();
+
+        LinearLayout customView = (LinearLayout) dialog.getCustomView();
+        LinearLayout tag = (LinearLayout) customView.findViewById(R.id.dialog_searchby_tag_linear);
+        LinearLayout pid = (LinearLayout) customView.findViewById(R.id.dialog_searchby_pid_linear);
+
+        TextView tagText = (TextView) customView.findViewById(R.id.dialog_searchby_tag_text);
+        TextView pidText = (TextView) customView.findViewById(R.id.dialog_searchby_pid_text);
+
+        ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+
+        tagText.setText(logLine.getTag());
+        pidText.setText(Integer.toString(logLine.getProcessId()));
+        tagText.setTextColor(tagColor);
+        pidText.setTextColor(colorScheme.getForegroundColor(this));
+
+        int backgroundColor = colorScheme.getSpinnerColor(this);
+        pidText.setBackgroundColor(backgroundColor);
+        tagText.setBackgroundColor(backgroundColor);
+
+        tag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tagQuery = (logLine.getTag().contains(" "))
+                        ? ('"' + logLine.getTag() + '"')
+                        : logLine.getTag();
+                silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+                //TODO: put the cursor at the end
+                                /*searchEditText.setSelection(searchEditText.length());*/
+            }
+        });
+
+        pid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+                //TODO: put the cursor at the end
+                                /*searchEditText.setSelection(searchEditText.length());*/
+            }
+        });
     }
 
     private void showRecordLogDialog() {
