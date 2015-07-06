@@ -691,7 +691,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private void showSearchByDialog(final LogLine logLine) {
         int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
 
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
+        final MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.filter_choice)
                 .iconRes(R.drawable.abc_ic_search_api_mtrl_alpha)
                 .customView(R.layout.dialog_searchby, false)
@@ -722,6 +722,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                         ? ('"' + logLine.getTag() + '"')
                         : logLine.getTag();
                 silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+                dialog.dismiss();
                 //TODO: put the cursor at the end
                                 /*searchEditText.setSelection(searchEditText.length());*/
             }
@@ -731,6 +732,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             @Override
             public void onClick(View v) {
                 silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+                dialog.dismiss();
                 //TODO: put the cursor at the end
                                 /*searchEditText.setSelection(searchEditText.length());*/
             }
