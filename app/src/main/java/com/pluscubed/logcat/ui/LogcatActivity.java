@@ -755,9 +755,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.e("t", "Started async task");
+                Log.e("t", "Started thread");
                 final List<FilterItem> filters = new ArrayList<>();
-                filters.add(FilterItem.create(-1, null)); // dummy for the "add filter" option
 
                 CatlogDBHelper dbHelper = null;
                 try {
@@ -771,31 +770,35 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
                 Collections.sort(filters);
 
-                Log.e("t", "finish async task doinbackground");
-
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
+                        ListView view = new ListView(LogcatActivity.this);
+                        view.setAdapter(filterAdapter);
+                        view.setDivider(null);
+                        view.setDividerHeight(0);
+                        View footer = getLayoutInflater().inflate(R.layout.list_header_add_filter, view, false);
+                        view.addFooterView(footer);
 
-                        new AlertDialog.Builder(LogcatActivity.this)
-                                .setCancelable(true)
-                                .setTitle(R.string.title_filters)
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .setSingleChoiceItems(filterAdapter, 0, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (which == 0) { // dummy 'add filter' item
-                                            showAddFilterDialog(filterAdapter);
-                                        } else {
-                                            // load filter
-                                            String text = filterAdapter.getItem(which).getText();
-                                            silentlySetSearchText(text);
-                                            dialog.dismiss();
-                                        }
-                                    }
-                                })
-                                .show();
+                        final MaterialDialog dialog = new MaterialDialog.Builder(LogcatActivity.this)
+                                .title(R.string.title_filters)
+                                .customView(view, false)
+                                .negativeText(android.R.string.cancel).show();
+
+                        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                if (position == parent.getCount() - 1) {
+                                    showAddFilterDialog(filterAdapter);
+                                } else {
+                                    // load filter
+                                    String text = filterAdapter.getItem(position).getText();
+                                    silentlySetSearchText(text);
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -805,8 +808,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private void showAddFilterDialog(final FilterAdapter filterAdapter) {
 
         // show a popup to add a new filter text
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") final AutoCompleteTextView editText =
+        LayoutInflater inflater = getLayoutInflater();
+        @SuppressLint("InflateParams")
+        final AutoCompleteTextView editText =
                 (AutoCompleteTextView) inflater.inflate(R.layout.new_filter_text_view, null, false);
 
         // show suggestions as the user types
@@ -815,26 +819,20 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 this, R.layout.simple_dropdown, suggestions);
         editText.setAdapter(suggestionAdapter);
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setCancelable(true)
-                .setTitle(R.string.add_filter)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
+        final MaterialDialog alertDialog = new MaterialDialog.Builder(this)
+                .title(R.string.add_filter)
+                .positiveText(android.R.string.ok)
+                .callback(new MaterialDialog.ButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // dismiss soft keyboard
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
                         handleNewFilterText(editText.getText().toString(), filterAdapter);
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, null)
-                .setView(editText)
-                .create();
-
-        // ensures that the soft keyboard doesn't weirdly pop up at startup
-        //alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                .negativeText(android.R.string.cancel)
+                .customView(editText, true)
+                .build();
 
         // when 'Done' is clicked (i.e. enter button), do the same as when "OK" is clicked
         editText.setOnEditorActionListener(new OnEditorActionListener() {
@@ -843,8 +841,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // dismiss soft keyboard
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
                     handleNewFilterText(editText.getText().toString(), filterAdapter);
 
@@ -857,42 +853,45 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         alertDialog.show();
 
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 0);
+
     }
 
     protected void handleNewFilterText(String text, final FilterAdapter filterAdapter) {
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
 
-            new AsyncTask<Void, Void, FilterItem>() {
-
+            new Thread(new Runnable() {
                 @Override
-                protected FilterItem doInBackground(Void... params) {
+                public void run() {
                     CatlogDBHelper dbHelper = null;
+                    FilterItem item = null;
                     try {
                         dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                        return dbHelper.addFilter(trimmed);
-
-
+                        item = dbHelper.addFilter(trimmed);
                     } finally {
                         if (dbHelper != null) {
                             dbHelper.close();
                         }
                     }
+
+                    final FilterItem finalItem = item;
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalItem != null) { // null indicates duplicate
+                                filterAdapter.add(finalItem);
+                                filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
+                                filterAdapter.notifyDataSetChanged();
+
+                                addToAutocompleteSuggestions(trimmed);
+                            }
+                        }
+                    });
+
                 }
-
-                @Override
-                protected void onPostExecute(FilterItem filterItem) {
-                    super.onPostExecute(filterItem);
-
-                    if (filterItem != null) { // null indicates duplicate
-                        filterAdapter.add(filterItem);
-                        filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
-                        filterAdapter.notifyDataSetChanged();
-
-                        addToAutocompleteSuggestions(trimmed);
-                    }
-                }
-            }.execute((Void) null);
+            }).start();
         }
     }
 
@@ -913,7 +912,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             helpView.setHorizontalScrollBarEnabled(false);
             final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
 
-            new AlertDialog.Builder(this)
+            new AlertDialogWrapper.Builder(this)
                     .setTitle(R.string.menu_title_partial_select)
                     .setCancelable(true)
                     .setView(helpView)
