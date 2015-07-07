@@ -50,6 +50,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            //noinspection ConstantConditions
             final List<String> suggestions = Arrays.asList(getArguments().getStringArray(QUERY_SUGGESTIONS));
 
             String logFilename = DialogHelper.createLogFilename();
@@ -68,6 +69,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
 
                                 Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                             } else {
+                                materialDialog.dismiss();
                                 String filename = charSequence.toString();
                                 Runnable runnable = new Runnable() {
                                     @Override
@@ -82,6 +84,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                     })
                     .neutralText(R.string.text_filter_ellipsis)
                     .negativeText(android.R.string.cancel)
+                    .autoDismiss(false)
                     .callback(new MaterialDialog.ButtonCallback() {
                         @Override
                         public void onAny(MaterialDialog dialog) {
@@ -106,9 +109,11 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                         @Override
                         public void onNegative(MaterialDialog dialog) {
                             super.onNegative(dialog);
+                            dialog.dismiss();
                             getActivity().finish();
                         }
                     }).build();
+            //noinspection ConstantConditions
             dialog.getInputEditText().setSelection(0, logFilename.length() - 4);
 
             return dialog;

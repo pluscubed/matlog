@@ -197,7 +197,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         log.d("initial collapsed mode is %s", mCollapsedMode);
 
         mSearchSuggestionsAdapter = new SimpleCursorAdapter(this,
-                R.layout.simple_dropdown,
+                R.layout.dropdown,
                 null,
                 new String[]{"suggestion"},
                 new int[]{android.R.id.text1},
@@ -811,12 +811,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         LayoutInflater inflater = getLayoutInflater();
         @SuppressLint("InflateParams")
         final AutoCompleteTextView editText =
-                (AutoCompleteTextView) inflater.inflate(R.layout.new_filter_text_view, null, false);
+                (AutoCompleteTextView) inflater.inflate(R.layout.text_new_filter, null, false);
 
         // show suggestions as the user types
         List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
         SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<>(
-                this, R.layout.simple_dropdown, suggestions);
+                this, R.layout.dropdown, suggestions);
         editText.setAdapter(suggestionAdapter);
 
         final MaterialDialog alertDialog = new MaterialDialog.Builder(this)

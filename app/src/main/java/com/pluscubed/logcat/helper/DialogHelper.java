@@ -1,9 +1,8 @@
 package com.pluscubed.logcat.helper;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
 import android.os.Looper;
@@ -87,15 +86,15 @@ public class DialogHelper {
 			final Callback<FilterQueryWithLevel> callback) {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View filterView = inflater.inflate(R.layout.filter_query_for_recording, null, false);
-		
-		// add suggestions to autocompletetextview
-		final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.edit);
-		autoCompleteTextView.setText(queryFilterText);            
+        @SuppressLint("InflateParams") View filterView = inflater.inflate(R.layout.dialog_recording_filter, null, false);
+
+        // add suggestions to autocompletetextview
+        final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.text1);
+        autoCompleteTextView.setText(queryFilterText);
 
 		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
-				context, R.layout.simple_dropdown, filterQuerySuggestions);
-		autoCompleteTextView.setAdapter(suggestionAdapter);
+                context, R.layout.dropdown, filterQuerySuggestions);
+        autoCompleteTextView.setAdapter(suggestionAdapter);
 		
 		// set values on spinner to be the log levels
 		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
@@ -105,39 +104,38 @@ public class DialogHelper {
 		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(context));
 		int index = ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), defaultLogLevel);
 		logLevels[index] = logLevels[index].toString() + " " + context.getString(R.string.default_in_parens);
-		
-		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
-		            context, android.R.layout.simple_spinner_item, logLevels);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
+                context, android.R.layout.simple_spinner_item, logLevels);
+        adapter.setDropDownViewResource(R.layout.dropdown);
+        spinner.setAdapter(adapter);
 		
 		// in case the user has changed it, choose the pre-selected log level
 		spinner.setSelection(ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), 
 				logLevelText));
 		
 		// create alertdialog for the "Filter..." button
-		new AlertDialog.Builder(context)
-			.setCancelable(true)
-			.setTitle(R.string.title_filter)
-			.setView(filterView)
-			.setNegativeButton(android.R.string.cancel, null)
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					
-					// get the true log level value, as opposed to the display string
-					int logLevelIdx = spinner.getSelectedItemPosition();
-					String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
-					String logLevelValue = logLevelValues[logLevelIdx];
-					
-					String filterQuery = autoCompleteTextView.getText().toString();
-					
-					callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
-				}
-			}).show();
-		
-	}
+        new MaterialDialog.Builder(context)
+                .title(R.string.title_filter)
+                .customView(filterView, true)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
+                        // get the true log level value, as opposed to the display string
+                        int logLevelIdx = spinner.getSelectedItemPosition();
+                        String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
+                        String logLevelValue = logLevelValues[logLevelIdx];
+
+                        String filterQuery = autoCompleteTextView.getText().toString();
+
+                        callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
+                    }
+                }).show();
+
+    }
 
 	public static void stopRecordingLog(Context context) {
 		
