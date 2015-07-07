@@ -3,7 +3,6 @@ package com.pluscubed.logcat.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -50,12 +49,6 @@ public class RecordLogDialogActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onDismiss(DialogInterface dialog) {
-            super.onDismiss(dialog);
-            getActivity().finish();
-        }
-
-        @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final List<String> suggestions = Arrays.asList(getArguments().getStringArray(QUERY_SUGGESTIONS));
 
@@ -79,9 +72,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                                 Runnable runnable = new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (activity != null) {
-                                            activity.finish();
-                                        }
+                                        activity.finish();
                                     }
                                 };
                                 DialogHelper.startRecordingWithProgressDialog(filename,
