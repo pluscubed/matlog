@@ -8,8 +8,6 @@
 
     <string name="donate_version_name">Donate</string>
 
-    <string name="first_run">first_run23</string>
-
     <string name="log_level_debug">Debug</string>
     <string name="log_level_error">Error</string>
     <string name="log_level_info">Info</string>
@@ -114,7 +112,7 @@
 
     <string name="manage_saved_logs">Manage Saved Logs</string>
 
-    <string name="menu_title_partial_select">Select Partial</string>
+    <string name="menu_title_partial_select">Save Partial</string>
 
     <string name="no_saved_logs">No saved logs found.</string>
 

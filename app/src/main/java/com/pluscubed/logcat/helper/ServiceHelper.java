@@ -19,11 +19,9 @@ public class ServiceHelper {
 	public static void startOrStopCrazyLogger(Context context) {
 		
 		boolean alreadyRunning = checkIfServiceIsRunning(context, CrazyLoggerService.class);
-		
 		Intent intent = new Intent(context, CrazyLoggerService.class);
 		
 		if (!alreadyRunning) {
-			
 			context.startService(intent);
 		} else {
 			context.stopService(intent);

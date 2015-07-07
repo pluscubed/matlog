@@ -227,22 +227,6 @@ public class PreferenceHelper {
 		return sharedPrefs.getBoolean(
 				context.getText(R.string.pref_expanded_by_default).toString(), false);
 	}
-	public static void setFirstRunPreference(Context context, boolean bool) {
-
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		Editor editor = sharedPrefs.edit();
-		
-		editor.putBoolean(context.getString(R.string.first_run), bool);
-
-		editor.apply();
-
-	}
-	public static boolean getFirstRunPreference(Context context) {
-
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		return sharedPrefs.getBoolean(context.getString(R.string.first_run), true);
-
-	}
 	
 	public static ColorScheme getColorScheme(Context context) {
 		

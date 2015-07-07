@@ -1,24 +1,18 @@
 package com.pluscubed.logcat.helper;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
@@ -138,67 +132,39 @@ public class DialogHelper {
     }
 
 	public static void stopRecordingLog(Context context) {
-		
-		ServiceHelper.stopBackgroundServiceIfRunning(context);
-		
-	}
-	public static EditText createEditTextForFilenameSuggestingDialog(final Context context) {
-		
-		final EditText editText = new EditText(context);
-		editText.setSingleLine();
-		editText.setSingleLine(true);
-		editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
-		editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		editText.setOnEditorActionListener(new OnEditorActionListener() {
-			
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				
-				if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
-					// dismiss soft keyboard
-					InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-					return true;
-				}
-				
-				
-				return false;
-			}
-		});
-		
-		// create an initial filename to suggest to the user
-		String filename = createLogFilename();
-		editText.setText(filename);
-		
-		// highlight everything but the .txt at the end
-		editText.setSelection(0, filename.length() - 4);
-		
-		return editText;
-	}
-	
-	
-	
-	public static void showFilenameSuggestingDialog(Context context, EditText editText, 
-			OnClickListener onOkClickListener, OnClickListener onNeutralListener, 
-			OnClickListener onCancelListener, int titleResId) {
-		
-		Builder builder = new Builder(context);
-		
-		builder.setTitle(titleResId)
-			.setCancelable(true)
-			.setNegativeButton(android.R.string.cancel, onCancelListener)
-			.setPositiveButton(android.R.string.ok, onOkClickListener)
-			.setMessage(R.string.enter_filename)
-			.setView(editText);
-		
-		if (onNeutralListener != null) {
+        ServiceHelper.stopBackgroundServiceIfRunning(context);
+    }
 
-			builder.setNeutralButton(R.string.text_filter_ellipsis, onNeutralListener);
-		}
-		
-		builder.show();
-		
-	}
+
+    public static void showFilenameSuggestingDialog(final Context context,
+                                                    final MaterialDialog.ButtonCallback callback, final MaterialDialog.InputCallback inputCallback, int titleResId) {
+
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
+        builder.title(titleResId)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .content(R.string.enter_filename)
+                .input("", "", inputCallback)
+                .callback(callback);
+
+        MaterialDialog show = builder.show();
+        initFilenameInputDialog(show);
+    }
+
+    public static void initFilenameInputDialog(MaterialDialog show) {
+        final EditText editText = show.getInputEditText();
+        editText.setSingleLine();
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        // create an initial filename to suggest to the user
+        String filename = createLogFilename();
+        editText.setText(filename);
+
+        // highlight everything but the .txt at the end
+        editText.setSelection(0, filename.length() - 4);
+    }
 
     public static String createLogFilename() {
         Date date = new Date();

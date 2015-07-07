@@ -66,7 +66,6 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                         @Override
                         public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
                             if (DialogHelper.isInvalidFilename(charSequence)) {
-
                                 Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                             } else {
                                 materialDialog.dismiss();
@@ -114,7 +113,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                         }
                     }).build();
             //noinspection ConstantConditions
-            dialog.getInputEditText().setSelection(0, logFilename.length() - 4);
+            DialogHelper.initFilenameInputDialog(dialog);
 
             return dialog;
         }

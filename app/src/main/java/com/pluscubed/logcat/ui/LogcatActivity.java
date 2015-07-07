@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -25,7 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -43,7 +41,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
@@ -175,12 +172,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
                     if (partiallySelectedLogLines.size() == 2) {
                         // last line
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                completePartialSelect();
-                            }
-                        });
+                        completePartialSelect();
                     }
                 } else {
                     logLine.setExpanded(!logLine.isExpanded());
@@ -273,32 +265,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             openLogFile(filename);
         }
 
-        boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
-        if (isFirstRun) {
-
-            View view = View.inflate(this, R.layout.intro_dialog, null);
-            TextView textView = (TextView) view.findViewById(R.id.first_run_text_view_2);
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
-            textView.setLinkTextColor(ColorStateList.valueOf(getResources().getColor(R.color.linkColorBlue)));
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.first_run_title)
-                    .setView(view)
-                    .setPositiveButton(android.R.string.ok,
-                            new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int which) {
-                                    PreferenceHelper.setFirstRunPreference(getApplicationContext(), false);
-                                    dialog.dismiss();
-                                    doAfterInitialMessage(getIntent());
-                                }
-                            })
-                    .setIcon(R.drawable.ic_launcher).show();
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-
-        } else {
-            doAfterInitialMessage(getIntent());
-        }
+        doAfterInitialMessage(getIntent());
 
 
     }
@@ -914,15 +881,15 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             helpView.setHorizontalScrollBarEnabled(false);
             final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
 
-            new AlertDialogWrapper.Builder(this)
-                    .setTitle(R.string.menu_title_partial_select)
-                    .setCancelable(true)
-                    .setView(helpView)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
+            new MaterialDialog.Builder(this)
+                    .title(R.string.menu_title_partial_select)
+                    .customView(helpView, true)
+                    .negativeText(android.R.string.cancel)
+                    .positiveText(android.R.string.ok)
+                    .callback(new MaterialDialog.ButtonCallback() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
                             partialSelectMode = true;
                             partiallySelectedLogLines.clear();
                             Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
@@ -931,8 +898,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                                 // hide this help dialog in the future
                                 PreferenceHelper.setHidePartialSelectHelpPreference(LogcatActivity.this, true);
                             }
-
-                            dialog.dismiss();
                         }
                     })
                     .show();
@@ -1244,33 +1209,23 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void showSaveLogDialog() {
-
         if (!SaveLogHelper.checkSdCard(this)) {
             return;
         }
 
-        final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
-
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-
+        MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-
-                if (DialogHelper.isInvalidFilename(editText.getText())) {
+            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+                if (DialogHelper.isInvalidFilename(charSequence)) {
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                 } else {
-                    String filename = editText.getText().toString();
+                    String filename = charSequence.toString();
                     saveLog(filename);
                 }
-
-
-                dialog.dismiss();
-
             }
         };
 
-        DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, null, R.string.save_log);
+        DialogHelper.showFilenameSuggestingDialog(this, null, onClickListener, R.string.save_log);
     }
 
     private void savePartialLog(final String filename, LogLine first, LogLine last) {
@@ -1300,35 +1255,26 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             return;
         }
 
-        AsyncTask<Void, Void, Boolean> saveTask = new AsyncTask<Void, Void, Boolean>() {
-
+        new Thread(new Runnable() {
             @Override
-            protected Boolean doInBackground(Void... params) {
+            public void run() {
                 SaveLogHelper.deleteLogIfExists(filename);
-                return SaveLogHelper.saveLog(logLines, filename);
+                final boolean saved = SaveLogHelper.saveLog(logLines, filename);
 
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (saved) {
+                            Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                            openLogFile(filename);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                        }
+                        cancelPartialSelect();
+                    }
+                });
             }
-
-            @Override
-            protected void onPostExecute(Boolean successfullySavedLog) {
-
-                super.onPostExecute(successfullySavedLog);
-
-                if (successfullySavedLog) {
-                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLogFile(filename);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
-                }
-
-                cancelPartialSelect();
-            }
-
-
-        };
-
-        saveTask.execute((Void) null);
-
+        }).start();
     }
 
     private void saveLog(final String filename) {
@@ -1337,32 +1283,25 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         final List<CharSequence> logLines = getCurrentLogAsListOfStrings();
 
-        AsyncTask<Void, Void, Boolean> saveTask = new AsyncTask<Void, Void, Boolean>() {
-
+        new Thread(new Runnable() {
             @Override
-            protected Boolean doInBackground(Void... params) {
+            public void run() {
                 SaveLogHelper.deleteLogIfExists(filename);
-                return SaveLogHelper.saveLog(logLines, filename);
+                final boolean saved = SaveLogHelper.saveLog(logLines, filename);
 
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (saved) {
+                            Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                            openLogFile(filename);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
-
-            @Override
-            protected void onPostExecute(Boolean successfullySavedLog) {
-
-                super.onPostExecute(successfullySavedLog);
-
-                if (successfullySavedLog) {
-                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLogFile(filename);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
-                }
-            }
-
-
-        };
-
-        saveTask.execute((Void) null);
+        }).start();
 
     }
 
@@ -1597,39 +1536,31 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             return;
         }
 
-        final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
-
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+        MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-
-                if (DialogHelper.isInvalidFilename(editText.getText())) {
+            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+                if (DialogHelper.isInvalidFilename(charSequence)) {
                     cancelPartialSelect();
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-
                 } else {
-                    String filename = editText.getText().toString();
+                    String filename = charSequence.toString();
                     savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
                 }
-
-                dialog.dismiss();
-
             }
         };
 
 
-        DialogInterface.OnClickListener onCancelListener = new DialogInterface.OnClickListener() {
+        MaterialDialog.ButtonCallback onCancelListener = new MaterialDialog.ButtonCallback() {
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onNegative(MaterialDialog dialog) {
+                super.onNegative(dialog);
                 cancelPartialSelect();
             }
         };
 
-        DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, onCancelListener, R.string.save_log);
+        DialogHelper.showFilenameSuggestingDialog(this, onCancelListener, onClickListener, R.string.save_log);
 
     }
 

@@ -73,14 +73,6 @@
             android:summary="@string/pref_display_limit_summary"
             android:title="@string/pref_display_limit_title" />
 
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/first_run"
-            android:persistent="true"
-            android:summary="@string/first_run_pref_summary"
-            android:title="@string/first_run_pref_title" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about">
