@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- TODO: Switch to MaterialDialog preferences-->
+
     <PreferenceCategory android:title="@string/pref_cat_appearance">
 
         <ListPreference
@@ -25,7 +27,7 @@
             android:summary="@string/pref_show_timestamp_summary"
             android:title="@string/pref_show_timestamp_title" />
 
-        <com.pluscubed.logcat.widget.MockDisabledListPreference
+        <Preference
             android:defaultValue="@string/pref_theme_choice_dark_value"
             android:entries="@array/pref_theme_choices_names"
             android:entryValues="@array/pref_theme_choices_values"
@@ -37,6 +39,7 @@
 
     <PreferenceCategory android:title="@string/pref_cat_configuration">
 
+        <!-- TODO: Switch to MultiSelectListPreference-->
         <com.pluscubed.logcat.widget.MultipleChoicePreference
             android:defaultValue="@string/pref_buffer_choice_main_value"
             android:entries="@array/pref_buffer_choices"

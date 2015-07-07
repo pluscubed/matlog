@@ -11,6 +11,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -23,7 +24,6 @@ import com.pluscubed.logcat.helper.PackageHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.StringUtil;
-import com.pluscubed.logcat.widget.MockDisabledListPreference;
 import com.pluscubed.logcat.widget.MultipleChoicePreference;
 
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
                             new SettingsFragment())
                     .commit();
         }
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.settings);
     }
@@ -91,8 +92,8 @@ public class SettingsActivity extends AppCompatActivity {
         private EditTextPreference logLinePeriodPreference, displayLimitPreference;
         private ListPreference textSizePreference, defaultLevelPreference;
         private MultipleChoicePreference bufferPreference;
-        private MockDisabledListPreference themePreference;
-        private Preference aboutPreference;
+        private Preference mThemePreference;
+        private Preference mAboutPreference;
 
         private boolean bufferChanged = false;
 
@@ -136,8 +137,8 @@ public class SettingsActivity extends AppCompatActivity {
             defaultLevelPreference.setOnPreferenceChangeListener(this);
             setDefaultLevelPreferenceSummary(defaultLevelPreference.getEntry());
 
-            themePreference = (MockDisabledListPreference) findPreference(getString(R.string.pref_theme));
-            themePreference.setOnPreferenceChangeListener(this);
+            mThemePreference = findPreference(getString(R.string.pref_theme));
+            mThemePreference.setOnPreferenceChangeListener(this);
 
             bufferPreference = (MultipleChoicePreference) findPreference(getString(R.string.pref_buffer));
             bufferPreference.setOnPreferenceChangeListener(this);
@@ -147,11 +148,20 @@ public class SettingsActivity extends AppCompatActivity {
 
             String themeSummary = PreferenceHelper.getColorScheme(getActivity()).getDisplayableName(getActivity());
 
-            themePreference.setSummary(themeSummary);
-            themePreference.setEnabledAppearance(true);
+            mThemePreference.setSummary(themeSummary);
+            mThemePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    //TODO: Implement themes using color picker and remove this
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                            "Themes are not implemented yet. Stay tuned for updates! (they will be free, don't worry)", Snackbar.LENGTH_LONG)
+                            .show();
+                    return true;
+                }
+            });
 
-            aboutPreference = findPreference(getString(R.string.pref_about));
-            aboutPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            mAboutPreference = findPreference(getString(R.string.pref_about));
+            mAboutPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -161,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            aboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(getActivity())));
+            mAboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(getActivity())));
         }
 
         private void setDefaultLevelPreferenceSummary(CharSequence entry) {
@@ -232,9 +242,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             } else if (preference.getKey().equals(getString(R.string.pref_theme))) {
                 // update summary
-                int index = ArrayUtil.indexOf(themePreference.getEntryValues(), newValue.toString());
-                CharSequence newEntry = themePreference.getEntries()[index];
-                themePreference.setSummary(newEntry);
+                /*int index = ArrayUtil.indexOf(mThemePreference.getEntryValues(), newValue.toString());
+                CharSequence newEntry = mThemePreference.getEntries()[index];
+                mThemePreference.setSummary(newEntry);*/
 
                 return true;
             } else if (preference.getKey().equals(getString(R.string.pref_buffer))) {

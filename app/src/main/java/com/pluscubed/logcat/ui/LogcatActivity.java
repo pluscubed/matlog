@@ -487,6 +487,15 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         boolean showingMainLog = (mTask != null);
 
+        MenuItem item = menu.findItem(R.id.menu_expand_all);
+        if (mCollapsedMode) {
+            item.setIcon(R.drawable.ic_expand_more_white_24dp);
+            item.setTitle("Expand All");
+        } else {
+            item.setIcon(R.drawable.ic_expand_less_white_24dp);
+            item.setTitle("Collapse All");
+        }
+
         MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
         MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
         MenuItem saveAsLogMenuItem = menu.findItem(R.id.menu_save_as_log);
@@ -600,13 +609,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 return true;
             case R.id.menu_expand_all:
                 expandOrCollapseAll(true);
-                if (mCollapsedMode) {
-                    item.setIcon(R.drawable.ic_expand_more_white_24dp);
-                    item.setTitle("Expand All");
-                } else {
-                    item.setIcon(R.drawable.ic_expand_less_white_24dp);
-                    item.setTitle("Collapse All");
-                }
                 return true;
             case R.id.menu_clear:
                 if (mLogListAdapter != null) {
@@ -938,7 +940,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void startSettingsActivity() {
-
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SETTINGS);
     }
@@ -954,9 +955,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 logLine.setExpanded(!mCollapsedMode);
             }
         }
-
-       /* expandButtonImage.setImageResource(
-                mCollapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);*/
 
         mLogListAdapter.notifyDataSetChanged();
 
@@ -974,7 +972,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             mListView.setSelection(oldFirstVisibleItem);
         }
 
-
+        supportInvalidateOptionsMenu();
     }
 
     private void startDeleteSavedLogsDialog() {
@@ -994,7 +992,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         final LogFileAdapter logFileAdapter = new LogFileAdapter(this, filenames, -1, true);
 
-        LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_delete_logfiles, null);
+        @SuppressLint("InflateParams") LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_delete_logfiles, null);
 
         ListView view = (ListView) layout.findViewById(R.id.list);
         view.setAdapter(logFileAdapter);
@@ -1509,7 +1507,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         addFiltersToSuggestions(); // filters are what initial populate the suggestions
         updateDisplayedFilename();
         resetFilter();
-
     }
 
     private void updateDisplayedFilename() {

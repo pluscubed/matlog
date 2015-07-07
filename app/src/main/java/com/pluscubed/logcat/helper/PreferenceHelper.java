@@ -283,10 +283,10 @@ public class PreferenceHelper {
 	
 	public static List<String> getBufferNames(Context context) {
 		List<String> buffers = getBuffers(context);
-		
-		List<String> bufferNames = new ArrayList<String>();
-		
-		// TODO: this is inefficient - O(n^2)
+
+        List<String> bufferNames = new ArrayList<>();
+
+        // TODO: this is inefficient - O(n^2)
 		for (String buffer : buffers) {
 			int idx = Arrays.asList(context.getResources().getStringArray(
 					R.array.pref_buffer_choice_values)).indexOf(buffer);
@@ -304,9 +304,9 @@ public class PreferenceHelper {
 		Editor editor = sharedPrefs.edit();
 		
 		editor.putString(key, value);
-		
-		editor.commit();
-	}
+
+        editor.apply();
+    }
 	
 	public static boolean getIncludeDeviceInfoPreference(Context context) {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -319,6 +319,6 @@ public class PreferenceHelper {
 		
 		Editor editor = sharedPrefs.edit();
 		editor.putBoolean(context.getString(R.string.pref_include_device_info), value);
-		editor.commit();
-	}
+        editor.apply();
+    }
 }
