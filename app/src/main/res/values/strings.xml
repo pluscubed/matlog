@@ -102,7 +102,9 @@
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_title">Welcome to CatLog!</string>
 
-    <string name="log_cleared">Logs cleared. Long-press to reload.</string>
+    <!--TODO: Add this back in in some form-->
+    <!--<string name="log_cleared">Logs cleared. Long-press to reload.</string>-->
+    <string name="log_cleared">Logs cleared</string>
     <string name="log_level">Log Level</string>
     <string name="log_level_colon">Log level:</string>
     <string name="log_recording_started">Log recording started.</string>
