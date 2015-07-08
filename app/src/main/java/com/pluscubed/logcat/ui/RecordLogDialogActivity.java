@@ -32,8 +32,6 @@ public class RecordLogDialogActivity extends AppCompatActivity {
 
         DialogFragment fragment = ShowRecordLogDialog.newInstance(suggestions);
         fragment.show(getFragmentManager(), "showRecordLogDialog");
-
-
     }
 
     public static class ShowRecordLogDialog extends DialogFragment {
@@ -46,6 +44,13 @@ public class RecordLogDialogActivity extends AppCompatActivity {
             args.putStringArray(QUERY_SUGGESTIONS, suggestions);
             dialog.setArguments(args);
             return dialog;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            getDialog().setCancelable(false);
+            getDialog().setCanceledOnTouchOutside(false);
         }
 
         @Override

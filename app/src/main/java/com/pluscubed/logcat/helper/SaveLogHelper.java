@@ -289,9 +289,6 @@ public class SaveLogHelper {
 	/**
 	 * I used to save logs to /sdcard/catlog_saved_logs.  Now it's /sdcard/catlog/saved_logs.  Move any files that
 	 * need to be moved to the new directory.
-	 * 
-	 * @param sdcardDir
-	 * @param savedLogsDir
 	 */
 	public static synchronized void moveLogsFromLegacyDirIfNecessary() {
 		File sdcardDir = Environment.getExternalStorageDirectory();

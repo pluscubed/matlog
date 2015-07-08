@@ -875,7 +875,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         } else {
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            @SuppressLint("InflateParams") View helpView = inflater.inflate(R.layout.partial_select_help, null);
+            @SuppressLint("InflateParams") View helpView = inflater.inflate(R.layout.dialog_partial_save_help, null);
             // don't show the scroll bar
             helpView.setVerticalScrollBarEnabled(false);
             helpView.setHorizontalScrollBarEnabled(false);

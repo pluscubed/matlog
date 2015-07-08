@@ -25,7 +25,7 @@
 			</intent-filter>
 			
 			<intent-filter>
-				<action android:name="com.nolanlawson.logcat.intents.LAUNCH" />
+				<action android:name="com.pluscubed.logcat.intents.LAUNCH" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>			
 		</activity>
@@ -58,7 +58,7 @@
 			</intent-filter>
 			
 			<intent-filter>
-				<action android:name="com.nolanlawson.logcat.action.RECORD_OR_STOP" />
+				<action android:name="com.pluscubed.logcat.action.RECORD_OR_STOP" />
 				<data android:scheme="catlog_widget" />
 			</intent-filter>
 			

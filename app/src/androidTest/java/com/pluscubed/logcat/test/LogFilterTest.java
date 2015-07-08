@@ -27,7 +27,7 @@ public class LogFilterTest extends ActivityInstrumentationTestCase2<LogcatActivi
 
 
     public LogFilterTest() {
-        super("com.nolanlawson.logcat", LogcatActivity.class);
+        super("com.pluscubed.logcat", LogcatActivity.class);
     }
 
     public void testFilterBasic() {

@@ -210,7 +210,7 @@
     <string name="version">Version %s</string>
 
     <string name="widget_recording_in_progress">Recording…</string>
-    <string name="widget_start_recording">Record Log</string>
+    <string name="widget_start_recording">Record\nLog</string>
     <string name="as_text_not_work">\"As text\" may not work due to the large amount of characters. Please try \"As attachment\"</string>
     <string name="file">File</string>
 </resources>

@@ -1,73 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clickable_linear_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical"
-    android:padding="1dp">
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_launcher"
+        android:tint="#8f312f"
+        android:tintMode="multiply" />
 
     <LinearLayout
-        android:id="@+id/clickable_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:drawSelectorOnTop="false"
-        android:focusable="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        android:padding="2dp">
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:gravity="end|bottom">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bubble"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:paddingTop="5dp">
-
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_launcher" />
-
-                <LinearLayout
-                    android:layout_width="@android:dimen/app_icon_size"
-                    android:layout_height="@android:dimen/app_icon_size"
-                    android:gravity="right|bottom">
-
-                    <ImageView
-                        android:id="@+id/record_badge_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/record_badge_smaller"
-                        android:visibility="invisible" />
-
-                </LinearLayout>
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/widget_subtext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/widget_start_recording"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/record_badge_image_view"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@string/record_log"
+            android:src="@drawable/ic_record_white_24dp"
+            android:tint="#EF5350"
+            android:visibility="invisible"
+            tools:visibility="visible" />
 
     </LinearLayout>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_subtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="marquee"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="@string/widget_start_recording"
+        android:textColor="@color/primary_text_default_material_dark"
+        android:textSize="14sp" />
+
+</RelativeLayout>

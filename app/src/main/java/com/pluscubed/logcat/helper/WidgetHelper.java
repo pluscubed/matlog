@@ -29,8 +29,6 @@ public class WidgetHelper {
 	
 	/**
 	 * manually tell us if the service is running or not
-	 * @param context
-	 * @param serviceRunning
 	 */
 	public static void updateWidgets(Context context, boolean serviceRunning) {
 
@@ -96,18 +94,15 @@ public class WidgetHelper {
 		// it seems to be a quasi-bug in Android
 		Uri data = Uri.withAppendedPath(Uri.parse(RecordingWidgetProvider.URI_SCHEME + "://widget/id/#"), String.valueOf(appWidgetId));
         intent.setData(data);
-        
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                0 /* no requestCode */, intent, PendingIntent.FLAG_ONE_SHOT);
 
-		return pendingIntent;
+		return PendingIntent.getBroadcast(context,
+				0 /* no requestCode */, intent, PendingIntent.FLAG_ONE_SHOT);
 	}
 	
 	private static int[] findAppWidgetIds(Context context) {
 		AppWidgetManager manager = AppWidgetManager.getInstance(context);
 		ComponentName widget = new ComponentName(context, RecordingWidgetProvider.class);
-		int[] appWidgetIds = manager.getAppWidgetIds(widget);
-		return appWidgetIds;
+		return manager.getAppWidgetIds(widget);
 		
 	}
 	

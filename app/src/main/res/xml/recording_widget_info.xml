@@ -3,6 +3,5 @@
     android:initialLayout="@layout/recording_widget"
     android:minHeight="72dp"
     android:minWidth="72dp"
-    android:updatePeriodMillis="21600000"
-
-    />
+    android:resizeMode="none"
+    android:updatePeriodMillis="21600000" />

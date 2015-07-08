@@ -3,7 +3,6 @@ package com.pluscubed.logcat.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -178,13 +177,6 @@ public class SettingsActivity extends AppCompatActivity {
             defaultLevelPreference.setSummary(
                     String.format(getString(R.string.pref_default_log_level_summary), entry));
 
-        }
-
-        private void openDonateVersionInMarket() {
-
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=com.nolanlawson.logcat.donate"));
-            startActivity(intent);
         }
 
         public boolean onPreferenceChange(Preference preference, Object newValue) {

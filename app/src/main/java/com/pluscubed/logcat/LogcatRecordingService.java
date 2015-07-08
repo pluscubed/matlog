@@ -2,7 +2,6 @@ package com.pluscubed.logcat;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.pluscubed.logcat.data.LogLine;
@@ -27,8 +27,6 @@ import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
 /**
@@ -44,17 +42,12 @@ public class LogcatRecordingService extends IntentService {
 	public static final String EXTRA_LOADER = "loader";
 	public static final String EXTRA_QUERY_FILTER = "filter";
 	public static final String EXTRA_LEVEL = "level";
-	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
-	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
+    private static final String ACTION_STOP_RECORDING = "com.pluscubed.catlog.action.STOP_RECORDING";
+    private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 	private final Object lock = new Object();
-	private LogcatReader reader;
-	private NotificationManager mNM;
-	private Method mStartForeground;
-	private Method mStopForeground;
-	private Method mSetForeground;
-	private boolean killed;
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-		
+    private LogcatReader mReader;
+    private boolean mKilled;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			log.d("onReceive()");
@@ -78,31 +71,12 @@ public class LogcatRecordingService extends IntentService {
 		super.onCreate();
 		log.d("onCreate()");
 		
-		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		
 		IntentFilter intentFilter = new IntentFilter(ACTION_STOP_RECORDING);
 		intentFilter.addDataScheme(URI_SCHEME);
 		
 		registerReceiver(receiver, intentFilter);
 		
 		handler = new Handler(Looper.getMainLooper());
-		
-		try {
-			mStartForeground = getClass().getMethod("startForeground", int.class, Notification.class);
-			mStopForeground = getClass().getMethod("stopForeground", boolean.class);
-		} catch (NoSuchMethodException e) {
-			// Running on an older platform.
-			log.d(e,"running on older platform; couldn't find startForeground method");
-			mStartForeground = mStopForeground = null;
-		}
-		try {
-			mSetForeground = getClass().getMethod("setForeground", boolean.class);
-		} catch (NoSuchMethodException e) {
-			// running on newer platform
-			log.d(e,"running on newer platform; couldn't find setForeground method");
-			mSetForeground = null;
-		}
-
 	}
 
 
@@ -110,15 +84,15 @@ public class LogcatRecordingService extends IntentService {
 		try {
 			// use the "time" log so we can see what time the logs were logged at
 			LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
-			reader = loader.loadReader();
-		
-			while (!reader.readyToRecord() && !killed) {
-				reader.readLine();
-				// keep skipping lines until we find one that is past the last log line, i.e.
+            mReader = loader.loadReader();
+
+            while (!mReader.readyToRecord() && !mKilled) {
+                mReader.readLine();
+                // keep skipping lines until we find one that is past the last log line, i.e.
 				// it's ready to record
-			}			
-			if (!killed) {
-				makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
+			}
+            if (!mKilled) {
+                makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 			}
 		} catch (IOException e) {
 			log.d(e, "");
@@ -129,127 +103,54 @@ public class LogcatRecordingService extends IntentService {
 
 	@Override
 	public void onDestroy() {
-		log.d("onDestroy()");
 		super.onDestroy();
-		killProcess();
+        log.d("onDestroy()");
+        killProcess();
 
 		unregisterReceiver(receiver);
-		
-		stopForegroundCompat(R.string.notification_title);
-		
-		WidgetHelper.updateWidgets(getApplicationContext(), false);
-		
-		
+
+        stopForeground(true);
+
+        WidgetHelper.updateWidgets(getApplicationContext(), false);
 	}
 
     // This is the old onStart method that will be called on the pre-2.0
     // platform.
     @Override
     public void onStart(Intent intent, int startId) {
-    	log.d("onStart()");
     	super.onStart(intent, startId);
-        handleCommand(intent);
+        log.d("onStart()");
+        handleCommand();
     }
 
-	private void handleCommand(Intent intent) {
+    private void handleCommand() {
         
 		// notify the widgets that we're running
 		WidgetHelper.updateWidgets(getApplicationContext());
 		
         CharSequence tickerText = getText(R.string.notification_ticker);
 
-        // Set the icon, scrolling text and timestamp
-		Notification notification = new Notification(R.drawable.ic_launcher, tickerText,
-				System.currentTimeMillis());
-        
-
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
         // have to make this unique for God knows what reason
-        stopRecordingIntent.setData(Uri.withAppendedPath(Uri.parse(URI_SCHEME + "://stop/"), 
-        		Long.toHexString(new Random().nextLong())));
-        
+        stopRecordingIntent.setData(Uri.withAppendedPath(Uri.parse(URI_SCHEME + "://stop/"),
+                Long.toHexString(new Random().nextLong())));
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
-                    0 /* no requestCode */, stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
-        
-        // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, getText(R.string.notification_title),
-                       getText(R.string.notification_subtext), pendingIntent);
+                0 /* no requestCode */, stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        startForegroundCompat(R.string.notification_title, notification);
+        // Set the icon, scrolling text and timestamp
+        Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setTicker(tickerText)
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_subtext))
+                .setContentIntent(pendingIntent)
+                .build();
 
-		
-	}
-
-
-	/**
-	 * This is a wrapper around the new startForeground method, using the older
-	 * APIs if it is not available.
-	 */
-	private void startForegroundCompat(int id, Notification notification) {
-	    // If we have the new startForeground API, then use it.
-	    if (mStartForeground != null) {
-	        try {
-	            mStartForeground.invoke(this, Integer.valueOf(id), notification);
-	        } catch (InvocationTargetException e) {
-	            // Should not happen.
-	            log.d(e, "Unable to invoke startForeground");
-	        } catch (IllegalAccessException e) {
-	            // Should not happen.
-	            log.d(e, "Unable to invoke startForeground");
-	        }
-	        return;
-	    }
-
-	    // Fall back on the old API.
-	    if (mSetForeground != null) {
-	    	try {
-				mSetForeground.invoke(this, Boolean.TRUE);
-			} catch (IllegalAccessException e) {
-				// Should not happen.
-	            log.d(e, "Unable to invoke setForeground");
-			} catch (InvocationTargetException e) {
-				// Should not happen.
-	            log.d(e, "Unable to invoke setForeground");
-			}
-	    }
-	    mNM.notify(id, notification);
-	}
-
-	/**
-	 * This is a wrapper around the new stopForeground method, using the older
-	 * APIs if it is not available.
-	 */
-	private void stopForegroundCompat(int id) {
-	    // If we have the new stopForeground API, then use it.
-	    if (mStopForeground != null) {
-	        try {
-	            mStopForeground.invoke(this, Boolean.TRUE);
-	        } catch (InvocationTargetException e) {
-	            // Should not happen.
-	            log.d(e, "Unable to invoke stopForeground");
-	        } catch (IllegalAccessException e) {
-	            // Should not happen.
-	            log.d(e, "Unable to invoke stopForeground");
-	        }
-	        return;
-	    }
-
-	    // Fall back on the old API.  Note to cancel BEFORE changing the
-	    // foreground state, since we could be killed at that point.
-	    mNM.cancel(id);
-	    if (mSetForeground != null) {
-	    	try {
-				mSetForeground.invoke(this, Boolean.FALSE);
-			} catch (IllegalAccessException e) {
-				// Should not happen.
-	            log.d(e, "Unable to invoke setForeground");
-			} catch (InvocationTargetException e) {
-				// Should not happen.
-	            log.d(e, "Unable to invoke setForeground");
-			}
-	    }
-	}
+        startForeground(R.string.notification_title, notification);
+    }
 
 	protected void onHandleIntent(Intent intent) {
 		log.d("onHandleIntent()");
@@ -283,9 +184,9 @@ public class LogcatRecordingService extends IntentService {
 			String line;
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
-			while ((line = reader.readLine()) != null && !killed) {
-				
-				// filter
+            while ((line = mReader.readLine()) != null && !mKilled) {
+
+                // filter
 				if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {
 					if (!checkLogLine(line, searchCriteria, logLevelLimit)) {
 						continue;
@@ -340,25 +241,22 @@ public class LogcatRecordingService extends IntentService {
 
 	private void makeToast(final int stringResId, final int toastLength) {
 		handler.post(new Runnable() {
-			
 			@Override
 			public void run() {
-				
 				Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show();
-				
 			}
 		});
 		
 	}
 	
 	private void killProcess() {
-		if (!killed) {
-			synchronized (lock) {
-				if (!killed && reader != null) {
-					// kill the logcat process
-					reader.killQuietly();
-					killed = true;
-				}
+        if (!mKilled) {
+            synchronized (lock) {
+                if (!mKilled && mReader != null) {
+                    // kill the logcat process
+                    mReader.killQuietly();
+                    mKilled = true;
+                }
 			}
 		}
 	}
