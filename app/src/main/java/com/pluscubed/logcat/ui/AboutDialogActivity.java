@@ -3,14 +3,11 @@ package com.pluscubed.logcat.ui;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
@@ -53,7 +50,7 @@ public class AboutDialogActivity extends AppCompatActivity {
             String changelog = loadTextFile(R.raw.changelog);
             String css = loadTextFile(R.raw.about_css);
             String translations = loadTextFile(R.raw.translations);
-            text = String.format(text, version, changelog, css, translations);
+            text = String.format(text, version, changelog, css);
 
             WebSettings settings = view.getSettings();
             settings.setDefaultTextEncodingName("utf-8");
@@ -83,35 +80,28 @@ public class AboutDialogActivity extends AppCompatActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             WebView view = new WebView(getActivity());
-
-            view.setWebViewClient(new AboutWebClient());
+/*
+            view.setWebViewClient(new AboutWebClient());*/
             initializeWebView(view);
 
             return new MaterialDialog.Builder(getActivity())
                     .customView(view, false)
-                    .title(R.string.about_catlog)
+                    .title(R.string.about_matlog)
                     .iconRes(R.drawable.ic_launcher)
                     .positiveText(android.R.string.ok)
-                    .callback(new MaterialDialog.ButtonCallback() {
-                        @Override
-                        public void onPositive(MaterialDialog dialog) {
-                            super.onPositive(dialog);
-                            getActivity().finish();
-                        }
-                    })
                     .build();
         }
 
 
-        private void loadExternalUrl(String url) {
+        /*private void loadExternalUrl(String url) {
             Intent intent = new Intent();
             intent.setAction("android.intent.action.VIEW");
             intent.setData(Uri.parse(url));
 
             startActivity(intent);
-        }
+        }*/
 
-        private class AboutWebClient extends WebViewClient {
+        /*private class AboutWebClient extends WebViewClient {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, final String url) {
@@ -133,6 +123,6 @@ public class AboutDialogActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        }
+        }*/
     }
 }

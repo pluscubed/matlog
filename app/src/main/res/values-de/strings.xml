@@ -4,7 +4,7 @@
     <!-- translateable strings-->
 
     <string name="about">Über</string>
-    <string name="about_catlog">Über CatLog</string>
+    <string name="about_matlog">Über CatLog</string>
 
     <string name="add_filter">Filter hinzufügen</string>
     <string name="add_filter_ellipsis">Filter hinzufügen…</string>

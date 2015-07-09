@@ -2,7 +2,7 @@
 <resources>
 
     <string name="about">Over</string>
-    <string name="about_catlog">Over CatLog</string>
+    <string name="about_matlog">Over CatLog</string>
 
     <string name="add_filter">Filter Toevoegen</string>
     <string name="add_filter_ellipsis">Filter Toevoegen…</string>

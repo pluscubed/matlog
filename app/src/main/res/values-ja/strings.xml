@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about">CatLogについて</string>
-    <string name="about_catlog">CatLogについて</string>
+    <string name="about_matlog">CatLogについて</string>
 
     <string name="add_filter">フィルタを作る</string>
     <string name="add_filter_ellipsis">フィルタを作る…</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about">A propos</string>
-    <string name="about_catlog">A propos de CatLog</string>
+    <string name="about_matlog">A propos de CatLog</string>
 
     <string name="add_filter">Ajouter Filtre</string>
     <string name="add_filter_ellipsis">Ajouter Filtre…</string>

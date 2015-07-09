@@ -79,7 +79,7 @@
 
         <com.pluscubed.logcat.widget.NoPopupDialogPreference
             android:key="@string/pref_about"
-            android:title="@string/about_catlog" />
+            android:title="@string/about_matlog" />
 
     </PreferenceCategory>
 

@@ -7,17 +7,42 @@ android {
         applicationId "com.pluscubed.logcat"
         minSdkVersion 14
         targetSdkVersion 22
-        versionName '1.6.0'
-        versionCode 43
+        versionName '1.0.0-beta'
+        versionCode 1
 
         testApplicationId "com.pluscubed.logcat.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
+
+        manifestPlaceholders = [appName: "@string/app_name"]
+    }
+
+    if (project.hasProperty("RELEASE_STORE_FILE")) {
+        signingConfigs {
+            release {
+                storeFile file(RELEASE_STORE_FILE)
+                storePassword RELEASE_STORE_PASSWORD
+                keyAlias RELEASE_KEY_ALIAS_MATLOG
+                keyPassword RELEASE_KEY_PASSWORD_MATLOG
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles 'proguard-rules.pro'
+            if (project.hasProperty("RELEASE_STORE_FILE")) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            manifestPlaceholders = [appName: "MatLog DEBUG"]
+            ext.enableCrashlytics = false
         }
     }
 }
