@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.BaseColumns;
 import android.support.annotation.WorkerThread;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
@@ -110,6 +111,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private LogLineAdapter mLogListAdapter;
     private LogReaderAsyncTask mTask;
     private ListView mListView;
+    private FloatingActionButton mFab;
 
     private String mSearchingString;
     private int firstVisibleItem = -1;
@@ -152,6 +154,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         setContentView(R.layout.activity_logcat);
 
         mHandler = new Handler(Looper.getMainLooper());
+
+        mFab = (FloatingActionButton) findViewById(android.R.id.button1);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogHelper.stopRecordingLog(LogcatActivity.this);
+            }
+        });
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -308,6 +318,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             // scroll to bottom, since for some reason it always scrolls to the top, which is annoying
             mListView.setSelection(mListView.getCount() - 1);
         }
+
+        boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
+        mFab.setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
     }
 
     private void restartMainLog() {
@@ -479,13 +492,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
 
         MenuItem recordMenuItem = menu.findItem(R.id.menu_record_log);
-        MenuItem stopRecordingMenuItem = menu.findItem(R.id.menu_stop_recording_log);
 
         recordMenuItem.setEnabled(!recordingInProgress);
         recordMenuItem.setVisible(!recordingInProgress);
-
-        stopRecordingMenuItem.setEnabled(recordingInProgress);
-        stopRecordingMenuItem.setVisible(recordingInProgress);
 
         MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
         crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
@@ -585,9 +594,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 return true;
             case R.id.menu_record_log:
                 showRecordLogDialog();
-                return true;
-            case R.id.menu_stop_recording_log:
-                DialogHelper.stopRecordingLog(this);
                 return true;
             case R.id.menu_send_log:
                 showSendLogDialog();
@@ -1571,7 +1577,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void silentlySetSearchText(String text) {
-        //TODO Something?
         // sets the search text without invoking autosuggestions, which are really only useful when typing
 
         filter(text);

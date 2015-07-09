@@ -68,12 +68,6 @@
                 android:alphabeticShortcut="@string/manage_saved_logs"
                 android:icon="@drawable/ic_delete_white_24dp"
                 android:title="@string/manage_saved_logs" />
-
-            <item
-                android:id="@+id/menu_stop_recording_log"
-                android:alphabeticShortcut="@string/stop_recording_log"
-                android:icon="@drawable/ic_stop_white_24dp"
-                android:title="@string/stop_recording_log" />
         </menu>
     </item>
 

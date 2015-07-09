@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 public enum ColorScheme {
-	Dark (R.string.pref_theme_choice_dark_value, R.color.main_background_dark, 
+	Dark(R.string.pref_theme_choice_dark_value, R.color.main_background_dark,
 			R.color.main_foreground_dark, R.array.dark_theme_colors, R.color.spinner_droptown_dark,
 			R.color.main_bubble_background_dark_2, false, R.color.accent),
 	Light (R.string.pref_theme_choice_light_value, R.color.main_background_light, 
