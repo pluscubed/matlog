@@ -189,7 +189,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         log.d("initial collapsed mode is %s", mCollapsedMode);
 
         mSearchSuggestionsAdapter = new SimpleCursorAdapter(this,
-                R.layout.dropdown,
+                R.layout.list_item_dropdown,
                 null,
                 new String[]{"suggestion"},
                 new int[]{android.R.id.text1},
@@ -226,14 +226,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                     if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
-                    showInitialMessageAndStartupLog();
+                    startLog();
                 }
 
 
             }.execute((Void) null);
 
         } else {
-            showInitialMessageAndStartupLog();
+            startLog();
         }
 
     }
@@ -254,12 +254,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     }
 
-    private void showInitialMessageAndStartupLog() {
+    private void startLog() {
 
         Intent intent = getIntent();
 
         if (intent == null || !intent.hasExtra("filename")) {
-            startUpMainLog();
+            startMainLog();
         } else {
             String filename = intent.getStringExtra("filename");
             openLogFile(filename);
@@ -313,8 +313,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private void restartMainLog() {
         mLogListAdapter.clear();
 
-        startUpMainLog();
-
+        startMainLog();
     }
 
     @Override
@@ -346,7 +345,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         }
         mLogListAdapter.notifyDataSetChanged();
         updateBackgroundColor();
-        updateDisplayedFilename();
+        updateUiForFilename();
     }
 
     private void onSettingsActivityResult(final Intent data) {
@@ -368,10 +367,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     }
 
-    private void startUpMainLog() {
-
+    private void startMainLog() {
         Runnable mainLogRunnable = new Runnable() {
-
             @Override
             public void run() {
                 if (mLogListAdapter != null) {
@@ -443,6 +440,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     public void onBackPressed() {
         if (mSearchViewMenuItem.isActionViewExpanded()) {
             mSearchViewMenuItem.collapseActionView();
+        } else if (mCurrentlyOpenLog != null) {
+            startMainLog();
         } else {
             super.onBackPressed();
         }
@@ -457,37 +456,19 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         MenuItem item = menu.findItem(R.id.menu_expand_all);
         if (mCollapsedMode) {
             item.setIcon(R.drawable.ic_expand_more_white_24dp);
-            item.setTitle("Expand All");
+            item.setTitle(R.string.expand_all);
         } else {
             item.setIcon(R.drawable.ic_expand_less_white_24dp);
-            item.setTitle("Collapse All");
+            item.setTitle(R.string.collapse_all);
         }
 
-        MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
+        MenuItem clear = menu.findItem(R.id.menu_clear);
+        MenuItem pause = menu.findItem(R.id.menu_play_pause);
+        clear.setVisible(mCurrentlyOpenLog == null);
+        pause.setVisible(mCurrentlyOpenLog == null);
+
         MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
         MenuItem saveAsLogMenuItem = menu.findItem(R.id.menu_save_as_log);
-
-        mainLogMenuItem.setEnabled(!showingMainLog);
-        mainLogMenuItem.setVisible(!showingMainLog);
-        List<String> bufferNames = PreferenceHelper.getBufferNames(this);
-
-        // change the displayed menu name depending on how many logs are to be shown
-        String mainLogTitle;
-        switch (bufferNames.size()) {
-            case 1:
-                mainLogTitle = String.format(getString(R.string.play_x1_log), bufferNames.get(0));
-                break;
-            case 2:
-                mainLogTitle = String.format(getString(R.string.play_x2_log),
-                        bufferNames.get(0), bufferNames.get(1));
-                break;
-            default: // 3
-                mainLogTitle = getString(R.string.play_x3_log);
-                break;
-
-        }
-
-        mainLogMenuItem.setTitle(mainLogTitle);
 
         saveLogMenuItem.setEnabled(showingMainLog);
         saveLogMenuItem.setVisible(showingMainLog);
@@ -581,7 +562,15 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 if (mLogListAdapter != null) {
                     mLogListAdapter.clear();
                 }
-                Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), R.string.log_cleared, Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.undo), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startMainLog();
+                            }
+                        })
+                        .setActionTextColor(R.color.accent)
+                        .show();
                 return true;
 
             case R.id.menu_log_level:
@@ -603,8 +592,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             case R.id.menu_send_log:
                 showSendLogDialog();
                 return true;
-            case R.id.menu_main_log:
-                startUpMainLog();
+            case android.R.id.home:
+                onBackPressed();
                 return true;
             case R.id.menu_delete_saved_log:
                 startDeleteSavedLogsDialog();
@@ -780,12 +769,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         LayoutInflater inflater = getLayoutInflater();
         @SuppressLint("InflateParams")
         final AutoCompleteTextView editText =
-                (AutoCompleteTextView) inflater.inflate(R.layout.text_new_filter, null, false);
+                (AutoCompleteTextView) inflater.inflate(R.layout.dialog_new_filter, null, false);
 
         // show suggestions as the user types
         List<String> suggestions = new ArrayList<>(mSearchSuggestionsSet);
         SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<>(
-                this, R.layout.dropdown, suggestions);
+                this, R.layout.list_item_dropdown, suggestions);
         editText.setAdapter(suggestionAdapter);
 
         final MaterialDialog alertDialog = new MaterialDialog.Builder(this)
@@ -1434,37 +1423,32 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
 
     public void resetDisplayedLog(String filename) {
-
         mLogListAdapter.clear();
         mCurrentlyOpenLog = filename;
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
-        /*clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
-        pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
-        pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
-        expandButtonImage.setImageResource(
-                mCollapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);*/
         addFiltersToSuggestions(); // filters are what initial populate the suggestions
-        updateDisplayedFilename();
+        updateUiForFilename();
         resetFilter();
     }
 
-    private void updateDisplayedFilename() {
+    private void updateUiForFilename() {
+        boolean logFileMode = mCurrentlyOpenLog != null;
+
         //noinspection ConstantConditions
-        getSupportActionBar().setSubtitle(mCurrentlyOpenLog != null ? mCurrentlyOpenLog : "");
+        getSupportActionBar().setSubtitle(logFileMode ? mCurrentlyOpenLog : "");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(logFileMode);
+        supportInvalidateOptionsMenu();
     }
 
     private void resetFilter() {
-
         String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
         CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
         int logLevelLimit = ArrayUtil.indexOf(logLevels, defaultLogLevel);
         mLogListAdapter.setLogLevelLimit(logLevelLimit);
         logLevelChanged();
-
     }
 
     private void showLogLevelDialog() {
-
         String[] logLevels = getResources().getStringArray(R.array.log_levels);
 
         // put the word "default" after whatever the default log level is
@@ -1600,15 +1584,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         mSearchingString = filterText;
     }
 
-    /*@Override
-    public boolean onLongClick(View v) {
-        // clear button long-pressed, undo clear
-        startUpMainLog();
-        return true;
-
-    }*/
-
-
     private void pauseOrUnpause(MenuItem item) {
         LogReaderAsyncTask currentTask = mTask;
 
@@ -1711,6 +1686,16 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         private Runnable mOnFinishedRunnable;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            log.d("onPreExecute()");
+
+            resetDisplayedLog(null);
+
+            showProgressBar();
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
             log.d("doInBackground()");
 
@@ -1778,16 +1763,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             super.onPostExecute(result);
             log.d("onPostExecute()");
             doWhenFinished();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            log.d("onPreExecute()");
-
-            resetDisplayedLog(null);
-
-            showProgressBar();
         }
 
         @Override

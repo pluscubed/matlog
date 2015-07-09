@@ -65,9 +65,9 @@ public class WidgetHelper {
 		
 	}
 	private static void updateWidget(Context context, AppWidgetManager manager, int appWidgetId, boolean serviceRunning) {
-		
 
-		RemoteViews updateViews = new RemoteViews(context.getPackageName(), R.layout.recording_widget);
+
+		RemoteViews updateViews = new RemoteViews(context.getPackageName(), R.layout.widget_recording);
 		
 		// change the subtext depending on whether the service is running or not
 		CharSequence subtext = context.getText(

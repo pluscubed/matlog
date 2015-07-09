@@ -12,7 +12,7 @@
         android:textSize="12sp" />
 
     <include
-        layout="@layout/text_new_filter"
+        layout="@layout/dialog_new_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -2,6 +2,8 @@ package com.pluscubed.logcat.util;
 
 import android.util.Log;
 
+import com.pluscubed.logcat.BuildConfig;
+
 import java.util.Arrays;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Arrays;
  */
 public class UtilLogger {
 
-	public static final boolean DEBUG_MODE = false;
+	public static final boolean DEBUG_MODE = BuildConfig.DEBUG;
 	
 	private String tag;
 	

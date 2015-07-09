@@ -87,7 +87,7 @@ public class DialogHelper {
         autoCompleteTextView.setText(queryFilterText);
 
 		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
-                context, R.layout.dropdown, filterQuerySuggestions);
+                context, R.layout.list_item_dropdown, filterQuerySuggestions);
         autoCompleteTextView.setAdapter(suggestionAdapter);
 		
 		// set values on spinner to be the log levels
@@ -101,7 +101,7 @@ public class DialogHelper {
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
                 context, android.R.layout.simple_spinner_item, logLevels);
-        adapter.setDropDownViewResource(R.layout.dropdown);
+        adapter.setDropDownViewResource(R.layout.list_item_dropdown);
         spinner.setAdapter(adapter);
 		
 		// in case the user has changed it, choose the pre-selected log level

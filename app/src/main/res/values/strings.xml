@@ -123,10 +123,6 @@
     <string name="open">Open</string>
     <string name="open_log">Open Log</string>
 
-    <string name="play_x1_log">Play %s Log</string>
-    <string name="play_x2_log" formatted="false">Play %s, %s</string>
-    <string name="play_x3_log">Play All Logs</string>
-
     <string name="pref_buffer_choice_events">Events</string>
     <string name="pref_buffer_choice_main">Main</string>
     <string name="pref_buffer_choice_radio">Radio</string>
@@ -213,4 +209,9 @@
     <string name="widget_start_recording">Record\nLog</string>
     <string name="as_text_not_work">\"As text\" may not work due to the large amount of characters. Please try \"As attachment\"</string>
     <string name="file">File</string>
+    <string name="clear">Clear</string>
+    <string name="expand_all">Expand All</string>
+    <string name="collapse_all">Collapse All</string>
+    <string name="pause_unpause">Pause/Unpause</string>
+    <string name="undo">Undo</string>
 </resources>
