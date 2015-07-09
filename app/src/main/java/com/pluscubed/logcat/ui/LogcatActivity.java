@@ -118,7 +118,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private boolean mAutoscrollToBottom = true;
     private boolean mCollapsedMode;
 
-
+    private boolean mDynamicallyEnteringSearchText;
     private boolean partialSelectMode;
     private List<LogLine> partiallySelectedLogLines = new ArrayList<>(2);
 
@@ -290,7 +290,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             String level = intent.getStringExtra(Intents.EXTRA_LEVEL);
 
             if (!TextUtils.isEmpty(filter)) {
-                silentlySetSearchText(filter);
+                setSearchText(filter);
             }
 
 
@@ -513,7 +513,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         inflater.inflate(R.menu.menu_main, menu);
 
         //used to workaround issue where the search text is cleared on expanding the SearchView
-        final boolean[] triggerQuery = new boolean[]{true};
 
         mSearchViewMenuItem = menu.findItem(R.id.menu_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
@@ -525,12 +524,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (triggerQuery[0]) {
+                if (!mDynamicallyEnteringSearchText) {
                     log.d("filtering: %s", newText);
-                    filter(newText);
+                    search(newText);
                     populateSuggestionsAdapter(newText);
                 }
-                triggerQuery[0] = true;
+                mDynamicallyEnteringSearchText = false;
                 return false;
             }
         });
@@ -549,7 +548,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         });
         searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
         if (mSearchingString != null && !mSearchingString.isEmpty()) {
-            triggerQuery[0] = false;
+            mDynamicallyEnteringSearchText = true;
             mSearchViewMenuItem.expandActionView();
             searchView.setQuery(mSearchingString, true);
             searchView.clearFocus();
@@ -685,7 +684,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 String tagQuery = (logLine.getTag().contains(" "))
                         ? ('"' + logLine.getTag() + '"')
                         : logLine.getTag();
-                silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+                setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
                 dialog.dismiss();
                 //TODO: put the cursor at the end
                                 /*searchEditText.setSelection(searchEditText.length());*/
@@ -695,7 +694,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         pid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+                setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
                 dialog.dismiss();
                 //TODO: put the cursor at the end
                                 /*searchEditText.setSelection(searchEditText.length());*/
@@ -758,7 +757,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                                 } else {
                                     // load filter
                                     String text = filterAdapter.getItem(position).getText();
-                                    silentlySetSearchText(text);
+                                    setSearchText(text);
                                     dialog.dismiss();
                                 }
                             }
@@ -1576,14 +1575,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         }
     }
 
-    private void silentlySetSearchText(String text) {
+    private void setSearchText(String text) {
         // sets the search text without invoking autosuggestions, which are really only useful when typing
-
-        filter(text);
+        mDynamicallyEnteringSearchText = true;
+        search(text);
         supportInvalidateOptionsMenu();
     }
 
-    private void filter(String filterText) {
+    private void search(String filterText) {
         Filter filter = mLogListAdapter.getFilter();
         filter.filter(filterText, this);
         mSearchingString = filterText;
@@ -1613,7 +1612,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
 
     private void logLevelChanged() {
-        filter(mSearchingString);
+        search(mSearchingString);
     }
 
     private void updateBackgroundColor() {
