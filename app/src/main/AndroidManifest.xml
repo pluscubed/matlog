@@ -59,7 +59,7 @@
 			</intent-filter>
 			
 			<intent-filter>
-				<action android:name="com.pluscubed.logcat.action.RECORD_OR_STOP" />
+				<action android:name="${applicationId}.action.RECORD_OR_STOP" />
 				<data android:scheme="catlog_widget" />
 			</intent-filter>
 			
