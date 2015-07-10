@@ -49,7 +49,6 @@ public class AboutDialogActivity extends AppCompatActivity {
             String version = PackageHelper.getVersionName(getActivity());
             String changelog = loadTextFile(R.raw.changelog);
             String css = loadTextFile(R.raw.about_css);
-            String translations = loadTextFile(R.raw.translations);
             text = String.format(text, version, changelog, css);
 
             WebSettings settings = view.getSettings();

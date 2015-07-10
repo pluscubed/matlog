@@ -19,5 +19,6 @@
 -keepattributes SourceFile,LineNumberTable
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
--keep class android.support.v7.widget.** { *; }
--keep interface android.support.v7.widget.** { *; }
+
+-keep class android.support.v7.internal.view.menu.MenuBuilder {*;}
+-keep class android.support.v7.widget.SearchView {*;}
