@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about">Om</string>
-    <string name="about_catlog">Om CatLog</string>
+    <string name="about_matlog">Om CatLog</string>
 
     <string name="add_filter">Lägg till Filter</string>
     <string name="add_filter_ellipsis">Lägg till Filter…</string>

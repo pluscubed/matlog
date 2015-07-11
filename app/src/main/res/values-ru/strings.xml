@@ -59,7 +59,7 @@
 
 
     <string name="about">О программе</string>
-    <string name="about_catlog">CatLog</string>
+    <string name="about_matlog">CatLog</string>
 
     <string name="add_filter">Добавить фильтр</string>
     <string name="add_filter_ellipsis">Добавление фильтра…</string>

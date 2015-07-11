@@ -121,7 +121,7 @@ crashlytics-build.properties
 #Crashlytics
 crashlytics-build.properties
 com_crashlytics_export_strings.xml
-
+fabric_apikey.xml
 
 ### Windows ###
 # Windows image file caches

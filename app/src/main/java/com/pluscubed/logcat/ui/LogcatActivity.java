@@ -53,6 +53,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
+import com.pluscubed.logcat.BuildConfig;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
@@ -89,6 +91,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import io.fabric.sdk.android.Fabric;
 
 public class LogcatActivity extends AppCompatActivity implements FilterListener {
 
@@ -151,6 +155,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
         setContentView(R.layout.activity_logcat);
 
         mHandler = new Handler(Looper.getMainLooper());
