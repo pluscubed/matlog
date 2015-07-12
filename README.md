@@ -1,6 +1,6 @@
 MatLog
 =========
-It's like CatLog, but with material goodness.
+It's CatLog, but with material goodness.
 
 Graphical log reader for Android.
 
@@ -8,19 +8,21 @@ Based on Nolan Lawson's CatLog: [Google Play][1], [GitHub][2]
 
 Overview
 ---------
-CatLog is a free and open-source log reader for Android.  
+MatLog is a free and open-source material-style log reader for Android based on CatLog.
 
-It shows a scrolling (tailed) view of the Android "Logcat" system log, 
+It shows a scrolling (tailed) view of the Android "logcat" system log, 
 hence the goofy name.  It also allows you to record logs in real time, send logs via email, 
 and filter using a variety of criteria.
 
 Download
 --------------
-
-MatLog may be downloaded from [somewhere here][4].
+MatLog is currently in beta. If you would like to help test the app, please join the [Google+ 
+community here][3] and click on the link for beta testing there. APKs are also published
+on the [releases][4] page.
 
 FAQs
 -------------
+Taken from CatLog's FAQ:
 
 #### Where are the logs saved?
 
@@ -35,8 +37,10 @@ Next, see if your ROM offers system-wide settings to disable logging.  Be sure t
 
 If that still doesn't work, you can contact the creator of your ROM to file a bug/RFE.
 
-And if you don't have root, check to see if you're running Jelly Bean (Android 4.2+).  [CatLog has issues with unrooted Jelly Bean][6].
+And if you don't have root, check to see if you're running Jelly Bean (Android 4.2+).
 
 
 [1]: https://play.google.com/store/apps/details?id=com.nolanlawson.logcat
 [2]: https://github.com/nolanlawson/Catlog
+[3]: https://plus.google.com/u/0/communities/108705871773878445106
+[4]: https://github.com/plusCubed/matlog/releases
