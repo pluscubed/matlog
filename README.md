@@ -37,7 +37,7 @@ Next, see if your ROM offers system-wide settings to disable logging.  Be sure t
 
 If that still doesn't work, you can contact the creator of your ROM to file a bug/RFE.
 
-And if you don't have root, check to see if you're running Jelly Bean (Android 4.2+).
+Requires root on Android 4.1+
 
 
 [1]: https://play.google.com/store/apps/details?id=com.nolanlawson.logcat
