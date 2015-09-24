@@ -12,25 +12,26 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.pluscubed.logcat"
         minSdkVersion 14
-        targetSdkVersion 22
-        versionName '1.0.0-beta'
-        versionCode 1
+        targetSdkVersion 23
+        versionName '1.0.0'
+        versionCode 2
 
         testApplicationId "com.pluscubed.logcat.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
 
         manifestPlaceholders = [appName: "@string/app_name"]
     }
-
+/*
     if (project.hasProperty("RELEASE_STORE_FILE")) {
         signingConfigs {
             release {
@@ -40,18 +41,18 @@ android {
                 keyPassword RELEASE_KEY_PASSWORD_MATLOG
             }
         }
-    }
+    }*/
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            if (project.hasProperty("RELEASE_STORE_FILE")) {
+            /*if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
             } else {
                 signingConfig signingConfigs.debug
-            }
+            }*/
         }
         debug {
             applicationIdSuffix '.debug'
@@ -63,10 +64,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.+'
-    compile 'com.android.support:support-annotations:22.+'
-    compile 'com.android.support:design:22.+'
-    compile 'com.afollestad:material-dialogs:0.+'
+    compile 'com.android.support:appcompat-v7:23.+'
+    compile 'com.android.support:support-annotations:23.+'
+    compile 'com.android.support:design:23.+'
+    compile 'com.afollestad.material-dialogs:core:0.+'
     compile('com.crashlytics.sdk.android:crashlytics:2.+@aar') {
         transitive = true;
     }
