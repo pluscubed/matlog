@@ -17,6 +17,7 @@ import android.provider.BaseColumns;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -584,7 +585,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                                 startMainLog();
                             }
                         })
-                        .setActionTextColor(R.color.accent)
+                        .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
                         .show();
                 return true;
 
