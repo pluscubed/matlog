@@ -29,7 +29,7 @@ On the SD card, under ```/sdcard/catlog/saved_logs/```.
 #### I can't see any logs!
 
 This problem typically shows up on custom ROMs.  First off, try an alternative logging app, to verify that
-the problem is with your ROM and not CatLog.
+the problem is with your ROM and not MatLog.
 
 Next, see if your ROM offers system-wide settings to disable logging.  Be sure to reboot after you change anything.
 
