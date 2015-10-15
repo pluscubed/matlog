@@ -16,7 +16,7 @@
         <!--TODO: REMOVE THIS CONFIGCHANGES ATROCITY-->
         <activity
             android:name=".ui.LogcatActivity"
-            android:configChanges="orientation"
+            android:configChanges="screenSize|orientation"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
