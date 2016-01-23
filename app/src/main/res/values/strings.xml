@@ -212,4 +212,7 @@
     <string name="collapse_all">Collapse All</string>
     <string name="pause_unpause">Pause/Unpause</string>
     <string name="undo">Undo</string>
+    <string name="no_logs_warning_title">Can\'t access system logs</string>
+    <string name="no_logs_warning">%1$s doesn\'t have the permission necessary to access logcat. You\'ll only see its own logs.&lt;br/>&lt;br/>You have two options of granting %1$s the permission to read logs:&lt;br/>- Root your device&lt;br/>- Connect your device to a computer with Android SDK installed and run the following command:&lt;br/>&lt;tt>%2$s&lt;/tt>&lt;br/>(you\'ll only need to run this once)</string>
+    <string name="copy_command">Copy command</string>
 </resources>

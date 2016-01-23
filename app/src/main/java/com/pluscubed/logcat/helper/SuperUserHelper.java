@@ -1,8 +1,14 @@
 package com.pluscubed.logcat.helper;
 
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
+import android.view.View;
 import android.widget.Toast;
 
 import com.pluscubed.logcat.R;
@@ -32,16 +38,33 @@ public class SuperUserHelper {
     private static UtilLogger log = new UtilLogger(SuperUserHelper.class);
     private static boolean failedToObtainRoot = false;
 
-    private static void showToast(final Context context, final int resId) {
+    private static void showWarningDialog(final Context context) {
 		Handler handler = new Handler(Looper.getMainLooper());
-		
+
 		handler.post(new Runnable(){
 
 			@Override
 			public void run() {
-				Toast.makeText(context, resId, Toast.LENGTH_LONG).show();
-				
+				final String command=String.format("adb shell pm grant %s android.permission.READ_LOGS", context.getPackageName());
+				AlertDialog dlg=new AlertDialog.Builder(context)
+						.setTitle(R.string.no_logs_warning_title)
+						.setMessage(Html.fromHtml(context.getString(R.string.no_logs_warning, context.getApplicationInfo().nonLocalizedLabel, command)))
+						.setPositiveButton(android.R.string.ok, null)
+						.setNeutralButton(R.string.copy_command, null)
+						.show();
+				// set the listener like this so the dialog doesn't dismiss when the button is clicked
+				dlg.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v){
+						((ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE)).setText(command);
+						Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+					}
+				});
 			}});
+	}
+
+	private static boolean haveReadLogsPermission(Context context){
+		return context.getPackageManager().checkPermission("android.permission.READ_LOGS", context.getPackageName())==PackageManager.PERMISSION_GRANTED;
 	}
 	
 	private static List<Integer> getAllRelatedPids(final int pid) {
@@ -143,13 +166,18 @@ public class SuperUserHelper {
         }
 	}
 	
-	public static void requestRoot(Context context) {
-
-		showToast(context, R.string.toast_request_root);
+	public static void requestRoot(final Context context) {
+		Handler handler = new Handler(Looper.getMainLooper());
+		Runnable toastRunnable=new Runnable(){
+			@Override
+			public void run() {
+				Toast.makeText(context, R.string.toast_request_root, Toast.LENGTH_LONG).show();
+			}};
+		handler.postDelayed(toastRunnable, 200);
 		
 		Process process = null;
 		try {
-			// Preform su to get root privledges
+			// Preform su to get root privileges
 			process = Runtime.getRuntime().exec("su");
 
 			// confirm that we have root
@@ -162,7 +190,8 @@ public class SuperUserHelper {
 
 			process.waitFor();
 			if (process.exitValue() != 0) {
-				showToast(context, R.string.toast_no_root);
+				if(!haveReadLogsPermission(context))
+					showWarningDialog(context);
 				failedToObtainRoot = true;
 			} else {
 				// success
@@ -171,14 +200,16 @@ public class SuperUserHelper {
 
 		} catch (IOException e) {
 			log.w(e, "Cannot obtain root");
-			showToast(context, R.string.toast_no_root);
+			if(!haveReadLogsPermission(context))
+				showWarningDialog(context);
 			failedToObtainRoot = true;
 		} catch (InterruptedException e) {
 			log.w(e, "Cannot obtain root");
-			showToast(context, R.string.toast_no_root);
+			if(!haveReadLogsPermission(context))
+				showWarningDialog(context);
 			failedToObtainRoot = true;
 		}
-
+		handler.removeCallbacks(toastRunnable);
 	}
 	
 	public static boolean isFailedToObtainRoot() {
