@@ -28,9 +28,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DialogHelper {
-	
-	public static void startRecordingWithProgressDialog(final String filename, 
-			final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
+
+    public static void startRecordingWithProgressDialog(final String filename,
+                                                        final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
 
         final MaterialDialog progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.dialog_please_wait)
@@ -62,53 +62,53 @@ public class DialogHelper {
         }).start();
 
     }
-	
-	public static boolean isInvalidFilename(CharSequence filename) {
+
+    public static boolean isInvalidFilename(CharSequence filename) {
 
         String filenameAsString;
 
         return TextUtils.isEmpty(filename)
-				|| (filenameAsString = filename.toString()).contains("/")
-				|| filenameAsString.contains(":")
-				|| filenameAsString.contains(" ")
-				|| !filenameAsString.endsWith(".txt");
-				
-	}
-		
-	public static void showFilterDialogForRecording(final Context context, final String queryFilterText, 
-			final String logLevelText, final List<String> filterQuerySuggestions, 
-			final Callback<FilterQueryWithLevel> callback) {
+                || (filenameAsString = filename.toString()).contains("/")
+                || filenameAsString.contains(":")
+                || filenameAsString.contains(" ")
+                || !filenameAsString.endsWith(".txt");
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public static void showFilterDialogForRecording(final Context context, final String queryFilterText,
+                                                    final String logLevelText, final List<String> filterQuerySuggestions,
+                                                    final Callback<FilterQueryWithLevel> callback) {
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View filterView = inflater.inflate(R.layout.dialog_recording_filter, null, false);
 
         // add suggestions to autocompletetextview
         final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.text1);
         autoCompleteTextView.setText(queryFilterText);
 
-		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
+        SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
                 context, R.layout.list_item_dropdown, filterQuerySuggestions);
         autoCompleteTextView.setAdapter(suggestionAdapter);
-		
-		// set values on spinner to be the log levels
-		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
-		
-		// put the word "default" after whatever the default log level is
-		CharSequence[] logLevels = context.getResources().getStringArray(R.array.log_levels);
-		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(context));
-		int index = ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), defaultLogLevel);
-		logLevels[index] = logLevels[index].toString() + " " + context.getString(R.string.default_in_parens);
+
+        // set values on spinner to be the log levels
+        final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
+
+        // put the word "default" after whatever the default log level is
+        CharSequence[] logLevels = context.getResources().getStringArray(R.array.log_levels);
+        String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(context));
+        int index = ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), defaultLogLevel);
+        logLevels[index] = logLevels[index].toString() + " " + context.getString(R.string.default_in_parens);
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
                 context, android.R.layout.simple_spinner_item, logLevels);
         adapter.setDropDownViewResource(R.layout.list_item_dropdown);
         spinner.setAdapter(adapter);
-		
-		// in case the user has changed it, choose the pre-selected log level
-		spinner.setSelection(ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), 
-				logLevelText));
-		
-		// create alertdialog for the "Filter..." button
+
+        // in case the user has changed it, choose the pre-selected log level
+        spinner.setSelection(ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values),
+                logLevelText));
+
+        // create alertdialog for the "Filter..." button
         new MaterialDialog.Builder(context)
                 .title(R.string.title_filter)
                 .customView(filterView, true)
@@ -131,7 +131,7 @@ public class DialogHelper {
 
     }
 
-	public static void stopRecordingLog(Context context) {
+    public static void stopRecordingLog(Context context) {
         ServiceHelper.stopBackgroundServiceIfRunning(context);
     }
 
@@ -168,20 +168,20 @@ public class DialogHelper {
 
     public static String createLogFilename() {
         Date date = new Date();
-		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		
-		DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
-		DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
-		
-		String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
-		String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
-		String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
-		String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
-		String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
-		String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+        DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+
+        String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+        String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+        String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+        String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+        String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+        String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
 
         return year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".txt";
     }
-	
+
 }

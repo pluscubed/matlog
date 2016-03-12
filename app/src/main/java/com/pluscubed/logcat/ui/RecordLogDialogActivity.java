@@ -21,10 +21,10 @@ import java.util.List;
 public class RecordLogDialogActivity extends AppCompatActivity {
 
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // grab the search suggestions, if any
         final String[] suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))

@@ -17,11 +17,11 @@ import java.util.List;
 
 public class FilterAdapter extends ArrayAdapter<FilterItem> {
 
-	public FilterAdapter(Context context, List<FilterItem> items) {
+    public FilterAdapter(Context context, List<FilterItem> items) {
         super(context, R.layout.list_item_filter, items);
     }
 
-	@Override
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,5 +54,5 @@ public class FilterAdapter extends ArrayAdapter<FilterItem> {
 
         return convertView;
     }
-	
+
 }

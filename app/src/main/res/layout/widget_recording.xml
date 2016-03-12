@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clickable_linear_layout"
     android:layout_width="match_parent"
@@ -11,9 +12,9 @@
         android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher"
         android:tint="#8f312f"
-        android:tintMode="multiply" />
+        android:tintMode="multiply"
+        app:srcCompat="@drawable/ic_launcher" />
 
     <LinearLayout
         android:layout_width="64dp"
@@ -26,9 +27,9 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:contentDescription="@string/record_log"
-            android:src="@drawable/ic_record_white_24dp"
             android:tint="#EF5350"
             android:visibility="invisible"
+            app:srcCompat="@drawable/ic_record_white_24dp"
             tools:visibility="visible" />
 
     </LinearLayout>

@@ -6,30 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author nolan
  */
 public class StringUtil {
-	
-	/**
-	 * Pad the specified number of spaces to the input string to make it that length
-	 * @param input
-	 * @param size
-	 * @return
-	 */
-	public static String padLeft(String input, int size) {
-		
-		if (input.length() > size) {
-			throw new IllegalArgumentException("input must be shorter than or equal to the number of spaces: " + size);
-		}
-		
-		StringBuilder sb = new StringBuilder();
-		for (int i = input.length(); i < size; i ++) {
-			sb.append(" ");
-		}
-		return sb.append(input).toString();
-	}
-	
+
+    /**
+     * Pad the specified number of spaces to the input string to make it that length
+     *
+     * @param input
+     * @param size
+     * @return
+     */
+    public static String padLeft(String input, int size) {
+
+        if (input.length() > size) {
+            throw new IllegalArgumentException("input must be shorter than or equal to the number of spaces: " + size);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = input.length(); i < size; i++) {
+            sb.append(" ");
+        }
+        return sb.append(input).toString();
+    }
+
     /**
      * same as the String.split(), except it doesn't use regexes, so it's faster.
      *
@@ -51,18 +51,18 @@ public class StringUtil {
         return ArrayUtil.toArray(result, String.class);
     }
 
- /*
-     * Replace all occurances of the searchString in the originalString with the replaceString.  Faster than the
-     * String.replace() method.  Does not use regexes.
-     * <p/>
-     * If your searchString is empty, this will spin forever.
-     *
-     *
-     * @param originalString
-     * @param searchString
-     * @param replaceString
-     * @return
-     */
+    /*
+        * Replace all occurances of the searchString in the originalString with the replaceString.  Faster than the
+        * String.replace() method.  Does not use regexes.
+        * <p/>
+        * If your searchString is empty, this will spin forever.
+        *
+        *
+        * @param originalString
+        * @param searchString
+        * @param replaceString
+        * @return
+        */
     public static String replace(String originalString, String searchString, String replaceString) {
         StringBuilder sb = new StringBuilder(originalString);
         int index = sb.indexOf(searchString);
@@ -75,7 +75,7 @@ public class StringUtil {
     }
 
     public static String join(String delimiter, String[] strings) {
-        
+
         if (strings.length == 0) {
             return "";
         }
@@ -87,7 +87,7 @@ public class StringUtil {
 
         return stringBuilder.substring(1);
     }
-    
+
 
     public static int computeLevenshteinDistance(CharSequence str1, CharSequence str2) {
 
@@ -118,13 +118,12 @@ public class StringUtil {
                         distance[i - 1][j] + 1,
                         distance[i][j - 1] + 1,
                         distance[i - 1][j - 1] + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0
-                        : 1));
+                                : 1));
             }
         }
-        
+
         int dist = distance[str1.length()][str2.length()];
 
-       
 
         return dist;
     }
@@ -156,77 +155,78 @@ public class StringUtil {
     private static int minimum(int a, int b, int c) {
         return Math.min(Math.min(a, b), c);
     }
-    
-    public static String join(int[] arr, String delimiter) {
-    	
-    	if (arr.length == 0) {
-    		return "";
-    	}
 
-    	StringBuilder sb = new StringBuilder();
-    	
-    	for (int i : arr) {
-    		sb.append(delimiter).append(Integer.toString(i));
-    	}
-    	
-    	return sb.substring(delimiter.length());
-    	
+    public static String join(int[] arr, String delimiter) {
+
+        if (arr.length == 0) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i : arr) {
+            sb.append(delimiter).append(Integer.toString(i));
+        }
+
+        return sb.substring(delimiter.length());
+
     }
-    
+
     public static String capitalize(String str) {
-    	
-    	StringBuilder sb = new StringBuilder(str);
-    	
-    	for (int i = 0; i < sb.length(); i++) {
-    		if (i == 0 || Character.isWhitespace(sb.charAt(i - 1))) {
-    			sb.replace(i, i + 1, Character.toString(Character.toUpperCase(sb.charAt(i))));
-    		}
-    	}
-    	
-    	return sb.toString();	
+
+        StringBuilder sb = new StringBuilder(str);
+
+        for (int i = 0; i < sb.length(); i++) {
+            if (i == 0 || Character.isWhitespace(sb.charAt(i - 1))) {
+                sb.replace(i, i + 1, Character.toString(Character.toUpperCase(sb.charAt(i))));
+            }
+        }
+
+        return sb.toString();
     }
-    
+
     public static String nullToEmpty(CharSequence str) {
-    	return str == null ? "" : str.toString();
+        return str == null ? "" : str.toString();
     }
-    
+
     public static boolean isEmptyOrWhitespaceOnly(String str) {
-    	if (TextUtils.isEmpty(str)) {
-    		return true;
-    	}
-    	for (int i = 0; i < str.length(); i++) {
-    		if (!Character.isWhitespace(str.charAt(i))) {
-    			return false;
-    		}
-    	}
-    	return true;
+        if (TextUtils.isEmpty(str)) {
+            return true;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
-    
+
     /**
      * same as String.contains, but ignores case.
+     *
      * @param str
      * @param query
      * @return
      */
     public static boolean containsIgnoreCase(String str, String query) {
-    	if (str != null && query != null) {
-    		int limit = str.length() - query.length() + 1;
-    		for (int i = 0; i < limit; i++) {
-    			if (matchesIgnoreCase(str, query, i)) {
-    				return true;
-    			}
-    		}
-    	}
-    	return false;
+        if (str != null && query != null) {
+            int limit = str.length() - query.length() + 1;
+            for (int i = 0; i < limit; i++) {
+                if (matchesIgnoreCase(str, query, i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-	private static boolean matchesIgnoreCase(String str, String query, int startingAt) {
-		int len = query.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.toUpperCase(query.charAt(i)) != Character.toUpperCase(str.charAt(startingAt + i))) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private static boolean matchesIgnoreCase(String str, String query, int startingAt) {
+        int len = query.length();
+        for (int i = 0; i < len; i++) {
+            if (Character.toUpperCase(query.charAt(i)) != Character.toUpperCase(str.charAt(startingAt + i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

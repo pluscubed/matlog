@@ -45,18 +45,18 @@ import java.util.List;
  * a single TextView.  If you want to use a more complex layout, use the constructors that
  * also takes a field id.  That field id should reference a TextView in the larger layout
  * resource.
- *
+ * <p/>
  * However the TextView is referenced, it will be filled with the toString() of each object in
  * the array. You can add lists or arrays of custom objects. Override the toString() method
  * of your objects to determine what text will be displayed for the item in the list.
- *
+ * <p/>
  * To use something other than TextViews for the array display, for instance, ImageViews,
  * or to have some of data besides toString() results fill the views,
  * override {@link #getView(int, View, ViewGroup)} to return the type of view you want.
  */
 public class LogLineAdapter extends BaseAdapter implements Filterable {
-	
-	private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
+
+    private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
     /**
      * Lock used to modify the content of {@link #mObjects}. Any write operation
      * performed on the array should be synchronized on this lock. This lock is also
@@ -88,25 +88,23 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      */
     private boolean mNotifyOnChange = true;
 
-    private Context mContext;    
+    private Context mContext;
 
     private ArrayList<LogLine> mOriginalValues;
     private ArrayFilter mFilter;
 
     private LayoutInflater mInflater;
-    
+
     private int logLevelLimit = 0;
-
-
 
 
     /**
      * Constructor
      *
-     * @param context The current context.
+     * @param context            The current context.
      * @param textViewResourceId The resource ID for a layout file containing a TextView to use when
-     *                 instantiating views.
-     * @param objects The objects to represent in the ListView.
+     *                           instantiating views.
+     * @param objects            The objects to represent in the ListView.
      */
     public LogLineAdapter(Context context, int textViewResourceId, List<LogLine> objects) {
         init(context, textViewResourceId, 0, objects);
@@ -123,7 +121,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             synchronized (mLock) {
                 mOriginalValues.add(object);
                 mObjects.add(object);
-                
+
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
         } else {
@@ -131,42 +129,42 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             if (mNotifyOnChange) notifyDataSetChanged();
         }
     }
-    
 
-	public void addWithFilter(LogLine object, CharSequence text) {
-		
+
+    public void addWithFilter(LogLine object, CharSequence text) {
+
         if (mOriginalValues != null) {
 
             List<LogLine> inputList = Collections.singletonList(object);
-            
+
             if (mFilter == null) {
-            	mFilter = new ArrayFilter();
+                mFilter = new ArrayFilter();
             }
-            
+
             List<LogLine> filteredObjects = mFilter.performFilteringOnList(inputList, text);
-        	
+
             synchronized (mLock) {
                 mOriginalValues.add(object);
-                
+
                 mObjects.addAll(filteredObjects);
-                
+
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
         } else {
-        	synchronized (mLock) {
-        		mObjects.add(object);
-        	}
+            synchronized (mLock) {
+                mObjects.add(object);
+            }
             if (mNotifyOnChange) notifyDataSetChanged();
         }
-        
-		
-	}    
+
+
+    }
 
     /**
      * Inserts the specified object at the specified index in the array.
      *
      * @param object The object to insert into the array.
-     * @param index The index at which the object must be inserted.
+     * @param index  The index at which the object must be inserted.
      */
     public void insert(LogLine object, int index) {
         if (mOriginalValues != null) {
@@ -195,25 +193,25 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         }
         if (mNotifyOnChange) notifyDataSetChanged();
     }
-    
+
     public void removeFirst(int n) {
-    	StopWatch stopWatch = new StopWatch("removeFirst()");
-    	if (mOriginalValues != null) {
-    		synchronized (mLock) {
-    			List<LogLine> subList = mOriginalValues.subList(n, mOriginalValues.size());
-    			for (int i = 0; i < n; i++) { 
-    				// value to delete - delete it from the mObjects as well
-    				mObjects.remove(mOriginalValues.get(i));
-    			}
-    			mOriginalValues = new ArrayList<LogLine>(subList);
-    		}
-    	} else {
-    		synchronized (mLock) {
-    			mObjects = new ArrayList<LogLine>(mObjects.subList(n, mObjects.size()));
-    		}
-    	}
-    	if (mNotifyOnChange) notifyDataSetChanged();
-    	stopWatch.log(log);
+        StopWatch stopWatch = new StopWatch("removeFirst()");
+        if (mOriginalValues != null) {
+            synchronized (mLock) {
+                List<LogLine> subList = mOriginalValues.subList(n, mOriginalValues.size());
+                for (int i = 0; i < n; i++) {
+                    // value to delete - delete it from the mObjects as well
+                    mObjects.remove(mOriginalValues.get(i));
+                }
+                mOriginalValues = new ArrayList<LogLine>(subList);
+            }
+        } else {
+            synchronized (mLock) {
+                mObjects = new ArrayList<LogLine>(mObjects.subList(n, mObjects.size()));
+            }
+        }
+        if (mNotifyOnChange) notifyDataSetChanged();
+        stopWatch.log(log);
     }
 
     /**
@@ -235,12 +233,12 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * Sorts the content of this adapter using the specified comparator.
      *
      * @param comparator The comparator used to sort the objects contained
-     *        in this adapter.
+     *                   in this adapter.
      */
     public void sort(Comparator<? super LogLine> comparator) {
-    	this.mComparator = comparator;
+        this.mComparator = comparator;
         Collections.sort(mObjects, comparator);
-        if (mNotifyOnChange) notifyDataSetChanged();        
+        if (mNotifyOnChange) notifyDataSetChanged();
     }
 
     /**
@@ -250,7 +248,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         mNotifyOnChange = true;
-        
+
     }
 
     /**
@@ -259,7 +257,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * {@link #notifyDataSetChanged}.  If set to false, caller must
      * manually call notifyDataSetChanged() to have the changes
      * reflected in the attached view.
-     *
+     * <p/>
      * The default is true, and calling notifyDataSetChanged()
      * resets the flag to true.
      *
@@ -273,7 +271,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 
     private void init(Context context, int resource, int textViewResourceId, List<LogLine> objects) {
         mContext = context;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mResource = mDropDownResource = resource;
         mObjects = objects;
     }
@@ -292,9 +290,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * {@inheritDoc}
      */
     public int getCount() {
-    	synchronized (mLock) {
-    		return mObjects.size();
-    	}
+        synchronized (mLock) {
+            return mObjects.size();
+        }
     }
 
     /**
@@ -303,16 +301,15 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     public LogLine getItem(int position) {
         return mObjects.get(position);
     }
-    
+
     public List<LogLine> getTrueValues() {
-    	return mOriginalValues != null ? mOriginalValues : mObjects;
+        return mOriginalValues != null ? mOriginalValues : mObjects;
     }
 
     /**
      * Returns the position of the specified item in the array.
      *
      * @param item The item to retrieve the position of.
-     *
      * @return The position of the specified item.
      */
     public int getPosition(LogLine item) {
@@ -327,20 +324,20 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-    	return createViewFromResource(position, convertView, parent, mResource);
+        return createViewFromResource(position, convertView, parent, mResource);
     }
 
 
     private View createViewFromResource(int position, View view, ViewGroup parent,
-            int resource) {
-    	
-    	Context context = parent.getContext();
+                                        int resource) {
+
+        Context context = parent.getContext();
         LogLineViewHolder wrapper;
         if (view == null) {
             view = mInflater.inflate(R.layout.list_item_logcat, parent, false);
             wrapper = new LogLineViewHolder(view);
             view.setTag(wrapper);
-		} else {
+        } else {
             wrapper = (LogLineViewHolder) view.getTag();
         }
 
@@ -352,19 +349,19 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 
 
         LogLine logLine;
-		try {
-			logLine = getItem(position);
-		} catch (IndexOutOfBoundsException ignore) {
-			// XXX hack - I sometimes get array index out of bounds exceptions here
-			// no idea how to solve it, so this is the best I can do
+        try {
+            logLine = getItem(position);
+        } catch (IndexOutOfBoundsException ignore) {
+            // XXX hack - I sometimes get array index out of bounds exceptions here
+            // no idea how to solve it, so this is the best I can do
             //TODO: Fix
             logLine = LogLine.newLogLine("", PreferenceHelper.getExpandedByDefaultPreference(context));
-		}
-		
-		levelTextView.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
-		levelTextView.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
-		levelTextView.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
-		levelTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+        }
+
+        levelTextView.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
+        levelTextView.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
+        levelTextView.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
+        levelTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         int textColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
         float textSize = PreferenceHelper.getTextSizePreference(context);
@@ -373,57 +370,57 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         CharSequence output = logLine.getLogOutput();
 
         outputTextView.setSingleLine(!logLine.isExpanded());
-		outputTextView.setText(output);
+        outputTextView.setText(output);
         outputTextView.setTextColor(textColor);
 
 
         //TAG TEXT VIEW
         String tag = logLine.getTag();
 
-		tagTextView.setSingleLine(!logLine.isExpanded());
-		tagTextView.setText(tag);
-		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+        tagTextView.setSingleLine(!logLine.isExpanded());
+        tagTextView.setText(tag);
+        tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
 
         //TEXT SIZE
         tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 
         //EXPANDED INFO
         boolean extraInfoIsVisible = logLine.isExpanded()
-				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
-				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
-		
-		pidTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-		timestampTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-		
-		if (extraInfoIsVisible) {
+                && PreferenceHelper.getShowTimestampAndPidPreference(context)
+                && logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...'
+
+        pidTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+        timestampTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+
+        if (extraInfoIsVisible) {
 
             pidTextView.setTextColor(textColor);
             timestampTextView.setTextColor(textColor);
 
             pidTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-			timestampTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-			
-			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
-			timestampTextView.setText(logLine.getTimestamp());
-		}
+            timestampTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 
-		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
-		
-		// if this is a "partially selected" log, change the color to orange or whatever
-		
-		int selectedBackground = logLine.isHighlighted() 
-				? PreferenceHelper.getColorScheme(context).getSelectedColor(context) 
-				: context.getResources().getColor(android.R.color.transparent);
-		view.setBackgroundColor(selectedBackground);
-		
-		return view;
+            pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
+            timestampTextView.setText(logLine.getTimestamp());
+        }
+
+        tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
+
+        // if this is a "partially selected" log, change the color to orange or whatever
+
+        int selectedBackground = logLine.isHighlighted()
+                ? PreferenceHelper.getColorScheme(context).getSelectedColor(context)
+                : context.getResources().getColor(android.R.color.transparent);
+        view.setBackgroundColor(selectedBackground);
+
+        return view;
     }
 
 
-	/**
+    /**
      * <p>Sets the layout resource to create the drop down views.</p>
      *
      * @param resource the layout resource defining the drop down views
@@ -441,16 +438,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         return createViewFromResource(position, convertView, parent, mDropDownResource);
     }
 
-	public int getLogLevelLimit() {
-		return logLevelLimit;
-	}
+    public int getLogLevelLimit() {
+        return logLevelLimit;
+    }
 
 
-	public void setLogLevelLimit(int logLevelLimit) {
-		this.logLevelLimit = logLevelLimit;
-	}
+    public void setLogLevelLimit(int logLevelLimit) {
+        this.logLevelLimit = logLevelLimit;
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      */
     public Filter getFilter() {
@@ -461,9 +458,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
 
     public List<LogLine> getObjects() {
-    	return mObjects;
+        return mObjects;
     }
-    
+
     /**
      * <p>An array filter constrains the content of the array adapter with
      * a prefix. Each item that does not start with the supplied prefix
@@ -479,35 +476,35 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                     mOriginalValues = new ArrayList<LogLine>(mObjects);
                 }
             }
-            
+
             ArrayList<LogLine> allValues = performFilteringOnList(mOriginalValues, prefix);
-            
+
             results.values = allValues;
             results.count = allValues.size();
-            
+
             return results;
         }
-        
+
         public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, CharSequence query) {
-            
-        	SearchCriteria searchCriteria = new SearchCriteria(query);
-            
+
+            SearchCriteria searchCriteria = new SearchCriteria(query);
+
             // search by log level
             ArrayList<LogLine> allValues = new ArrayList<LogLine>();
-            
+
             ArrayList<LogLine> logLines;
             synchronized (mLock) {
-            	logLines = new ArrayList<LogLine>(inputList);
+                logLines = new ArrayList<LogLine>(inputList);
             }
-            
+
             for (LogLine logLine : logLines) {
-            	if (logLine != null && 
-            			LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
-            		allValues.add(logLine);
-            	}
+                if (logLine != null &&
+                        LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
+                    allValues.add(logLine);
+                }
             }
             ArrayList<LogLine> finalValues = allValues;
-            
+
             // search by criteria
             if (!searchCriteria.isEmpty()) {
 
@@ -526,23 +523,23 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 
                 finalValues = newValues;
             }
-            
+
             // sort here to ensure that filtering the list doesn't mess up the sorting
             if (mComparator != null) {
-            	Collections.sort((List<LogLine>)finalValues, mComparator);
+                Collections.sort(finalValues, mComparator);
             }
-            
-            return finalValues;        	
+
+            return finalValues;
         }
 
         @SuppressWarnings("unchecked")
-		@Override
+        @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //noinspection unchecked
-        	
-        	//log.d("filtering: %s", constraint);
-        	
-			
+
+            //log.d("filtering: %s", constraint);
+
+
             mObjects = (List<LogLine>) results.values;
             if (results.count > 0) {
                 notifyDataSetChanged();

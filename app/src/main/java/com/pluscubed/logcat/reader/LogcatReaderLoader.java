@@ -16,71 +16,71 @@ import java.util.Map.Entry;
 
 public class LogcatReaderLoader implements Parcelable {
 
-	public static final Parcelable.Creator<LogcatReaderLoader> CREATOR = new Parcelable.Creator<LogcatReaderLoader>() {
-		public LogcatReaderLoader createFromParcel(Parcel in) {
-			return new LogcatReaderLoader(in);
-		}
+    public static final Parcelable.Creator<LogcatReaderLoader> CREATOR = new Parcelable.Creator<LogcatReaderLoader>() {
+        public LogcatReaderLoader createFromParcel(Parcel in) {
+            return new LogcatReaderLoader(in);
+        }
 
-		public LogcatReaderLoader[] newArray(int size) {
-			return new LogcatReaderLoader[size];
-		}
-	};
-	private Map<String, String> lastLines = new HashMap<>();
-	private boolean recordingMode;
-	private boolean multiple;
-	
-	private LogcatReaderLoader(Parcel in) {
-		this.recordingMode = in.readInt() == 1;
-		this.multiple = in.readInt() == 1;
-		Bundle bundle = in.readBundle();
-		for (String key : bundle.keySet()) {
-			lastLines.put(key, bundle.getString(key));
-		}
-	}
-	
-	private LogcatReaderLoader(List<String> buffers, boolean recordingMode) {
-		this.recordingMode = recordingMode;
-		this.multiple = buffers.size() > 1;
-		for (String buffer : buffers) {
-			// no need to grab the last line if this isn't recording mode
-			String lastLine = recordingMode ? LogcatHelper.getLastLogLine(buffer) : null;
-			lastLines.put(buffer, lastLine);
-		}
-	}
+        public LogcatReaderLoader[] newArray(int size) {
+            return new LogcatReaderLoader[size];
+        }
+    };
+    private Map<String, String> lastLines = new HashMap<>();
+    private boolean recordingMode;
+    private boolean multiple;
 
-	public static LogcatReaderLoader create(Context context, boolean recordingMode) {
-		List<String> buffers = PreferenceHelper.getBuffers(context);
-		return new LogcatReaderLoader(buffers, recordingMode);
-	}
-	
-	public LogcatReader loadReader() throws IOException {
-		LogcatReader reader;
-		if (!multiple) {
-			// single reader
-			String buffer = lastLines.keySet().iterator().next();
-			String lastLine = lastLines.values().iterator().next();
-			reader = new SingleLogcatReader(recordingMode, buffer, lastLine);
-		} else {
-			// multiple reader
-			reader = new MultipleLogcatReader(recordingMode, lastLines);
-		}
+    private LogcatReaderLoader(Parcel in) {
+        this.recordingMode = in.readInt() == 1;
+        this.multiple = in.readInt() == 1;
+        Bundle bundle = in.readBundle();
+        for (String key : bundle.keySet()) {
+            lastLines.put(key, bundle.getString(key));
+        }
+    }
 
-		return reader;
-	}
+    private LogcatReaderLoader(List<String> buffers, boolean recordingMode) {
+        this.recordingMode = recordingMode;
+        this.multiple = buffers.size() > 1;
+        for (String buffer : buffers) {
+            // no need to grab the last line if this isn't recording mode
+            String lastLine = recordingMode ? LogcatHelper.getLastLogLine(buffer) : null;
+            lastLines.put(buffer, lastLine);
+        }
+    }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    public static LogcatReaderLoader create(Context context, boolean recordingMode) {
+        List<String> buffers = PreferenceHelper.getBuffers(context);
+        return new LogcatReaderLoader(buffers, recordingMode);
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(recordingMode ? 1 : 0);
-		dest.writeInt(multiple ? 1 : 0);
-		Bundle bundle = new Bundle();
-		for (Entry<String,String> entry : lastLines.entrySet()) {
-			bundle.putString(entry.getKey(), entry.getValue());
-		}
-		dest.writeBundle(bundle);
-	}
+    public LogcatReader loadReader() throws IOException {
+        LogcatReader reader;
+        if (!multiple) {
+            // single reader
+            String buffer = lastLines.keySet().iterator().next();
+            String lastLine = lastLines.values().iterator().next();
+            reader = new SingleLogcatReader(recordingMode, buffer, lastLine);
+        } else {
+            // multiple reader
+            reader = new MultipleLogcatReader(recordingMode, lastLines);
+        }
+
+        return reader;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(recordingMode ? 1 : 0);
+        dest.writeInt(multiple ? 1 : 0);
+        Bundle bundle = new Bundle();
+        for (Entry<String, String> entry : lastLines.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+        dest.writeBundle(bundle);
+    }
 }

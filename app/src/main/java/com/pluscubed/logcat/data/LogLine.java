@@ -12,185 +12,185 @@ import java.util.regex.Pattern;
 
 public class LogLine {
 
-	public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
-	
-	private static final int TIMESTAMP_LENGTH = 19;
-	
-	private static Pattern logPattern = Pattern.compile(
-			// log level
-			"(\\w)" +
-			"/" +
-			// tag
-			"([^(]+)" +
-			"\\(\\s*" +
-			// pid
-			"(\\d+)" +
-			// optional weird number that only occurs on ZTE blade
-			"(?:\\*\\s*\\d+)?" +
-			"\\): ");
-	
-	private static UtilLogger log = new UtilLogger(LogLine.class);
-	
-	private int logLevel;
-	private String tag;
-	private String logOutput;
-	private int processId = -1;
-	private String timestamp;
-	private boolean expanded = false;
-	private boolean highlighted = false;
-	
-	public static LogLine newLogLine(String originalLine, boolean expanded) {
+    public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 
-		LogLine logLine = new LogLine();
-		logLine.setExpanded(expanded);
+    private static final int TIMESTAMP_LENGTH = 19;
 
-		int startIdx = 0;
+    private static Pattern logPattern = Pattern.compile(
+            // log level
+            "(\\w)" +
+                    "/" +
+                    // tag
+                    "([^(]+)" +
+                    "\\(\\s*" +
+                    // pid
+                    "(\\d+)" +
+                    // optional weird number that only occurs on ZTE blade
+                    "(?:\\*\\s*\\d+)?" +
+                    "\\): ");
 
-		// if the first char is a digit, then this starts out with a timestamp
-		// otherwise, it's a legacy log or the beginning of the log output or something
-		if (!TextUtils.isEmpty(originalLine)
-				&& Character.isDigit(originalLine.charAt(0))
-				&& originalLine.length() >= TIMESTAMP_LENGTH) {
-			String timestamp = originalLine.substring(0, TIMESTAMP_LENGTH - 1);
-			logLine.setTimestamp(timestamp);
-			startIdx = TIMESTAMP_LENGTH; // cut off timestamp
-		}
+    private static UtilLogger log = new UtilLogger(LogLine.class);
 
-		Matcher matcher = logPattern.matcher(originalLine);
+    private int logLevel;
+    private String tag;
+    private String logOutput;
+    private int processId = -1;
+    private String timestamp;
+    private boolean expanded = false;
+    private boolean highlighted = false;
 
-		if (matcher.find(startIdx)) {
-			char logLevelChar = matcher.group(1).charAt(0);
+    public static LogLine newLogLine(String originalLine, boolean expanded) {
 
-			logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
-			logLine.setTag(matcher.group(2));
-			logLine.setProcessId(Integer.parseInt(matcher.group(3)));
+        LogLine logLine = new LogLine();
+        logLine.setExpanded(expanded);
 
-			logLine.setLogOutput(originalLine.substring(matcher.end()));
+        int startIdx = 0;
 
-		} else {
-			log.d("Line doesn't match pattern: %s", originalLine);
-			logLine.setLogOutput(originalLine);
-			logLine.setLogLevel(-1);
-		}
+        // if the first char is a digit, then this starts out with a timestamp
+        // otherwise, it's a legacy log or the beginning of the log output or something
+        if (!TextUtils.isEmpty(originalLine)
+                && Character.isDigit(originalLine.charAt(0))
+                && originalLine.length() >= TIMESTAMP_LENGTH) {
+            String timestamp = originalLine.substring(0, TIMESTAMP_LENGTH - 1);
+            logLine.setTimestamp(timestamp);
+            startIdx = TIMESTAMP_LENGTH; // cut off timestamp
+        }
 
-		return logLine;
+        Matcher matcher = logPattern.matcher(originalLine);
 
-	}
+        if (matcher.find(startIdx)) {
+            char logLevelChar = matcher.group(1).charAt(0);
 
-	public static int convertCharToLogLevel(char logLevelChar) {
+            logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
+            logLine.setTag(matcher.group(2));
+            logLine.setProcessId(Integer.parseInt(matcher.group(3)));
 
-		switch (logLevelChar) {
-			case 'D':
-				return Log.DEBUG;
-			case 'E':
-				return Log.ERROR;
-			case 'I':
-				return Log.INFO;
-			case 'V':
-				return Log.VERBOSE;
-			case 'W':
-				return Log.WARN;
-			case 'F':
-				return LogLineAdapterUtil.LOG_WTF; // 'F' actually stands for 'WTF', which is a real Android log level in 2.2
-		}
-		return -1;
-	}
+            logLine.setLogOutput(originalLine.substring(matcher.end()));
 
-	public static char convertLogLevelToChar(int logLevel) {
+        } else {
+            log.d("Line doesn't match pattern: %s", originalLine);
+            logLine.setLogOutput(originalLine);
+            logLine.setLogLevel(-1);
+        }
 
-		switch (logLevel) {
-			case Log.DEBUG:
-				return 'D';
-			case Log.ERROR:
-				return 'E';
-			case Log.INFO:
-				return 'I';
-			case Log.VERBOSE:
-				return 'V';
-			case Log.WARN:
-				return 'W';
-			case LogLineAdapterUtil.LOG_WTF:
-				return 'F';
-		}
-		return ' ';
-	}
+        return logLine;
 
-	public String getOriginalLine() {
+    }
 
-		if (logLevel == -1) { // starter line like "begin of log etc. etc."
-			return logOutput;
-		}
+    public static int convertCharToLogLevel(char logLevelChar) {
 
-		StringBuilder stringBuilder = new StringBuilder();
+        switch (logLevelChar) {
+            case 'D':
+                return Log.DEBUG;
+            case 'E':
+                return Log.ERROR;
+            case 'I':
+                return Log.INFO;
+            case 'V':
+                return Log.VERBOSE;
+            case 'W':
+                return Log.WARN;
+            case 'F':
+                return LogLineAdapterUtil.LOG_WTF; // 'F' actually stands for 'WTF', which is a real Android log level in 2.2
+        }
+        return -1;
+    }
 
-		if (timestamp != null) {
-			stringBuilder.append(timestamp).append(' ');
-		}
+    public static char convertLogLevelToChar(int logLevel) {
 
-		stringBuilder.append(convertLogLevelToChar(logLevel))
-				.append('/')
-				.append(tag)
-				.append('(')
-				.append(processId)
-				.append("): ")
-				.append(logOutput);
+        switch (logLevel) {
+            case Log.DEBUG:
+                return 'D';
+            case Log.ERROR:
+                return 'E';
+            case Log.INFO:
+                return 'I';
+            case Log.VERBOSE:
+                return 'V';
+            case Log.WARN:
+                return 'W';
+            case LogLineAdapterUtil.LOG_WTF:
+                return 'F';
+        }
+        return ' ';
+    }
 
-		return stringBuilder.toString();
-	}
+    public String getOriginalLine() {
 
-	public int getLogLevel() {
-		return logLevel;
-	}
+        if (logLevel == -1) { // starter line like "begin of log etc. etc."
+            return logOutput;
+        }
 
-	public void setLogLevel(int logLevel) {
-		this.logLevel = logLevel;
-	}
+        StringBuilder stringBuilder = new StringBuilder();
 
-	public String getTag() {
-		return tag;
-	}
+        if (timestamp != null) {
+            stringBuilder.append(timestamp).append(' ');
+        }
 
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
+        stringBuilder.append(convertLogLevelToChar(logLevel))
+                .append('/')
+                .append(tag)
+                .append('(')
+                .append(processId)
+                .append("): ")
+                .append(logOutput);
 
-	public String getLogOutput() {
-		return logOutput;
-	}
+        return stringBuilder.toString();
+    }
 
-	public void setLogOutput(String logOutput) {
-		this.logOutput = logOutput;
-	}
+    public int getLogLevel() {
+        return logLevel;
+    }
 
-	public int getProcessId() {
-		return processId;
-	}
+    public void setLogLevel(int logLevel) {
+        this.logLevel = logLevel;
+    }
 
-	public void setProcessId(int processId) {
-		this.processId = processId;
-	}
+    public String getTag() {
+        return tag;
+    }
 
-	public String getTimestamp() {
-		return timestamp;
-	}
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
+    public String getLogOutput() {
+        return logOutput;
+    }
 
-	public boolean isExpanded() {
-		return expanded;
-	}
+    public void setLogOutput(String logOutput) {
+        this.logOutput = logOutput;
+    }
 
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
+    public int getProcessId() {
+        return processId;
+    }
 
-	public boolean isHighlighted() {
-		return highlighted;
-	}
+    public void setProcessId(int processId) {
+        this.processId = processId;
+    }
 
-	public void setHighlighted(boolean highlighted) {
-		this.highlighted = highlighted;
-	}
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
 }

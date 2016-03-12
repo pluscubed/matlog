@@ -48,11 +48,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_compat_margin"
-            android:src="@drawable/ic_stop_white_24dp"
             android:visibility="gone"
             app:borderWidth="0dp"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
+            app:srcCompat="@drawable/ic_stop_white_24dp"
             tools:visibility="visible" />
 
         <View
@@ -115,7 +115,7 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_media_pause" />
+                    app:srcCompat="@drawable/ic_media_pause" />
             </LinearLayout>
 
             <LinearLayout
@@ -137,7 +137,7 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_menu_more_32" />
+                    app:srcCompat="@drawable/ic_menu_more_32" />
             </LinearLayout>
 
             <LinearLayout
@@ -159,7 +159,7 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_menu_close_clear_cancel_32" />
+                    app:srcCompat="@drawable/ic_menu_close_clear_cancel_32" />
             </LinearLayout>
         </LinearLayout>-->
 </LinearLayout>

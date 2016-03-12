@@ -30,9 +30,9 @@ public class SearchCriteria {
             try {
                 pid = Integer.parseInt(pidMatcher.group(1));
                 query.replace(pidMatcher.start(), pidMatcher.end(), ""); // remove
-                                                                         // from
-                                                                         // search
-                                                                         // string
+                // from
+                // search
+                // string
             } catch (NumberFormatException ignore) {
             }
         }
@@ -46,9 +46,9 @@ public class SearchCriteria {
                 tag = tag.substring(1, tag.length() - 1); // remove quotes
             }
             query.replace(tagMatcher.start(), tagMatcher.end(), ""); // remove
-                                                                     // from
-                                                                     // search
-                                                                     // string
+            // from
+            // search
+            // string
         }
 
         // everything else becomes a search term
@@ -74,10 +74,7 @@ public class SearchCriteria {
         if (!checkFoundTag(logLine)) {
             return false;
         }
-        if (!checkFoundText(logLine)) {
-            return false;
-        }
-        return true;
+        return checkFoundText(logLine);
     }
 
     private boolean checkFoundText(LogLine logLine) {

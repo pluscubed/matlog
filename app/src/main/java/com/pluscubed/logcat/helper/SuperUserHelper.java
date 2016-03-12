@@ -1,16 +1,17 @@
 package com.pluscubed.logcat.helper;
 
-import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.Html;
-import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.util.UtilLogger;
 
@@ -25,57 +26,66 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/* 
+
+/*
  * Starting in JellyBean, the READ_LOGS permission must be requested as super user
  * or else you can only read your own app's logs.
  * 
  * This class contains helper methods to correct the problem.
  */
 public class SuperUserHelper {
-	
-	private static final Pattern PID_PATTERN = Pattern.compile("\\d+");
-	private static final Pattern SPACES_PATTERN = Pattern.compile("\\s+");
+
+    private static final Pattern PID_PATTERN = Pattern.compile("\\d+");
+    private static final Pattern SPACES_PATTERN = Pattern.compile("\\s+");
     private static UtilLogger log = new UtilLogger(SuperUserHelper.class);
     private static boolean failedToObtainRoot = false;
 
     private static void showWarningDialog(final Context context) {
-		Handler handler = new Handler(Looper.getMainLooper());
+        Handler handler = new Handler(Looper.getMainLooper());
 
-		handler.post(new Runnable(){
+        handler.post(new Runnable() {
 
-			@Override
-			public void run() {
-				final String command=String.format("adb shell pm grant %s android.permission.READ_LOGS", context.getPackageName());
-				AlertDialog dlg=new AlertDialog.Builder(context)
-						.setTitle(R.string.no_logs_warning_title)
-						.setMessage(Html.fromHtml(context.getString(R.string.no_logs_warning, context.getApplicationInfo().nonLocalizedLabel, command)))
-						.setPositiveButton(android.R.string.ok, null)
-						.setNeutralButton(R.string.copy_command, null)
-						.show();
-				// set the listener like this so the dialog doesn't dismiss when the button is clicked
-				dlg.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener(){
-					@Override
-					public void onClick(View v){
-						((ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE)).setText(command);
-						Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
-					}
-				});
-			}});
-	}
+            @Override
+            public void run() {
+                final String command = String.format("adb shell pm grant %s android.permission.READ_LOGS", context.getPackageName());
+                new MaterialDialog.Builder(context)
+                        .title(R.string.no_logs_warning_title)
+                        .content(Html.fromHtml(context.getString(R.string.no_logs_warning, context.getString(R.string.app_name), command)))
+                        .positiveText(android.R.string.ok)
+                        .neutralText(R.string.copy_command)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ((ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE))
+                                        .setPrimaryClip(ClipData.newPlainText(context.getString(R.string.adb_command), command));
+                                Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .autoDismiss(false)
+                        .show();
+            }
+        });
+    }
 
-	private static boolean haveReadLogsPermission(Context context){
-		return context.getPackageManager().checkPermission("android.permission.READ_LOGS", context.getPackageName())==PackageManager.PERMISSION_GRANTED;
-	}
-	
-	private static List<Integer> getAllRelatedPids(final int pid) {
-	    List<Integer> result = new ArrayList<Integer>(Arrays.asList(pid));
-	    // use 'ps' to get this pid and all pids that are related to it (e.g. spawned by it)
+    private static boolean haveReadLogsPermission(Context context) {
+        return context.getPackageManager().checkPermission("android.permission.READ_LOGS", context.getPackageName()) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private static List<Integer> getAllRelatedPids(final int pid) {
+        List<Integer> result = new ArrayList<>(Arrays.asList(pid));
+        // use 'ps' to get this pid and all pids that are related to it (e.g. spawned by it)
         try {
-                
+
             final Process suProcess = Runtime.getRuntime().exec("su");
-    
+
             new Thread(new Runnable() {
-                
+
                 @Override
                 public void run() {
                     PrintStream outputStream = null;
@@ -89,10 +99,10 @@ public class SuperUserHelper {
                             outputStream.close();
                         }
                     }
-                    
+
                 }
             }).run();
-            
+
             if (suProcess != null) {
                 try {
                     suProcess.waitFor();
@@ -100,19 +110,20 @@ public class SuperUserHelper {
                     log.e(e, "cannot get pids");
                 }
             }
-            
-            
+
+
             BufferedReader bufferedReader = null;
             try {
                 bufferedReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()), 8192);
                 while (bufferedReader.ready()) {
                     String[] line = SPACES_PATTERN.split(bufferedReader.readLine());
-                    if (line.length >= 3 ) {
+                    if (line.length >= 3) {
                         try {
                             if (pid == Integer.parseInt(line[2])) {
                                 result.add(Integer.parseInt(line[1]));
                             }
-                        } catch (NumberFormatException ignore) {}
+                        } catch (NumberFormatException ignore) {
+                        }
                     }
                 }
             } finally {
@@ -123,24 +134,24 @@ public class SuperUserHelper {
         } catch (IOException e1) {
             log.e(e1, "cannot get process ids");
         }
-        
+
         return result;
-	}
-	
-	public static void destroy(Process process) {
-	    // stupid method for getting the pid, but it actually works
-	    Matcher matcher = PID_PATTERN.matcher(process.toString());
-	    matcher.find();
-	    int pid = Integer.parseInt(matcher.group());
-	    List<Integer> allRelatedPids = getAllRelatedPids(pid);
-	    log.d("Killing %s", allRelatedPids);
-	    for (Integer relatedPid : allRelatedPids) {
-	        destroyPid(relatedPid);
-	    }
-        
-	}
-	
-	private static void destroyPid(int pid) {
+    }
+
+    public static void destroy(Process process) {
+        // stupid method for getting the pid, but it actually works
+        Matcher matcher = PID_PATTERN.matcher(process.toString());
+        matcher.find();
+        int pid = Integer.parseInt(matcher.group());
+        List<Integer> allRelatedPids = getAllRelatedPids(pid);
+        log.d("Killing %s", allRelatedPids);
+        for (Integer relatedPid : allRelatedPids) {
+            destroyPid(relatedPid);
+        }
+
+    }
+
+    private static void destroyPid(int pid) {
 
         Process suProcess = null;
         PrintStream outputStream = null;
@@ -164,55 +175,51 @@ public class SuperUserHelper {
                 }
             }
         }
-	}
-	
-	public static void requestRoot(final Context context) {
-		Handler handler = new Handler(Looper.getMainLooper());
-		Runnable toastRunnable=new Runnable(){
-			@Override
-			public void run() {
-				Toast.makeText(context, R.string.toast_request_root, Toast.LENGTH_LONG).show();
-			}};
-		handler.postDelayed(toastRunnable, 200);
-		
-		Process process = null;
-		try {
-			// Preform su to get root privileges
-			process = Runtime.getRuntime().exec("su");
+    }
 
-			// confirm that we have root
-			DataOutputStream outputStream = new DataOutputStream(process.getOutputStream());
-			outputStream.writeBytes("echo hello\n");
+    public static void requestRoot(final Context context) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable toastRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, R.string.toast_request_root, Toast.LENGTH_LONG).show();
+            }
+        };
+        handler.postDelayed(toastRunnable, 200);
 
-			// Close the terminal
-			outputStream.writeBytes("exit\n");
-			outputStream.flush();
+        Process process = null;
+        try {
+            // Preform su to get root privileges
+            process = Runtime.getRuntime().exec("su");
 
-			process.waitFor();
-			if (process.exitValue() != 0) {
-				if(!haveReadLogsPermission(context))
-					showWarningDialog(context);
-				failedToObtainRoot = true;
-			} else {
-				// success
+            // confirm that we have root
+            DataOutputStream outputStream = new DataOutputStream(process.getOutputStream());
+            outputStream.writeBytes("echo hello\n");
+
+            // Close the terminal
+            outputStream.writeBytes("exit\n");
+            outputStream.flush();
+
+            process.waitFor();
+            if (process.exitValue() != 0) {
+                if (!haveReadLogsPermission(context))
+                    showWarningDialog(context);
+                failedToObtainRoot = true;
+            } else {
+                // success
                 PreferenceHelper.setJellybeanRootRan(context);
-			}
+            }
 
-		} catch (IOException e) {
-			log.w(e, "Cannot obtain root");
-			if(!haveReadLogsPermission(context))
-				showWarningDialog(context);
-			failedToObtainRoot = true;
-		} catch (InterruptedException e) {
-			log.w(e, "Cannot obtain root");
-			if(!haveReadLogsPermission(context))
-				showWarningDialog(context);
-			failedToObtainRoot = true;
-		}
-		handler.removeCallbacks(toastRunnable);
-	}
-	
-	public static boolean isFailedToObtainRoot() {
-		return failedToObtainRoot;
-	}
+        } catch (IOException | InterruptedException e) {
+            log.w(e, "Cannot obtain root");
+            if (!haveReadLogsPermission(context))
+                showWarningDialog(context);
+            failedToObtainRoot = true;
+        }
+        handler.removeCallbacks(toastRunnable);
+    }
+
+    public static boolean isFailedToObtainRoot() {
+        return failedToObtainRoot;
+    }
 }
