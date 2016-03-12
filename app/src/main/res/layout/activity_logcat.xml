@@ -36,9 +36,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:dividerHeight="0px"
+            android:dividerHeight="0dp"
             android:paddingBottom="2dp"
             android:paddingTop="1dp"
+            android:scrollbarSize="0dp"
             android:scrollbars="vertical" />
 
         <!--TODO: Change border width back to 0.5dp when design library is fixed-->
@@ -60,106 +61,4 @@
             android:layout_height="5dp"
             android:background="?toolbarShadow" />
     </FrameLayout>
-
-
-    <!--    <LinearLayout
-            android:id="@+id/action_bar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/main_button_height"
-            android:gravity="center_vertical|end"
-            android:orientation="horizontal" >
-
-            &lt;!&ndash; Dummy item to prevent AutoCompleteTextView from receiving focus &ndash;&gt;
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="0px"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                tools:ignore="UselessLeaf" />
-
-            <AutoCompleteTextView
-                android:id="@+id/main_edit_text"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="3dp"
-                android:layout_weight="1"
-                android:completionThreshold="1"
-                android:drawableLeft="@drawable/ic_btn_search"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical|left"
-                android:hint="@string/main_edit_text_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="textFilter"
-                android:nextFocusLeft="@+id/main_edit_text"
-                android:nextFocusUp="@+id/main_edit_text"
-                android:singleLine="true" />
-
-            <LinearLayout
-                android:id="@+id/main_pause_button"
-                style="@android:style/Widget.Button"
-                android:layout_width="@dimen/main_button_width"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/list_selector_background"
-                android:gravity="center_vertical|left"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray" />
-
-                <ImageView
-                    android:id="@+id/main_pause_button_image"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_media_pause" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/main_more_button"
-                style="@android:style/Widget.Button"
-                android:layout_width="@dimen/main_button_width"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/list_selector_background"
-                android:gravity="center_vertical|left"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray" />
-
-                <ImageView
-                    android:id="@+id/main_expand_button_image"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_menu_more_32" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/main_clear_button"
-                style="@android:style/Widget.Button"
-                android:layout_width="@dimen/main_button_width"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/list_selector_background"
-                android:gravity="center_vertical|left"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray" />
-
-                <ImageView
-                    android:id="@+id/main_clear_button_image"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_menu_close_clear_cancel_32" />
-            </LinearLayout>
-        </LinearLayout>-->
 </LinearLayout>
