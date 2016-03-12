@@ -4,7 +4,7 @@ It's CatLog, but with material goodness.
 
 Graphical log reader for Android.
 
-[![Get it on Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
+[![Get it on Google Play](http://i.imgur.com/MIXbzVC.png)](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
 
 Based on Nolan Lawson's CatLog: [Google Play][1], [GitHub][2]
 
@@ -34,6 +34,26 @@ the problem is with your ROM and not MatLog.
 Next, see if your ROM offers system-wide settings to disable logging.  Be sure to reboot after you change anything.
 
 If that still doesn't work, you can contact the creator of your ROM to file a bug/RFE.
+
+License
+---------
+```
+Copyright (C) 2016  Daniel Ciao
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+```
 
 [1]: https://play.google.com/store/apps/details?id=com.nolanlawson.logcat
 [2]: https://github.com/nolanlawson/Catlog
