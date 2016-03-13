@@ -148,7 +148,7 @@ public class SaveLogHelper {
 
             @Override
             public int compare(File object1, File object2) {
-                return new Long(object2.lastModified()).compareTo(object1.lastModified());
+                return Long.valueOf(object2.lastModified()).compareTo(object1.lastModified());
             }
         });
 

@@ -12,9 +12,9 @@
         android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_launcher"
         android:tint="#8f312f"
-        android:tintMode="multiply"
-        app:srcCompat="@drawable/ic_launcher" />
+        android:tintMode="multiply"/>
 
     <LinearLayout
         android:layout_width="64dp"

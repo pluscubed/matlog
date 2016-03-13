@@ -1,11 +1,13 @@
 package com.pluscubed.logcat.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -14,9 +16,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
@@ -97,6 +101,8 @@ import io.fabric.sdk.android.Fabric;
 
 public class LogcatActivity extends AppCompatActivity implements FilterListener {
 
+    public static final int REQUEST_STORAGE_PERMISSIONS = 101;
+
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     // how often to check to see if we've gone over the max size
@@ -151,6 +157,19 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         }
 
         context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title)));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_STORAGE_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showSaveLogDialog();
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
@@ -1211,6 +1230,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void showSaveLogDialog() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    101);
+            return;
+        }
+
         if (!SaveLogHelper.checkSdCard(this)) {
             return;
         }
