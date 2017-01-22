@@ -86,7 +86,7 @@ public class AboutDialogActivity extends AppCompatActivity {
             return new MaterialDialog.Builder(getActivity())
                     .customView(view, false)
                     .title(R.string.about_matlog)
-                    .iconRes(R.drawable.ic_launcher)
+                    .iconRes(R.mipmap.ic_launcher)
                     .positiveText(android.R.string.ok)
                     .build();
         }

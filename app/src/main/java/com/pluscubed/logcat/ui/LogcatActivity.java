@@ -99,9 +99,8 @@ import java.util.Set;
 
 import io.fabric.sdk.android.Fabric;
 
-public class LogcatActivity extends AppCompatActivity implements FilterListener {
 
-    public static final int REQUEST_STORAGE_PERMISSIONS = 101;
+public class LogcatActivity extends AppCompatActivity implements FilterListener {
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
@@ -114,6 +113,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     // id for context menu entry
     private static final int CONTEXT_MENU_FILTER_ID = 0;
     private static final int CONTEXT_MENU_COPY_ID = 1;
+
+    // id requests for access to sdcard
+    private static final int DELETE_SAVED_LOG_REQUEST = 1;
+    private static final int SEND_LOG_ID_REQUEST = 2;
+    private static final int SAVE_LOG_REQUEST = 3;
+    private static final int OPEN_LOG_REQUEST = 4;
+    private static final int COMPLETE_PARTIAL_SELECT_REQUEST = 5;
+    private static final int SHOW_RECORD_LOG_REQUEST = 6;
 
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 
@@ -163,12 +170,30 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == REQUEST_STORAGE_PERMISSIONS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, R.string.permission_not_granted, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        switch (requestCode) {
+            case DELETE_SAVED_LOG_REQUEST:
+                startDeleteSavedLogsDialog();
+                break;
+            case SEND_LOG_ID_REQUEST:
+                showSendLogDialog();
+                break;
+            case SAVE_LOG_REQUEST:
                 showSaveLogDialog();
-            } else {
-                finish();
-            }
+                break;
+            case OPEN_LOG_REQUEST:
+                showOpenLogFileDialog();
+                break;
+            case COMPLETE_PARTIAL_SELECT_REQUEST:
+                completePartialSelect();
+                break;
+            case SHOW_RECORD_LOG_REQUEST:
+                showRecordLogDialog();
+                break;
         }
     }
 
@@ -683,7 +708,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         final MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.filter_choice)
-                .iconRes(R.drawable.abc_ic_search_api_mtrl_alpha)
+                .iconRes(R.drawable.ic_search)
                 .customView(R.layout.dialog_searchby, false)
                 .show();
 
@@ -731,6 +756,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void showRecordLogDialog() {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    SHOW_RECORD_LOG_REQUEST);
+            return;
+        }
         // start up the dialog-like activity
         String[] suggestions = ArrayUtil.toArray(new ArrayList<>(mSearchSuggestionsSet), String.class);
 
@@ -932,7 +964,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void expandOrCollapseAll(boolean change) {
 
-        mCollapsedMode = change ? !mCollapsedMode : mCollapsedMode;
+        mCollapsedMode = change != mCollapsedMode;
 
         int oldFirstVisibleItem = firstVisibleItem;
 
@@ -963,6 +995,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void startDeleteSavedLogsDialog() {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    DELETE_SAVED_LOG_REQUEST);
+            return;
+        }
         if (!SaveLogHelper.checkSdCard(this)) {
             return;
         }
@@ -1067,6 +1106,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     private void showSendLogDialog() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    SEND_LOG_ID_REQUEST);
+            return;
+        }
 
         String[] items = new String[]{(String) getText(R.string.as_attachment), (String) getText(R.string.as_text)};
 
@@ -1234,7 +1281,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    101);
+                    SAVE_LOG_REQUEST);
             return;
         }
 
@@ -1336,6 +1383,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void showOpenLogFileDialog() {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    OPEN_LOG_REQUEST);
+            return;
+        }
         if (!SaveLogHelper.checkSdCard(this)) {
             return;
         }
@@ -1555,6 +1609,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void completePartialSelect() {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    COMPLETE_PARTIAL_SELECT_REQUEST);
+            return;
+        }
         if (!SaveLogHelper.checkSdCard(this)) {
             cancelPartialSelect();
             return;
