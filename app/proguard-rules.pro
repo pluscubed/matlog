@@ -15,6 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontobfuscate
+-optimizations !code/allocation/variable
 
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
