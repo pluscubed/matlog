@@ -56,7 +56,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.logcat.BuildConfig;
@@ -1060,7 +1059,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     protected void verifyDelete(final CharSequence[] filenameArray,
                                 final boolean[] checkedItems, final DialogInterface parentDialog) {
 
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         int deleteCount = 0;
 
@@ -1131,7 +1130,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
         });
 
-        new AlertDialog.Builder(this)
+        new android.app.AlertDialog.Builder(this)
                 .setTitle(R.string.send_log_title)
                 .setView(includeDeviceInfoView)
                 .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
@@ -1162,10 +1161,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                     @Override
                     public void run() {
                         if (asText || mCurrentlyOpenLog == null || includeDeviceInfo) {
-                            AlertDialogWrapper.Builder progressDialog = new AlertDialogWrapper.Builder(LogcatActivity.this);
-                            progressDialog.setTitle(R.string.dialog_please_wait);
-                            progressDialog.setMessage(getString(R.string.dialog_compiling_log));
-                            mDialog = (MaterialDialog) progressDialog.show();
+                            MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
+                            progressDialog.title(R.string.dialog_please_wait);
+                            progressDialog.content(getString(R.string.dialog_compiling_log));
+                            progressDialog.progress(true, 0);
+                            mDialog = progressDialog.show();
                             mDialog.setCanceledOnTouchOutside(false);
                             mDialog.setCancelable(false);
                         }
@@ -1551,7 +1551,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         logLevels[index] = logLevels[index] + " " + getString(R.string.default_in_parens);
 
-        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.log_level)
                 .setCancelable(true)
