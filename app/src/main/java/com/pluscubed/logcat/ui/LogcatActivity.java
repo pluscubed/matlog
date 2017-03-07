@@ -54,8 +54,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
-import com.pluscubed.logcat.BuildConfig;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
@@ -81,6 +79,7 @@ import com.pluscubed.logcat.intents.Intents;
 import com.pluscubed.logcat.reader.LogcatReader;
 import com.pluscubed.logcat.reader.LogcatReaderLoader;
 import com.pluscubed.logcat.util.ArrayUtil;
+import com.pluscubed.logcat.util.CrashlyticsWrapper;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
@@ -94,8 +93,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import io.fabric.sdk.android.Fabric;
 
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_COPY_ID;
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_FILTER_ID;
@@ -199,9 +196,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics());
-        }
+        CrashlyticsWrapper.initCrashlytics(this);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logcat);
 
         LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);
