@@ -140,7 +140,7 @@ public class LogcatRecordingService extends IntentService {
 
         // Set the icon, scrolling text and timestamp
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker(tickerText)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(getString(R.string.notification_title))

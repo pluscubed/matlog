@@ -37,7 +37,7 @@ public class SaveLogHelper {
     public static final String TEMP_ZIP_FILENAME = "logcat_and_device_info.zip";
     private static final int BUFFER = 0x1000; // 4K
     private static final String LEGACY_SAVED_LOGS_DIR = "catlog_saved_logs";
-    private static final String CATLOG_DIR = "catlog";
+    private static final String CATLOG_DIR = "matlog";
     private static final String SAVED_LOGS_DIR = "saved_logs";
     private static final String TMP_DIR = "tmp";
 
@@ -290,7 +290,7 @@ public class SaveLogHelper {
     }
 
     /**
-     * I used to save logs to /sdcard/catlog_saved_logs.  Now it's /sdcard/catlog/saved_logs.  Move any files that
+     * I used to save logs to /sdcard/catlog_saved_logs.  Now it's /sdcard/matlog/saved_logs.  Move any files that
      * need to be moved to the new directory.
      */
     public static synchronized void moveLogsFromLegacyDirIfNecessary() {
