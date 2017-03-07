@@ -1,14 +1,12 @@
-![Icon](./app/src/main/res/drawable-hdpi/ic_launcher.png)MatLog
+![Icon](./app/src/main/res/mipmap-hdpi/ic_launcher.png)MatLog
 =========
 It's CatLog, but with material goodness.
 
 Graphical log reader for Android.
 
-[![Get it on Google Play](http://i.imgur.com/MIXbzVC.png)](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
+[![Get it on Google Play](http://i.imgur.com/PeDVOwW.png)](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
 
 Based on Nolan Lawson's CatLog: [Google Play][1], [GitHub][2]
-
-Discussions: [Google+ Community][3]
 
 Overview
 ---------
@@ -38,7 +36,7 @@ If that still doesn't work, you can contact the creator of your ROM to file a bu
 License
 ---------
 ```
-Copyright (C) 2016  Daniel Ciao
+Copyright (C) 2017  Daniel Ciao
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
