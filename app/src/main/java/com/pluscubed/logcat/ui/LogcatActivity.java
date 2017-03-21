@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,11 +26,13 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,8 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -66,6 +65,7 @@ import com.pluscubed.logcat.data.FilterAdapter;
 import com.pluscubed.logcat.data.LogFileAdapter;
 import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.data.LogLineAdapter;
+import com.pluscubed.logcat.data.LogLineViewHolder;
 import com.pluscubed.logcat.data.SavedLog;
 import com.pluscubed.logcat.data.SearchCriteria;
 import com.pluscubed.logcat.data.SendLogDetails;
@@ -98,8 +98,11 @@ import java.util.Set;
 
 import io.fabric.sdk.android.Fabric;
 
+import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_COPY_ID;
+import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_FILTER_ID;
 
-public class LogcatActivity extends AppCompatActivity implements FilterListener {
+
+public class LogcatActivity extends AppCompatActivity implements FilterListener, LogLineViewHolder.OnClickListener {
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
@@ -108,10 +111,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     // how many suggestions to keep in the autosuggestions text
     private static final int MAX_NUM_SUGGESTIONS = 1000;
-
-    // id for context menu entry
-    private static final int CONTEXT_MENU_FILTER_ID = 0;
-    private static final int CONTEXT_MENU_COPY_ID = 1;
 
     // id requests for access to sdcard
     private static final int DELETE_SAVED_LOG_REQUEST = 1;
@@ -127,11 +126,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private ProgressBar darkProgressBar, lightProgressBar;
     private LogLineAdapter mLogListAdapter;
     private LogReaderAsyncTask mTask;
-    private ListView mListView;
+    private RecyclerView mListView;
     private FloatingActionButton mFab;
 
     private String mSearchingString;
-    private int firstVisibleItem = -1;
+
     private boolean mAutoscrollToBottom = true;
     private boolean mCollapsedMode;
 
@@ -214,33 +213,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
         });
 
-        mListView = (ListView) findViewById(android.R.id.list);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LogLine logLine = mLogListAdapter.getItem(position);
-
-                if (partialSelectMode) {
-                    logLine.setHighlighted(true);
-                    partiallySelectedLogLines.add(logLine);
-
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLogListAdapter.notifyDataSetChanged();
-                        }
-                    });
-
-                    if (partiallySelectedLogLines.size() == 2) {
-                        // last line
-                        completePartialSelect();
-                    }
-                } else {
-                    logLine.setExpanded(!logLine.isExpanded());
-                    mLogListAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        mListView = (RecyclerView) findViewById(android.R.id.list);
+        mListView.setLayoutManager(new LinearLayoutManager(this));
+        mListView.setItemAnimator(new DefaultItemAnimator());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
@@ -256,7 +231,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 new int[]{android.R.id.text1},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
-        registerForContextMenu(mListView);
         setUpViews();
         setUpAdapter();
         updateBackgroundColor();
@@ -365,9 +339,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     public void onResume() {
         super.onResume();
 
-        if (mListView.getCount() > 0) {
+        if (mLogListAdapter.getItemCount() > 0) {
             // scroll to bottom, since for some reason it always scrolls to the top, which is annoying
-            mListView.setSelection(mListView.getCount() - 1);
+            scrollToBottom();
         }
 
         boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
@@ -671,15 +645,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
-        menu.add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        LogLine logLine = mLogListAdapter.getItem(info.position);
+    public boolean onMenuItemClick(MenuItem item, LogLine logLine) {
         if (logLine != null) {
             switch (item.getItemId()) {
                 case CONTEXT_MENU_COPY_ID:
@@ -700,6 +666,29 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
         }
         return false;
+    }
+
+    @Override
+    public void onClick(final View itemView, final LogLine logLine) {
+        if (partialSelectMode) {
+            logLine.setHighlighted(true);
+            partiallySelectedLogLines.add(logLine);
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mLogListAdapter.notifyItemChanged(mListView.getChildAdapterPosition(itemView));
+                }
+            });
+
+            if (partiallySelectedLogLines.size() == 2) {
+                // last line
+                completePartialSelect();
+            }
+        } else {
+            logLine.setExpanded(!logLine.isExpanded());
+            mLogListAdapter.notifyItemChanged(mListView.getChildAdapterPosition(itemView));
+        }
     }
 
     private void showSearchByDialog(final LogLine logLine) {
@@ -965,7 +954,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         mCollapsedMode = change != mCollapsedMode;
 
-        int oldFirstVisibleItem = firstVisibleItem;
+        int oldFirstVisibleItem = ((LinearLayoutManager)mListView.getLayoutManager()).findFirstVisibleItemPosition();
 
         for (LogLine logLine : mLogListAdapter.getTrueValues()) {
             if (logLine != null) {
@@ -979,14 +968,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
         if (mAutoscrollToBottom) {
 
-            mListView.setSelection(mListView.getCount() - 1);
+            scrollToBottom();
 
             // ... or that whatever was the previous first visible item is still the current first
             // visible item after expanding/collapsing
 
         } else if (oldFirstVisibleItem != -1) {
 
-            mListView.setSelection(oldFirstVisibleItem);
+            mListView.scrollToPosition(oldFirstVisibleItem);
         }
 
         supportInvalidateOptionsMenu();
@@ -1257,9 +1246,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private List<CharSequence> getCurrentLogAsListOfStrings() {
 
-        List<CharSequence> result = new ArrayList<>(mLogListAdapter.getCount());
+        List<CharSequence> result = new ArrayList<>(mLogListAdapter.getItemCount());
 
-        for (int i = 0; i < mLogListAdapter.getCount(); i++) {
+        for (int i = 0; i < mLogListAdapter.getItemCount(); i++) {
             result.add(mLogListAdapter.getItem(i).getOriginalLine());
         }
 
@@ -1269,7 +1258,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     private CharSequence getCurrentLogAsCharSequence() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < mLogListAdapter.getCount(); i++) {
+        for (int i = 0; i < mLogListAdapter.getItemCount(); i++) {
             stringBuilder.append(mLogListAdapter.getItem(i).getOriginalLine()).append('\n');
         }
 
@@ -1306,12 +1295,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void savePartialLog(final String filename, LogLine first, LogLine last) {
 
-        final List<CharSequence> logLines = new ArrayList<>(mLogListAdapter.getCount());
+        final List<CharSequence> logLines = new ArrayList<>(mLogListAdapter.getItemCount());
 
         // filter based on first and last
         boolean started = false;
         boolean foundLast = false;
-        for (int i = 0; i < mLogListAdapter.getCount(); i++) {
+        for (int i = 0; i < mLogListAdapter.getItemCount(); i++) {
             LogLine logLine = mLogListAdapter.getItem(i);
             if (logLine == first) {
                 started = true;
@@ -1478,7 +1467,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
                 }
 
                 // scroll to bottom
-                mListView.setSelection(mListView.getCount() - 1);
+                scrollToBottom();
             }
         };
 
@@ -1578,30 +1567,32 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
 
     private void setUpAdapter() {
 
-        mLogListAdapter = new LogLineAdapter(this, R.layout.list_item_logcat, new ArrayList<LogLine>());
+        mLogListAdapter = new LogLineAdapter(new ArrayList<LogLine>());
+        mLogListAdapter.setClickListener(this);
 
         mListView.setAdapter(mLogListAdapter);
 
-        mListView.setOnScrollListener(new OnScrollListener() {
+        mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-
-                // update what the first viewable item is
-                LogcatActivity.this.firstVisibleItem = firstVisibleItem;
-
-                // if the bottom of the list isn't visible anymore, then stop autoscrolling
-                mAutoscrollToBottom = (firstVisibleItem + visibleItemCount == totalItemCount);
-
-                // only hide the fast scroll if we're unpaused and at the bottom of the list
-                boolean enableFastScroll = mTask == null || mTask.isPaused() || !mAutoscrollToBottom;
-                mListView.setFastScrollEnabled(enableFastScroll);
-
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
             }
 
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                // do nothing
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+
+                // update what the first viewable item is
+                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // if the bottom of the list isn't visible anymore, then stop autoscrolling
+                mAutoscrollToBottom = (layoutManager.findLastCompletelyVisibleItemPosition() == recyclerView.getAdapter().getItemCount() - 1);
+
+                // only hide the fast scroll if we're unpaused and at the bottom of the list
+                // TODO:
+                //boolean enableFastScroll = mTask == null || mTask.isPaused() || !mAutoscrollToBottom;
+                //mListView.setFastScrollEnabled(enableFastScroll);
 
             }
         });
@@ -1702,7 +1693,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
     @Override
     public void onFilterComplete(int count) {
         // always scroll to the bottom when searching
-        mListView.setSelection(count);
+        mListView.scrollToPosition(count - 1);
 
     }
 
@@ -1722,8 +1713,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
         });
 
-        mListView.setCacheColorHint(color);
-        mListView.setDivider(new ColorDrawable(color));
+        //TODO:
+        //mListView.setCacheColorHint(color);
+        //mListView.setDivider(new ColorDrawable(color));
 
     }
 
@@ -1891,7 +1883,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
             }
 
             if (mAutoscrollToBottom) {
-                mListView.setSelection(mListView.getCount());
+                scrollToBottom();
             }
 
         }
@@ -1927,5 +1919,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener 
         }
 
 
+    }
+
+    private void scrollToBottom() {
+        mListView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 }
