@@ -208,8 +208,7 @@ public class SuperUserHelper {
 
             process.waitFor();
             if (process.exitValue() != 0) {
-                if (!haveReadLogsPermission(context))
-                    showWarningDialog(context);
+                showWarningDialog(context);
                 failedToObtainRoot = true;
             } else {
                 // success
@@ -218,8 +217,7 @@ public class SuperUserHelper {
 
         } catch (IOException | InterruptedException e) {
             log.w(e, "Cannot obtain root");
-            if (!haveReadLogsPermission(context))
-                showWarningDialog(context);
+            showWarningDialog(context);
             failedToObtainRoot = true;
         }
         handler.removeCallbacks(toastRunnable);
