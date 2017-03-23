@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<android.support.v7.widget.Toolbar
     android:id="@+id/toolbar_actionbar"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
@@ -11,3 +12,4 @@
     app:contentInsetStart="16dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
     tools:showIn="@layout/activity_logcat" />
+</layout>
