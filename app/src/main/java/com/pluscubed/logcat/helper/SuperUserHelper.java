@@ -178,6 +178,12 @@ public class SuperUserHelper {
     }
 
     public static void requestRoot(final Context context) {
+        // Don't request root when read logs permission is already granted
+        if(haveReadLogsPermission(context)) {
+            failedToObtainRoot = true;
+            return;
+        }
+
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable toastRunnable = new Runnable() {
             @Override
@@ -202,8 +208,7 @@ public class SuperUserHelper {
 
             process.waitFor();
             if (process.exitValue() != 0) {
-                if (!haveReadLogsPermission(context))
-                    showWarningDialog(context);
+                showWarningDialog(context);
                 failedToObtainRoot = true;
             } else {
                 // success
@@ -212,8 +217,7 @@ public class SuperUserHelper {
 
         } catch (IOException | InterruptedException e) {
             log.w(e, "Cannot obtain root");
-            if (!haveReadLogsPermission(context))
-                showWarningDialog(context);
+            showWarningDialog(context);
             failedToObtainRoot = true;
         }
         handler.removeCallbacks(toastRunnable);
