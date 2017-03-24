@@ -119,6 +119,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     private static final int OPEN_LOG_REQUEST = 4;
     private static final int COMPLETE_PARTIAL_SELECT_REQUEST = 5;
     private static final int SHOW_RECORD_LOG_REQUEST = 6;
+    private static final int SHOW_RECORD_LOG_REQUEST_SHORTCUT = 7;
 
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 
@@ -192,6 +193,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             case SHOW_RECORD_LOG_REQUEST:
                 showRecordLogDialog();
                 break;
+            case SHOW_RECORD_LOG_REQUEST_SHORTCUT:
+                handleShortcuts("record");
+                break;
         }
     }
 
@@ -202,6 +206,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             Fabric.with(this, new Crashlytics());
         }
         setContentView(R.layout.activity_logcat);
+
+        handleShortcuts(getIntent().getStringExtra("shortcut_action"));
 
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -235,6 +241,33 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         setUpAdapter();
         updateBackgroundColor();
         runUpdatesIfNecessaryAndShowWelcomeMessage();
+    }
+
+    private void handleShortcuts(String action) {
+        if (action == null) return;
+
+        switch (action) {
+            case "record":
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            SHOW_RECORD_LOG_REQUEST_SHORTCUT);
+                    return;
+                }
+
+                String logFilename = DialogHelper.createLogFilename();
+                String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
+
+                DialogHelper.startRecordingWithProgressDialog(logFilename, "", defaultLogLevel, new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, this);
+
+                break;
+        }
     }
 
     private void runUpdatesIfNecessaryAndShowWelcomeMessage() {
