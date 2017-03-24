@@ -4,9 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import com.pluscubed.logcat.R;
+import com.pluscubed.logcat.databinding.ListItemLogcatBinding;
 
 /**
  * ViewHolder to show log entries
@@ -18,29 +18,19 @@ public class LogLineViewHolder extends RecyclerView.ViewHolder implements PopupM
     public static final int CONTEXT_MENU_FILTER_ID = 0;
     public static final int CONTEXT_MENU_COPY_ID = 1;
 
-    final TextView levelTextView;
-    final TextView outputTextView;
-    final TextView tagTextView;
-    final TextView pidTextView;
-    final TextView timestampTextView;
-
+    final ListItemLogcatBinding binding;
     LogLine logLine;
 
     private final OnClickListener clickListener;
 
-    public LogLineViewHolder(View view, final OnClickListener clickListener) {
-        super(view);
+    public LogLineViewHolder(ListItemLogcatBinding binding, final OnClickListener clickListener) {
+        super(binding.getRoot());
 
+        this.binding = binding;
         this.clickListener = clickListener;
 
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
-
-        pidTextView = (TextView) view.findViewById(R.id.pid_text);
-        timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
-        tagTextView = (TextView) view.findViewById(R.id.tag_text);
-        levelTextView = (TextView) view.findViewById(R.id.log_level_text);
-        outputTextView = (TextView) view.findViewById(R.id.log_output_text);
     }
 
     @Override
