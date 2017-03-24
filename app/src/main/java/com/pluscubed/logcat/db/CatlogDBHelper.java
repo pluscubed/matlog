@@ -85,7 +85,7 @@ public class CatlogDBHelper extends SQLiteOpenHelper {
 
             long result = db.insert(TABLE_NAME, null, contentValues);
 
-            log.d("inserted filter with text %s: %g", text, result);
+            log.d("inserted filter with text %s: %d", text, result);
 
             if (result == -1) {
                 log.d("attempted to insert duplicate filter");
