@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Switch to MaterialDialog preferences-->
-
     <PreferenceCategory android:title="@string/pref_cat_appearance">
 
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="@string/text_size_medium_value"
             android:entries="@array/text_sizes"
             android:entryValues="@array/text_size_values"
@@ -48,7 +46,7 @@
             android:persistent="true"
             android:title="@string/pref_buffer_title" />
 
-        <ListPreference
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="@string/log_level_value_verbose"
             android:entries="@array/log_levels"
             android:entryValues="@array/log_levels_values"
@@ -59,6 +57,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_advanced">
+
         <com.pluscubed.logcat.widget.NonnegativeIntegerEditTextPreference
             android:defaultValue="@string/pref_log_line_period_default"
             android:key="@string/pref_log_line_period"
@@ -77,7 +76,7 @@
 
     <PreferenceCategory android:title="@string/about">
 
-        <com.pluscubed.logcat.widget.NoPopupDialogPreference
+        <Preference
             android:key="@string/pref_about"
             android:title="@string/about_matlog" />
 
