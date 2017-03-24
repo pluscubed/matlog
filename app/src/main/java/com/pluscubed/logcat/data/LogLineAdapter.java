@@ -232,7 +232,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
         holder.logLine = logLine;
 
-        holder.binding.logLevelText.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
+        holder.binding.logLevelText.setText(logLine.getProcessIdText());
         holder.binding.logLevelText.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
         holder.binding.logLevelText.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
         holder.binding.logLevelText.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
