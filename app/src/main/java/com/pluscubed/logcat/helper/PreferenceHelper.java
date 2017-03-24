@@ -308,4 +308,9 @@ public class PreferenceHelper {
         editor.putBoolean(context.getString(R.string.pref_include_device_info), value);
         editor.apply();
     }
+
+    public static boolean isScrubberEnabled(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPrefs.getBoolean("scrubber", false);
+    }
 }

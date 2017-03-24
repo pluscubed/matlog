@@ -10,6 +10,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.pluscubed.logcat.R;
+import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.helper.PackageHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.util.ArrayUtil;
@@ -93,6 +95,7 @@ public class SettingsActivity extends AppCompatActivity {
         private MultipleChoicePreference bufferPreference;
         private Preference mThemePreference;
         private Preference mAboutPreference;
+        private SwitchPreference scrubberPreference;
 
         private boolean bufferChanged = false;
 
@@ -171,6 +174,15 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
             mAboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(getActivity())));
+
+            scrubberPreference = (SwitchPreference) getPreferenceScreen().findPreference("scrubber");
+            scrubberPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    LogLine.isScrubberEnabled = (boolean) newValue;
+                    return true;
+                }
+            });
         }
 
         private void setDefaultLevelPreferenceSummary(CharSequence entry) {

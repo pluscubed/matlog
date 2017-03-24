@@ -3,6 +3,7 @@ package com.pluscubed.logcat.data;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.pluscubed.logcat.reader.ScrubberUtils;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
@@ -11,8 +12,6 @@ import java.util.regex.Pattern;
 
 
 public class LogLine {
-
-    public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 
     private static final int TIMESTAMP_LENGTH = 19;
 
@@ -38,6 +37,8 @@ public class LogLine {
     private String timestamp;
     private boolean expanded = false;
     private boolean highlighted = false;
+
+    public static boolean isScrubberEnabled = false;
 
     public static LogLine newLogLine(String originalLine, boolean expanded) {
 
@@ -159,7 +160,11 @@ public class LogLine {
     }
 
     public void setLogOutput(String logOutput) {
-        this.logOutput = logOutput;
+        if (isScrubberEnabled) {
+            this.logOutput = ScrubberUtils.scrubLine(logOutput);
+        } else {
+            this.logOutput = logOutput;
+        }
     }
 
     public int getProcessId() {

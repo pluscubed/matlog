@@ -72,6 +72,12 @@
             android:summary="@string/pref_display_limit_summary"
             android:title="@string/pref_display_limit_title" />
 
+        <SwitchPreference
+            android:key="scrubber"
+            android:title="@string/scrubber"
+            android:summary="@string/scrubber_summary"
+            android:defaultValue="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about">

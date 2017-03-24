@@ -207,6 +207,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
         setContentView(R.layout.activity_logcat);
 
+        LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);
+
         handleShortcuts(getIntent().getStringExtra("shortcut_action"));
 
         mHandler = new Handler(Looper.getMainLooper());

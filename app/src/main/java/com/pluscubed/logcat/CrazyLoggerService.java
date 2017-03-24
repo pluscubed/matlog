@@ -7,6 +7,7 @@ import android.os.IBinder;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  * just writes a bunch of logs.  to be used during debugging and testing.
@@ -38,6 +39,12 @@ public class CrazyLoggerService extends IntentService {
             }
             Date date = new Date();
             log.i("Log message " + date + " " + (date.getTime() % 1000));
+
+            if (new Random().nextInt(100) % 5 == 0) {
+                log.i("email: emailme@hello.com");
+                log.i("ftp: ftp://website.com:21/");
+                log.i("http: https://website.com/");
+            }
 
         }
 
