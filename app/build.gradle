@@ -60,6 +60,7 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             manifestPlaceholders = [appName: "MatLog DEBUG"]
+            ext.enableCrashlytics = false
         }
     }
 }
