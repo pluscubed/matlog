@@ -78,7 +78,7 @@ public class LogLine {
 
     }
 
-    public static int convertCharToLogLevel(char logLevelChar) {
+    private static int convertCharToLogLevel(char logLevelChar) {
 
         switch (logLevelChar) {
             case 'D':
@@ -97,7 +97,7 @@ public class LogLine {
         return -1;
     }
 
-    public static char convertLogLevelToChar(int logLevel) {
+    private static char convertLogLevelToChar(int logLevel) {
 
         switch (logLevel) {
             case Log.DEBUG:
@@ -137,6 +137,10 @@ public class LogLine {
                 .append(logOutput);
 
         return stringBuilder.toString();
+    }
+
+    public String getProcessIdText() {
+        return Character.toString(convertLogLevelToChar(logLevel));
     }
 
     public int getLogLevel() {

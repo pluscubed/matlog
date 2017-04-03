@@ -19,6 +19,8 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
+    dataBinding.enabled = true
+
     defaultConfig {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
