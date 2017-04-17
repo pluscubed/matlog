@@ -1,16 +1,26 @@
 package com.pluscubed.logcat.test;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.data.SearchCriteria;
 import com.pluscubed.logcat.ui.LogcatActivity;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class LogFilterTest extends ActivityInstrumentationTestCase2<LogcatActivity> {
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class LogFilterTest {
+    @Rule
+    public ActivityTestRule<LogcatActivity> activityTestRule = new ActivityTestRule<>(LogcatActivity.class);
 
     private static final List<String> TEST_LOG_LINES = Arrays
             .asList("07-21 21:34:09.900 D/dalvikvm(  257): GC_CONCURRENT freed 385K, 50% free 3190K/6279K, external 0K/0K, paused 2ms+2ms",
@@ -25,11 +35,7 @@ public class LogFilterTest extends ActivityInstrumentationTestCase2<LogcatActivi
                     "07-21 21:34:10.110 W/Tethering(  167): active iface (usb0) reported as added, ignoring",
                     "07-21 21:34:10.110 W/Changelog Droid(  123): blah blah blah");
 
-
-    public LogFilterTest() {
-        super("com.pluscubed.logcat", LogcatActivity.class);
-    }
-
+    @Test
     public void testFilterBasic() {
         testFilter("dalvik", 1);
         testFilter("tethering", 3);
@@ -40,6 +46,7 @@ public class LogFilterTest extends ActivityInstrumentationTestCase2<LogcatActivi
         testFilter("tag:Vold", 3);
     }
 
+    @Test
     public void testFilterTagWithSpaces() {
         testFilter("changelog droid", 1);
         testFilter("changelog", 1);
