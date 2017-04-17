@@ -352,7 +352,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
 
                 if (logLevelLimit == -1) {
-                    String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+                    String invalidLevel = getString(R.string.toast_invalid_level, level);
                     Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
                 } else {
                     mLogListAdapter.setLogLevelLimit(logLevelLimit);
@@ -1093,7 +1093,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
-                    .setMessage(String.format(getText(R.string.are_you_sure).toString(), finalDeleteCount))
+                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -1106,7 +1106,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                                 }
                             }
 
-                            String toastText = String.format(getText(R.string.files_deleted).toString(), finalDeleteCount);
+                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1474,7 +1474,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 if (savedLog.isTruncated()) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
+                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                         }
                     });
