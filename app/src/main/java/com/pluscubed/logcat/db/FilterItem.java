@@ -1,5 +1,7 @@
 package com.pluscubed.logcat.db;
 
+import android.support.annotation.NonNull;
+
 import java.util.Comparator;
 
 
@@ -36,7 +38,7 @@ public class FilterItem implements Comparable<FilterItem> {
     }
 
     @Override
-    public int compareTo(FilterItem another) {
+    public int compareTo(@NonNull FilterItem another) {
         return DEFAULT_COMPARATOR.compare(this, another);
     }
 }

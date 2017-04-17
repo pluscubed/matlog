@@ -74,7 +74,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                     .content(R.string.enter_filename)
                     .input("", logFilename, new MaterialDialog.InputCallback() {
                         @Override
-                        public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+                        public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                             if (DialogHelper.isInvalidFilename(charSequence)) {
                                 Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                             } else {

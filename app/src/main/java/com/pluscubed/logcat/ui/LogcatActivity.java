@@ -1306,7 +1306,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                 } else {
@@ -1634,7 +1634,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
 
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     cancelPartialSelect();
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
