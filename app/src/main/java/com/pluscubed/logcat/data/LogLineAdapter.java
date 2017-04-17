@@ -19,6 +19,7 @@
 package com.pluscubed.logcat.data;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -283,7 +284,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
         int selectedBackground = logLine.isHighlighted()
                 ? PreferenceHelper.getColorScheme(context).getSelectedColor(context)
-                : context.getResources().getColor(android.R.color.transparent);
+                : ContextCompat.getColor(context,android.R.color.transparent);
         holder.itemView.setBackgroundColor(selectedBackground);
     }
 

@@ -1,6 +1,7 @@
 package com.pluscubed.logcat.data;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.util.ArrayUtil;
@@ -85,21 +86,21 @@ public enum ColorScheme {
 
     public int getSelectedColor(Context context) {
         if (selectedColor == -1) {
-            selectedColor = context.getResources().getColor(selectedColorResource);
+            selectedColor = ContextCompat.getColor(context,selectedColorResource);
         }
         return selectedColor;
     }
 
     public int getBackgroundColor(Context context) {
         if (backgroundColor == -1) {
-            backgroundColor = context.getResources().getColor(backgroundColorResource);
+            backgroundColor = ContextCompat.getColor(context,backgroundColorResource);
         }
         return backgroundColor;
     }
 
     public int getForegroundColor(Context context) {
         if (foregroundColor == -1) {
-            foregroundColor = context.getResources().getColor(foregroundColorResource);
+            foregroundColor = ContextCompat.getColor(context,foregroundColorResource);
         }
         return foregroundColor;
     }
@@ -113,14 +114,14 @@ public enum ColorScheme {
 
     public int getSpinnerColor(Context context) {
         if (spinnerColor == -1) {
-            spinnerColor = context.getResources().getColor(spinnerColorResource);
+            spinnerColor = ContextCompat.getColor(context,spinnerColorResource);
         }
         return spinnerColor;
     }
 
     public int getBubbleBackgroundColor(Context context) {
         if (bubbleBackgroundColor == -1) {
-            bubbleBackgroundColor = context.getResources().getColor(bubbleBackgroundColorResource);
+            bubbleBackgroundColor = ContextCompat.getColor(context,bubbleBackgroundColorResource);
         }
         return bubbleBackgroundColor;
     }
