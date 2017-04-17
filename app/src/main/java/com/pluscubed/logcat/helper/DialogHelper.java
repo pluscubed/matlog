@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
@@ -114,11 +116,9 @@ public class DialogHelper {
                 .customView(filterView, true)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .callback(new MaterialDialog.ButtonCallback() {
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
-                        // get the true log level value, as opposed to the display string
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         int logLevelIdx = spinner.getSelectedItemPosition();
                         String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
                         String logLevelValue = logLevelValues[logLevelIdx];
@@ -127,7 +127,8 @@ public class DialogHelper {
 
                         callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
                     }
-                }).show();
+                })
+                .show();
 
     }
 
@@ -137,7 +138,7 @@ public class DialogHelper {
 
 
     public static void showFilenameSuggestingDialog(final Context context,
-                                                    final MaterialDialog.ButtonCallback callback, final MaterialDialog.InputCallback inputCallback, int titleResId) {
+                                                    final MaterialDialog.SingleButtonCallback callback, final MaterialDialog.InputCallback inputCallback, int titleResId) {
 
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
@@ -146,7 +147,7 @@ public class DialogHelper {
                 .positiveText(android.R.string.ok)
                 .content(R.string.enter_filename)
                 .input("", "", inputCallback)
-                .callback(callback);
+                .onAny(callback);
 
         MaterialDialog show = builder.show();
         initFilenameInputDialog(show);
