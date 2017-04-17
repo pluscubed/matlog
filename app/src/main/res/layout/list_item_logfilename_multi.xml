@@ -28,10 +28,10 @@
         android:layout_marginTop="16dp"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
-        android:singleLine="true"
         android:textColor="@color/primary_text_default_material_dark"
         android:textSize="16sp"
-        tools:text="TEST" />
+        tools:text="TEST"
+        android:maxLines="1" />
 
     <TextView
         android:id="@android:id/text2"
@@ -43,8 +43,8 @@
         android:layout_marginRight="24dp"
         android:layout_marginStart="80dp"
         android:ellipsize="marquee"
-        android:singleLine="true"
         android:textColor="@color/secondary_text_default_material_dark"
         android:textSize="14sp"
-        tools:text="TEST" />
+        tools:text="TEST"
+        android:maxLines="1" />
 </RelativeLayout>
