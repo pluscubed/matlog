@@ -31,8 +31,8 @@
         android:layout_toLeftOf="@android:id/button1"
         android:layout_toStartOf="@android:id/button1"
         android:ellipsize="marquee"
-        android:singleLine="true"
         android:textSize="16sp"
-        tools:text="ALKJFOWIEUKCXJ.txt" />
+        tools:text="ALKJFOWIEUKCXJ.txt"
+        android:maxLines="1" />
 
 </RelativeLayout>

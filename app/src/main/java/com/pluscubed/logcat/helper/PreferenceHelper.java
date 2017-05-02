@@ -13,16 +13,11 @@ import com.pluscubed.logcat.widget.MultipleChoicePreference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PreferenceHelper {
 
     private static final String WIDGET_EXISTS_PREFIX = "widget_";
-    public static Map<Integer, Integer> ellipsisLengthsCache =
-            Collections.synchronizedMap(new HashMap<Integer, Integer>());
     private static float textSize = -1;
     private static Character defaultLogLevel = null;
     private static Boolean showTimestampAndPid = null;
@@ -35,7 +30,6 @@ public class PreferenceHelper {
         textSize = -1;
         showTimestampAndPid = null;
         colorScheme = null;
-        ellipsisLengthsCache.clear();
         displayLimit = -1;
     }
 

@@ -18,11 +18,11 @@
             android:layout_alignParentStart="true"
             android:paddingEnd="2dp"
             android:paddingRight="2dp"
-            android:singleLine="true"
             android:textSize="12sp"
             android:typeface="monospace"
             tools:ignore="RtlSymmetry"
-            tools:text="6177" />
+            tools:text="6177"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/timestamp_text"
@@ -32,10 +32,10 @@
             android:layout_toRightOf="@+id/pid_text"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:singleLine="true"
             android:textSize="12sp"
             android:typeface="monospace"
-            tools:text="12 June 2011" />
+            tools:text="12 June 2011"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/tag_text"
@@ -60,10 +60,10 @@
             android:layout_toEndOf="@+id/tag_text"
             android:layout_toRightOf="@+id/tag_text"
             android:gravity="center_horizontal"
-            android:singleLine="true"
             android:textSize="12sp"
             android:typeface="monospace"
-            tools:text="D" />
+            tools:text="D"
+            android:maxLines="1" />
 
 
         <TextView

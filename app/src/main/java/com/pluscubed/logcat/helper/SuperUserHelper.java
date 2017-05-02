@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,7 +77,8 @@ public class SuperUserHelper {
     }
 
     private static List<Integer> getAllRelatedPids(final int pid) {
-        List<Integer> result = new ArrayList<>(Arrays.asList(pid));
+        List<Integer> result = new ArrayList<>();
+        result.add(pid);
         // use 'ps' to get this pid and all pids that are related to it (e.g. spawned by it)
         try {
 

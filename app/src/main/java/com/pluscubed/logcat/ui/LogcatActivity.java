@@ -53,6 +53,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.pluscubed.logcat.BuildConfig;
@@ -352,7 +353,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
 
                 if (logLevelLimit == -1) {
-                    String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+                    String invalidLevel = getString(R.string.toast_invalid_level, level);
                     Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
                 } else {
                     mLogListAdapter.setLogLevelLimit(logLevelLimit);
@@ -860,10 +861,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         final MaterialDialog alertDialog = new MaterialDialog.Builder(this)
                 .title(R.string.add_filter)
                 .positiveText(android.R.string.ok)
-                .callback(new MaterialDialog.ButtonCallback() {
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         handleNewFilterText(editText.getText().toString(), filterAdapter);
                         dialog.dismiss();
                     }
@@ -955,10 +955,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                     .customView(helpView, true)
                     .negativeText(android.R.string.cancel)
                     .positiveText(android.R.string.ok)
-                    .callback(new MaterialDialog.ButtonCallback() {
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onPositive(MaterialDialog dialog) {
-                            super.onPositive(dialog);
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             partialSelectMode = true;
                             partiallySelectedLogLines.clear();
                             Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
@@ -1043,10 +1042,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .customView(layout, false)
                 .negativeText(android.R.string.cancel)
                 .neutralText(R.string.delete_all)
-                .callback(new MaterialDialog.ButtonCallback() {
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onNeutral(MaterialDialog dialog) {
-                        super.onNeutral(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         boolean[] allChecked = new boolean[logFileAdapter.getCount()];
 
                         for (int i = 0; i < allChecked.length; i++) {
@@ -1054,10 +1052,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                         }
                         verifyDelete(filenameArray, allChecked, dialog);
                     }
-
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         verifyDelete(filenameArray, logFileAdapter.getCheckedItems(), dialog);
                     }
                 })
@@ -1093,7 +1091,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
-                    .setMessage(String.format(getText(R.string.are_you_sure).toString(), finalDeleteCount))
+                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -1106,7 +1104,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                                 }
                             }
 
-                            String toastText = String.format(getText(R.string.files_deleted).toString(), finalDeleteCount);
+                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1308,7 +1306,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                 } else {
@@ -1474,7 +1472,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 if (savedLog.isTruncated()) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
+                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -1636,7 +1634,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
 
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     cancelPartialSelect();
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
@@ -1648,12 +1646,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         };
 
 
-        MaterialDialog.ButtonCallback onCancelListener = new MaterialDialog.ButtonCallback() {
-
+        MaterialDialog.SingleButtonCallback onCancelListener = new MaterialDialog.SingleButtonCallback() {
             @Override
-            public void onNegative(MaterialDialog dialog) {
-                super.onNegative(dialog);
-                cancelPartialSelect();
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if(which == DialogAction.NEGATIVE) {
+                    cancelPartialSelect();
+                }
             }
         };
 

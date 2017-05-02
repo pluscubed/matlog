@@ -7,4 +7,4 @@
     android:hint="@string/text_filter_text"
     android:imeOptions="actionDone"
     android:inputType="textNoSuggestions"
-    android:singleLine="true" />
+    android:maxLines="1" />
