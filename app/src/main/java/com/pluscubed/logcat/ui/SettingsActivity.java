@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     //TODO: Implement themes using color picker and remove this
                     Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            "Themes are not implemented yet. Stay tuned for updates! (they will be free, don't worry)", Snackbar.LENGTH_LONG)
+                            "Themes are not implemented yet. Stay tuned for updates!", Snackbar.LENGTH_LONG)
                             .show();
                     return true;
                 }

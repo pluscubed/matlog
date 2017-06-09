@@ -200,9 +200,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics());
-        }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logcat);
 
         LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);
@@ -211,15 +208,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogHelper.stopRecordingLog(LogcatActivity.this);
-            }
-        });
+        binding.fab.setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
 
         binding.list.setLayoutManager(new LinearLayoutManager(this));
-        binding.list.setItemAnimator(new DefaultItemAnimator());
+
+        binding.list.setItemAnimator(null);
 
         setSupportActionBar(binding.toolbar.toolbarActionbar);
 
@@ -1586,7 +1579,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     private void setUpAdapter() {
 
-        mLogListAdapter = new LogLineAdapter(new ArrayList<LogLine>());
+        mLogListAdapter = new LogLineAdapter();
         mLogListAdapter.setClickListener(this);
 
         binding.list.setAdapter(mLogListAdapter);
@@ -1615,6 +1608,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             }
         });
+
+        binding.list.setHasFixedSize(true);
     }
 
     private void completePartialSelect() {

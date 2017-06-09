@@ -66,11 +66,11 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
     /**
      * Constructor
-     *
-     * @param objects            The objects to represent in the ListView.
      */
-    public LogLineAdapter(List<LogLine> objects) {
-        mObjects = objects;
+    public LogLineAdapter() {
+        mObjects = new ArrayList<>();
+
+        setHasStableIds(true);
     }
 
 
@@ -293,7 +293,9 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
      */
     @Override
     public long getItemId(int position) {
-        return position;
+        synchronized (mLock) {
+            return mObjects.get(position).getOriginalLine().hashCode();
+        }
     }
 
     @Override
@@ -343,7 +345,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
             if (mOriginalValues == null) {
                 synchronized (mLock) {
-                    mOriginalValues = new ArrayList<LogLine>(mObjects);
+                    mOriginalValues = new ArrayList<>(mObjects);
                 }
             }
 
