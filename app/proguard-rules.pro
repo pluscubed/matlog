@@ -16,9 +16,12 @@
 #   public *;
 #}
 
+-keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep class com.crashlytics.** { *; }
+-keep class io.fabric.** { *; }
 -dontwarn com.crashlytics.**
+-dontwarn io.fabric.**
 
 -keep class android.support.v7.internal.view.menu.MenuBuilder {*;}
 -keep class android.support.v7.widget.SearchView {*;}
