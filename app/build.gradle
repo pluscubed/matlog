@@ -26,8 +26,8 @@ android {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
         targetSdkVersion 26
-        versionName '1.1.0'
-        versionCode 5
+        versionName '1.1.1'
+        versionCode 6
 
         testApplicationId "com.pluscubed.matlog.test"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
