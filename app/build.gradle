@@ -51,7 +51,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
@@ -65,11 +65,6 @@ android {
             manifestPlaceholders = [appName: "MatLog DEBUG"]
             ext.enableCrashlytics = false
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

@@ -21,12 +21,11 @@ import android.support.annotation.WorkerThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -55,8 +54,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
-import com.pluscubed.logcat.BuildConfig;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
@@ -87,7 +84,6 @@ import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -95,8 +91,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import io.fabric.sdk.android.Fabric;
 
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_COPY_ID;
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_FILTER_ID;
@@ -208,7 +202,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        binding.fab.setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogHelper.stopRecordingLog(LogcatActivity.this);
+            }
+        });
 
         binding.list.setLayoutManager(new LinearLayoutManager(this));
 
@@ -562,7 +561,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         //used to workaround issue where the search text is cleared on expanding the SearchView
 
         mSearchViewMenuItem = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
+        final SearchView searchView = (SearchView) mSearchViewMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -1752,33 +1751,30 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
     }
 
-    public void invalidateDarkOrLightMenuItems(Context context, final Menu menu) {
-        if (menu != null && menu.getClass().getSimpleName().equals("MenuBuilder")) {
-            try {
-                Field field = menu.getClass().getDeclaredField("mOptionalIconsVisible");
-                field.setAccessible(true);
-                field.setBoolean(menu, true);
+    @SuppressLint("RestrictedApi")
+    public void invalidateDarkOrLightMenuItems(Context context, Menu menu) {
+        if (menu != null && menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+            /*final boolean darkMode = ThemeUtils.isDarkMode(context);
+            final int textColorPrimary = Utils.resolveColor(context, android.R.attr.textColorPrimary);
 
-                /*final boolean darkMode = ThemeUtils.isDarkMode(context);
-                final int textColorPrimary = Utils.resolveColor(context, android.R.attr.textColorPrimary);
-
-                mToolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < menu.size(); i++) {
-                            MenuItemImpl item = (MenuItemImpl) menu.getItem(i);
-                            int color = darkMode || item.isActionButton() ? Color.WHITE : textColorPrimary;
-                            if (item.getIcon() != null) {
-                                item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-                            }
+            mToolbar.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < menu.size(); i++) {
+                        MenuItemImpl item = (MenuItemImpl) menu.getItem(i);
+                        int color = darkMode || item.isActionButton() ? Color.WHITE : textColorPrimary;
+                        if (item.getIcon() != null) {
+                            item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_IN);
                         }
                     }
-                });*/
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                }
+            });*/
         }
+    }
+
+    private void scrollToBottom() {
+        binding.list.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
     private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {
@@ -1933,9 +1929,5 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
 
 
-    }
-
-    private void scrollToBottom() {
-        binding.list.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 }
