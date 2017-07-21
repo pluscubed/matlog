@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -66,7 +66,6 @@ import com.pluscubed.logcat.data.SavedLog;
 import com.pluscubed.logcat.data.SearchCriteria;
 import com.pluscubed.logcat.data.SendLogDetails;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
-import com.pluscubed.logcat.databinding.ActivityLogcatBinding;
 import com.pluscubed.logcat.db.CatlogDBHelper;
 import com.pluscubed.logcat.db.FilterItem;
 import com.pluscubed.logcat.helper.BuildHelper;
@@ -137,8 +136,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     private Handler mHandler;
     private MenuItem mSearchViewMenuItem;
 
-    private ActivityLogcatBinding binding;
-
     public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 
         Intent actionSendIntent = new Intent(Intent.ACTION_SEND);
@@ -194,7 +191,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_logcat);
+        setContentView(R.layout.activity_logcat);
 
         LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);
 
@@ -202,18 +199,18 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogHelper.stopRecordingLog(LogcatActivity.this);
             }
         });
 
-        binding.list.setLayoutManager(new LinearLayoutManager(this));
+        ((RecyclerView) findViewById(R.id.list)).setLayoutManager(new LinearLayoutManager(this));
 
-        binding.list.setItemAnimator(null);
+        ((RecyclerView) findViewById(R.id.list)).setItemAnimator(null);
 
-        setSupportActionBar(binding.toolbar.toolbarActionbar);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar_actionbar));
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
@@ -366,7 +363,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
 
         boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
-        binding.fab.setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
+        findViewById(R.id.fab).setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
     }
 
     private void restartMainLog() {
@@ -698,7 +695,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mLogListAdapter.notifyItemChanged(binding.list.getChildAdapterPosition(itemView));
+                    mLogListAdapter.notifyItemChanged(((RecyclerView)findViewById(R.id.list)).getChildAdapterPosition(itemView));
                 }
             });
 
@@ -708,7 +705,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         } else {
             logLine.setExpanded(!logLine.isExpanded());
-            mLogListAdapter.notifyItemChanged(binding.list.getChildAdapterPosition(itemView));
+            mLogListAdapter.notifyItemChanged(((RecyclerView)findViewById(R.id.list)).getChildAdapterPosition(itemView));
         }
     }
 
@@ -973,7 +970,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mCollapsedMode = change != mCollapsedMode;
 
-        int oldFirstVisibleItem = ((LinearLayoutManager) binding.list.getLayoutManager()).findFirstVisibleItemPosition();
+        int oldFirstVisibleItem = ((LinearLayoutManager) ((RecyclerView)findViewById(R.id.list)).getLayoutManager()).findFirstVisibleItemPosition();
 
         for (LogLine logLine : mLogListAdapter.getTrueValues()) {
             if (logLine != null) {
@@ -994,7 +991,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         } else if (oldFirstVisibleItem != -1) {
 
-            binding.list.scrollToPosition(oldFirstVisibleItem);
+            ((RecyclerView)findViewById(R.id.list)).scrollToPosition(oldFirstVisibleItem);
         }
 
         supportInvalidateOptionsMenu();
@@ -1512,14 +1509,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     void hideProgressBar() {
-        binding.mainDarkProgressBar.setVisibility(View.GONE);
-        binding.mainLightProgressBar.setVisibility(View.GONE);
+        findViewById(R.id.main_dark_progress_bar).setVisibility(View.GONE);
+        findViewById(R.id.main_light_progress_bar).setVisibility(View.GONE);
     }
 
     private void showProgressBar() {
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
-        binding.mainDarkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
-        binding.mainLightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.main_dark_progress_bar).setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
+        findViewById(R.id.main_light_progress_bar).setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
     }
 
 
@@ -1581,9 +1578,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         mLogListAdapter = new LogLineAdapter();
         mLogListAdapter.setClickListener(this);
 
-        binding.list.setAdapter(mLogListAdapter);
+        ((RecyclerView)findViewById(R.id.list)).setAdapter(mLogListAdapter);
 
-        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        ((RecyclerView)findViewById(R.id.list)).addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -1608,7 +1605,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         });
 
-        binding.list.setHasFixedSize(true);
+        ((RecyclerView)findViewById(R.id.list)).setHasFixedSize(true);
     }
 
     private void completePartialSelect() {
@@ -1706,7 +1703,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onFilterComplete(int count) {
         // always scroll to the bottom when searching
-        binding.list.scrollToPosition(count - 1);
+        ((RecyclerView)findViewById(R.id.list)).scrollToPosition(count - 1);
 
     }
 
@@ -1722,7 +1719,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mHandler.post(new Runnable() {
             public void run() {
-                binding.mainBackground.setBackgroundColor(color);
+                findViewById(R.id.main_background).setBackgroundColor(color);
             }
         });
 
@@ -1774,7 +1771,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     private void scrollToBottom() {
-        binding.list.scrollToPosition(mLogListAdapter.getItemCount() - 1);
+        ((RecyclerView)findViewById(R.id.list)).scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
     private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {

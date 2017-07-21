@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class RecordingWidgetProvider extends AppWidgetProvider {
 
-    public static final String ACTION_RECORD_OR_STOP = BuildConfig.APPLICATION_ID + ".action.RECORD_OR_STOP";
+    public static final String ACTION_RECORD_OR_STOP = "com.pluscubed.logcat.action.RECORD_OR_STOP";
 
     public static final String URI_SCHEME = "catlog_widget";
 

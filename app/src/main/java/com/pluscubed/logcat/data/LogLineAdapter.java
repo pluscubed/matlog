@@ -27,8 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
 
-import com.pluscubed.logcat.databinding.ListItemLogcatBinding;
+import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StopWatch;
@@ -213,8 +214,8 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
     @Override
     public LogLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ListItemLogcatBinding binding = ListItemLogcatBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new LogLineViewHolder(binding, mClickListener);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_logcat, parent, false);
+        return new LogLineViewHolder(v, mClickListener);
     }
 
     @Override
@@ -233,52 +234,57 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
         holder.logLine = logLine;
 
-        holder.binding.logLevelText.setText(logLine.getProcessIdText());
-        holder.binding.logLevelText.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
-        holder.binding.logLevelText.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
-        holder.binding.logLevelText.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+        TextView t = (TextView) holder.itemView.findViewById(R.id.log_level_text);
+        t.setText(logLine.getProcessIdText());
+        t.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
+        t.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
+        t.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         int textColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
         float textSize = PreferenceHelper.getTextSizePreference(context);
 
         //OUTPUT TEXT VIEW
-        holder.binding.logOutputText.setSingleLine(!logLine.isExpanded());
-        holder.binding.logOutputText.setText(logLine.getLogOutput());
-        holder.binding.logOutputText.setTextColor(textColor);
+        TextView output = (TextView) holder.itemView.findViewById(R.id.log_output_text);
+        output.setSingleLine(!logLine.isExpanded());
+        output.setText(logLine.getLogOutput());
+        output.setTextColor(textColor);
 
 
         //TAG TEXT VIEW
-        holder.binding.tagText.setSingleLine(!logLine.isExpanded());
-        holder.binding.tagText.setText(logLine.getTag());
-        holder.binding.tagText.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+        TextView tag = (TextView) holder.itemView.findViewById(R.id.tag_text);
+        tag.setSingleLine(!logLine.isExpanded());
+        tag.setText(logLine.getTag());
+        tag.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
 
         //TEXT SIZE
-        holder.binding.tagText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        holder.binding.logOutputText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        holder.binding.logLevelText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        tag.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        output.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 
         //EXPANDED INFO
         boolean extraInfoIsVisible = logLine.isExpanded()
                 && PreferenceHelper.getShowTimestampAndPidPreference(context)
                 && logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...'
 
-        holder.binding.pidText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-        holder.binding.timestampText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+        TextView pidText = (TextView) holder.itemView.findViewById(R.id.pid_text);
+        pidText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+        TextView timestampText = (TextView) holder.itemView.findViewById(R.id.timestamp_text);
+        timestampText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
 
         if (extraInfoIsVisible) {
 
-            holder.binding.pidText.setTextColor(textColor);
-            holder.binding.timestampText.setTextColor(textColor);
+            pidText.setTextColor(textColor);
+            timestampText.setTextColor(textColor);
 
-            holder.binding.pidText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-            holder.binding.timestampText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            pidText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+            timestampText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 
-            holder.binding.pidText.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
-            holder.binding.timestampText.setText(logLine.getTimestamp());
+            pidText.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
+            timestampText.setText(logLine.getTimestamp());
         }
 
-        holder.binding.tagText.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
+        tag.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 
         // if this is a "partially selected" log, change the color to orange or whatever
 
