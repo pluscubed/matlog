@@ -20,8 +20,6 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
 
-    dataBinding.enabled = true
-
     defaultConfig {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
@@ -78,12 +76,4 @@ dependencies {
     compile "com.android.support:support-v13:$supportLibrariesVersion"
 
     compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
-
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
 }
