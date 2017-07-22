@@ -70,6 +70,7 @@ import com.pluscubed.logcat.db.CatlogDBHelper;
 import com.pluscubed.logcat.db.FilterItem;
 import com.pluscubed.logcat.helper.BuildHelper;
 import com.pluscubed.logcat.helper.DialogHelper;
+import com.pluscubed.logcat.helper.DmesgHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.helper.SaveLogHelper;
 import com.pluscubed.logcat.helper.ServiceHelper;
@@ -1134,13 +1135,25 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         });
 
+        final CheckBox includeDmesgCheckBox = (CheckBox) includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
+
+        // allow user to choose whether or not to include device info in report, use preferences for persistence
+        includeDmesgCheckBox.setChecked(PreferenceHelper.getIncludeDmesgPreference(this));
+        includeDmesgCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked);
+            }
+        });
+
         new android.app.AlertDialog.Builder(this)
                 .setTitle(R.string.send_log_title)
                 .setView(includeDeviceInfoView)
                 .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked());
+                        sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
                         dialog.dismiss();
                     }
                 })
@@ -1148,7 +1161,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     }
 
-    protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo) {
+    protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo, final boolean includeDmesg) {
 
         if (!(mCurrentlyOpenLog == null && asText) && !SaveLogHelper.checkSdCard(this)) {
             // if asText is false, then we need to check to make sure we can access the sdcard
@@ -1164,7 +1177,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 ui.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (asText || mCurrentlyOpenLog == null || includeDeviceInfo) {
+                        if (asText || mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
                             MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
                             progressDialog.title(R.string.dialog_please_wait);
                             progressDialog.content(getString(R.string.dialog_compiling_log));
@@ -1175,7 +1188,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                         }
                     }
                 });
-                final SendLogDetails sendLogDetails = getSendLogDetails(asText, includeDeviceInfo);
+                final SendLogDetails sendLogDetails = getSendLogDetails(asText, includeDeviceInfo, includeDmesg);
                 ui.post(new Runnable() {
                     @Override
                     public void run() {
@@ -1195,7 +1208,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     @WorkerThread
-    private SendLogDetails getSendLogDetails(boolean asText, boolean includeDeviceInfo) {
+    private SendLogDetails getSendLogDetails(boolean asText, boolean includeDeviceInfo, boolean includeDmesg) {
         SendLogDetails sendLogDetails = new SendLogDetails();
         StringBuilder body = new StringBuilder();
 
@@ -1223,6 +1236,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                         SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
                 files.add(tempFile);
             }
+        }
+
+        if (includeDmesg) {
+            File tempDmsgFile = SaveLogHelper.saveTemporaryFile(this,
+                    SaveLogHelper.TEMP_DMESG_FILENAME, null, DmesgHelper.getDmsg());
+            files.add(tempDmsgFile);
         }
 
         if (asText) {

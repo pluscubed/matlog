@@ -31,7 +31,7 @@
     <string name="pref_display_limit_default">10000</string>
     <string name="pref_expanded_by_default">expand_default</string>
     <string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
-    <string name="pref_include_device_info">device_info</string>
+    <string name="pref_include_device_info" translatable="false">device_info</string>
     <string name="pref_log_line_period">log_line_period</string>
     <string name="pref_log_line_period_default">200</string>
     <string name="pref_ran_jellybean_su_update">jellybean_su</string>
@@ -232,5 +232,8 @@
     <string name="search">Search</string>
     <string name="scrubber">Omit sensitive info</string>
     <string name="scrubber_summary">Omit sensitive info like web urls, phone numbers or emails</string>
+
+    <string name="text_include_dmesg">Include kernel log</string>
+    <string name="pref_include_dmesg" translatable="false">dmesg</string>
 
 </resources>

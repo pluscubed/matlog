@@ -307,4 +307,18 @@ public class PreferenceHelper {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPrefs.getBoolean("scrubber", false);
     }
+
+    public static boolean getIncludeDmesgPreference(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return sharedPrefs.getBoolean(context.getString(R.string.pref_include_dmesg), true);
+    }
+
+    public static void setIncludeDmesgPreference(Context context, boolean value) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        Editor editor = sharedPrefs.edit();
+        editor.putBoolean(context.getString(R.string.pref_include_dmesg), value);
+        editor.apply();
+    }
 }
