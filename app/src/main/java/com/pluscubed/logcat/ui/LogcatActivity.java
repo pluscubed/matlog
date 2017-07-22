@@ -1118,7 +1118,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        String[] items = new String[]{(String) getText(R.string.as_attachment), (String) getText(R.string.as_text)};
+        String[] items = new String[]{(String) getText(R.string.as_attachment)/*, (String) getText(R.string.as_text)*/};
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
@@ -1140,7 +1140,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendLogToTargetApp(which == 1, includeDeviceInfoCheckBox.isChecked());
+                        sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked());
                         dialog.dismiss();
                     }
                 })
