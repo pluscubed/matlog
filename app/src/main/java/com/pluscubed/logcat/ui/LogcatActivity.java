@@ -1119,8 +1119,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        String[] items = new String[]{(String) getText(R.string.as_attachment)/*, (String) getText(R.string.as_text)*/};
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
         final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
@@ -1150,9 +1148,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         new android.app.AlertDialog.Builder(this)
                 .setTitle(R.string.send_log_title)
                 .setView(includeDeviceInfoView)
-                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                   public void onClick(DialogInterface dialog, int which) {
                         sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
                         dialog.dismiss();
                     }
