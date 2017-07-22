@@ -1260,7 +1260,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 sendLogDetails.setAttachment(files.get(0));
                 break;
             default: // 2 files - need to zip them up
-                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.TEMP_ZIP_FILENAME, files);
+                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createLogFilename(), files);
                 File tmpDirectory = SaveLogHelper.getTempDirectory();
                 for (File file : files) {
                     // delete original files
@@ -1269,6 +1269,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                         file.delete();
                     }
                 }
+                sendLogDetails.setSubject(zipFile.getName());
                 sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
                 sendLogDetails.setAttachment(zipFile);
                 break;

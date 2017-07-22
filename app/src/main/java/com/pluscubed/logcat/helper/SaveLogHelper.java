@@ -20,11 +20,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -35,7 +38,7 @@ public class SaveLogHelper {
     public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
     public static final String TEMP_LOG_FILENAME = "logcat.txt";
     public static final String TEMP_DMESG_FILENAME = "dmesg.txt";
-    public static final String TEMP_ZIP_FILENAME = "logcat_and_device_info.zip";
+    private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
     private static final String LEGACY_SAVED_LOGS_DIR = "catlog_saved_logs";
     private static final String CATLOG_DIR = "matlog";
@@ -374,5 +377,23 @@ public class SaveLogHelper {
             total += r;
         }
         return total;
+    }
+
+    public static String createLogFilename() {
+        Date date = new Date();
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+
+        DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+        DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+
+        String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+        String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+        String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+        String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+        String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+        String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
+
+        return TEMP_ZIP_FILENAME +"-" + year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".zip";
     }
 }
