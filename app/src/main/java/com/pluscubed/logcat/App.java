@@ -1,6 +1,7 @@
 package com.pluscubed.logcat;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -17,6 +18,8 @@ public class App extends Application {
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
     }
 }
