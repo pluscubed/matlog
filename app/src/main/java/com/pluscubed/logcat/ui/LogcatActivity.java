@@ -211,7 +211,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         ((RecyclerView) findViewById(R.id.list)).setItemAnimator(null);
 
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar_actionbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
@@ -638,8 +638,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             case R.id.menu_record_log:
                 showRecordLogDialog();
                 return true;
-            case R.id.menu_send_log:
+            case R.id.menu_send_log_zip:
                 showSendLogDialog();
+                return true;
+            case R.id.menu_save_log_zip:
+                showSaveLogZipDialog();
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -696,7 +699,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mLogListAdapter.notifyItemChanged(((RecyclerView)findViewById(R.id.list)).getChildAdapterPosition(itemView));
+                    mLogListAdapter.notifyItemChanged(((RecyclerView) findViewById(R.id.list)).getChildAdapterPosition(itemView));
                 }
             });
 
@@ -706,7 +709,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         } else {
             logLine.setExpanded(!logLine.isExpanded());
-            mLogListAdapter.notifyItemChanged(((RecyclerView)findViewById(R.id.list)).getChildAdapterPosition(itemView));
+            mLogListAdapter.notifyItemChanged(((RecyclerView) findViewById(R.id.list)).getChildAdapterPosition(itemView));
         }
     }
 
@@ -971,7 +974,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mCollapsedMode = change != mCollapsedMode;
 
-        int oldFirstVisibleItem = ((LinearLayoutManager) ((RecyclerView)findViewById(R.id.list)).getLayoutManager()).findFirstVisibleItemPosition();
+        int oldFirstVisibleItem = ((LinearLayoutManager) ((RecyclerView) findViewById(R.id.list)).getLayoutManager()).findFirstVisibleItemPosition();
 
         for (LogLine logLine : mLogListAdapter.getTrueValues()) {
             if (logLine != null) {
@@ -992,7 +995,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         } else if (oldFirstVisibleItem != -1) {
 
-            ((RecyclerView)findViewById(R.id.list)).scrollToPosition(oldFirstVisibleItem);
+            ((RecyclerView) findViewById(R.id.list)).scrollToPosition(oldFirstVisibleItem);
         }
 
         supportInvalidateOptionsMenu();
@@ -1145,19 +1148,68 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         });
 
-        new android.app.AlertDialog.Builder(this)
-                .setTitle(R.string.send_log_title)
-                .setView(includeDeviceInfoView)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+        new MaterialDialog.Builder(LogcatActivity.this)
+                .title(R.string.share_log)
+                .customView(includeDeviceInfoView, false)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                   public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
                         sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
-                        dialog.dismiss();
+                        materialDialog.dismiss();
                     }
-                })
-                .show();
+                }).show();
+    }
 
+    private void showSaveLogZipDialog() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    SEND_LOG_ID_REQUEST);
+            return;
+        }
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
+        final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+
+        // allow user to choose whether or not to include device info in report, use preferences for persistence
+        includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
+        includeDeviceInfoCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked);
+            }
+        });
+
+        final CheckBox includeDmesgCheckBox = (CheckBox) includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
+
+        // allow user to choose whether or not to include device info in report, use preferences for persistence
+        includeDmesgCheckBox.setChecked(PreferenceHelper.getIncludeDmesgPreference(this));
+        includeDmesgCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked);
+            }
+        });
+
+        new MaterialDialog.Builder(LogcatActivity.this)
+                .title(R.string.save_log_zip)
+                .customView(includeDeviceInfoView, false)
+                .negativeText(android.R.string.cancel)
+                .positiveText(android.R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
+                        saveLogToTargetApp(includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
+                        materialDialog.dismiss();
+                    }
+                }).show();
     }
 
     protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo, final boolean includeDmesg) {
@@ -1205,6 +1257,47 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }).start();
 
     }
+    protected void saveLogToTargetApp(final boolean includeDeviceInfo, final boolean includeDmesg) {
+
+        if (!SaveLogHelper.checkSdCard(this)) {
+            // if asText is false, then we need to check to make sure we can access the sdcard
+            return;
+        }
+
+        final Handler ui = new Handler(Looper.getMainLooper());
+        new Thread(new Runnable() {
+            private MaterialDialog mDialog;
+
+            @Override
+            public void run() {
+                ui.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
+                            MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
+                            progressDialog.title(R.string.dialog_please_wait);
+                            progressDialog.content(getString(R.string.dialog_compiling_log));
+                            progressDialog.progress(true, 0);
+                            mDialog = progressDialog.show();
+                            mDialog.setCanceledOnTouchOutside(false);
+                            mDialog.setCancelable(false);
+                        }
+                    }
+                });
+                final File zipFile = saveLogAsZip(includeDeviceInfo, includeDmesg);
+                ui.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mDialog != null && mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
+                        Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
+
+    }
 
     @WorkerThread
     private SendLogDetails getSendLogDetails(boolean asText, boolean includeDeviceInfo, boolean includeDmesg) {
@@ -1212,6 +1305,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         StringBuilder body = new StringBuilder();
 
         List<File> files = new ArrayList<>();
+        SaveLogHelper.cleanTemp();
 
         if (!asText) {
             if (mCurrentlyOpenLog != null) { // use saved log file
@@ -1260,15 +1354,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 sendLogDetails.setAttachment(files.get(0));
                 break;
             default: // 2 files - need to zip them up
-                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createLogFilename(), files);
-                File tmpDirectory = SaveLogHelper.getTempDirectory();
-                for (File file : files) {
-                    // delete original files
-                    if (file.getParentFile().equals(tmpDirectory)) { // only delete temporary files
-                        //noinspection ResultOfMethodCallIgnored
-                        file.delete();
-                    }
-                }
+                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createLogFilename(true), files);
+
                 sendLogDetails.setSubject(zipFile.getName());
                 sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
                 sendLogDetails.setAttachment(zipFile);
@@ -1276,6 +1363,38 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
 
         return sendLogDetails;
+    }
+
+    private File saveLogAsZip(boolean includeDeviceInfo, boolean includeDmesg) {
+        List<File> files = new ArrayList<>();
+        SaveLogHelper.cleanTemp();
+
+        if (mCurrentlyOpenLog != null) { // use saved log file
+            files.add(SaveLogHelper.getFile(mCurrentlyOpenLog));
+        } else { // create a temp file to hold the current, unsaved log
+            File tempLogFile = SaveLogHelper.saveTemporaryFile(this,
+                    SaveLogHelper.TEMP_LOG_FILENAME, null, getCurrentLogAsListOfStrings());
+            files.add(tempLogFile);
+        }
+
+        if (includeDeviceInfo) {
+            // include device info
+            String deviceInfo = BuildHelper.getBuildInformationAsString();
+            // or create as separate file called device.txt
+            File tempFile = SaveLogHelper.saveTemporaryFile(this,
+                    SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
+            files.add(tempFile);
+        }
+
+        if (includeDmesg) {
+            File tempDmsgFile = SaveLogHelper.saveTemporaryFile(this,
+                    SaveLogHelper.TEMP_DMESG_FILENAME, null, DmesgHelper.getDmsg());
+            files.add(tempDmsgFile);
+        }
+
+        File zipFile = SaveLogHelper.saveZipFile(SaveLogHelper.createLogFilename(true), files);
+
+        return zipFile;
     }
 
     private List<CharSequence> getCurrentLogAsListOfStrings() {
@@ -1597,9 +1716,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         mLogListAdapter = new LogLineAdapter();
         mLogListAdapter.setClickListener(this);
 
-        ((RecyclerView)findViewById(R.id.list)).setAdapter(mLogListAdapter);
+        ((RecyclerView) findViewById(R.id.list)).setAdapter(mLogListAdapter);
 
-        ((RecyclerView)findViewById(R.id.list)).addOnScrollListener(new RecyclerView.OnScrollListener() {
+        ((RecyclerView) findViewById(R.id.list)).addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -1624,7 +1743,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         });
 
-        ((RecyclerView)findViewById(R.id.list)).setHasFixedSize(true);
+        ((RecyclerView) findViewById(R.id.list)).setHasFixedSize(true);
     }
 
     private void completePartialSelect() {
@@ -1659,7 +1778,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         MaterialDialog.SingleButtonCallback onCancelListener = new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if(which == DialogAction.NEGATIVE) {
+                if (which == DialogAction.NEGATIVE) {
                     cancelPartialSelect();
                 }
             }
@@ -1722,7 +1841,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onFilterComplete(int count) {
         // always scroll to the bottom when searching
-        ((RecyclerView)findViewById(R.id.list)).scrollToPosition(count - 1);
+        ((RecyclerView) findViewById(R.id.list)).scrollToPosition(count - 1);
 
     }
 
@@ -1790,7 +1909,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     private void scrollToBottom() {
-        ((RecyclerView)findViewById(R.id.list)).scrollToPosition(mLogListAdapter.getItemCount() - 1);
+        ((RecyclerView) findViewById(R.id.list)).scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
     private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {

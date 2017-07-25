@@ -316,15 +316,24 @@ public class SaveLogHelper {
 
     public static File saveTemporaryZipFile(String filename, List<File> files) {
         try {
-            return saveTemporaryZipFileAndThrow(filename, files);
+            return saveZipFileAndThrow(getTempDirectory(), filename, files);
         } catch (IOException e) {
             log.e(e, "unexpected error");
         }
         return null;
     }
 
-    private static File saveTemporaryZipFileAndThrow(String filename, List<File> files) throws IOException {
-        File zipFile = new File(getTempDirectory(), filename);
+    public static File saveZipFile(String filename, List<File> files) {
+        try {
+            return saveZipFileAndThrow(getSavedLogsDirectory(), filename, files);
+        } catch (IOException e) {
+            log.e(e, "unexpected error");
+        }
+        return null;
+    }
+
+    private static File saveZipFileAndThrow(File dir, String filename, List<File> files) throws IOException {
+        File zipFile = new File(dir, filename);
 
         ZipOutputStream output = null;
         try {
@@ -379,21 +388,31 @@ public class SaveLogHelper {
         return total;
     }
 
-    public static String createLogFilename() {
-        Date date = new Date();
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
+    public static String createLogFilename(boolean withDate) {
+        if (withDate) {
+            Date date = new Date();
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
 
-        DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
-        DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+            DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+            DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
 
-        String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
-        String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
-        String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
-        String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
-        String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
-        String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
+            String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+            String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+            String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+            String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+            String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+            String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
 
-        return TEMP_ZIP_FILENAME +"-" + year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".zip";
+            return TEMP_ZIP_FILENAME + "-" + year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".zip";
+        } else {
+            return TEMP_ZIP_FILENAME + ".zip";
+        }
+    }
+
+    public static void cleanTemp() {
+        for (File file : getTempDirectory().listFiles()) {
+            file.delete();
+        }
     }
 }

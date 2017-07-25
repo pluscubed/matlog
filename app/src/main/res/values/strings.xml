@@ -235,5 +235,6 @@
 
     <string name="text_include_dmesg">Include kernel log</string>
     <string name="pref_include_dmesg" translatable="false">dmesg</string>
-
+    <string name="save_log_zip">Save zip</string>
+    <string name="share_log">Share</string>
 </resources>
