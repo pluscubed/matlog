@@ -17,15 +17,14 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
 
     dataBinding.enabled = true
 
     defaultConfig {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionName '1.1.2'
         versionCode 7
 
@@ -68,22 +67,22 @@ android {
     }
 }
 
-def supportLibrariesVersion = "26.1.0"
+def supportLibrariesVersion = "27.1.1"
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportLibrariesVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibrariesVersion"
-    compile "com.android.support:support-annotations:$supportLibrariesVersion"
-    compile "com.android.support:design:$supportLibrariesVersion"
-    compile "com.android.support:support-v13:$supportLibrariesVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibrariesVersion"
+    implementation "com.android.support:support-annotations:$supportLibrariesVersion"
+    implementation "com.android.support:design:$supportLibrariesVersion"
+    implementation "com.android.support:support-v13:$supportLibrariesVersion"
 
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
