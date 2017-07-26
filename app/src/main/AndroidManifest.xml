@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.pluscubed.logcat"
+<manifest package="org.omnirom.logcat"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-sdk android:minSdkVersion='25'
@@ -13,13 +13,13 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".App"
+        android:name=".OmniApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.MatLog">
 
         <!--TODO: REMOVE THIS CONFIGCHANGES ATROCITY-->
         <activity
-            android:name=".ui.LogcatActivity"
+            android:name="com.pluscubed.logcat.ui.LogcatActivity"
             android:configChanges="screenSize|orientation"
             android:launchMode="singleTop">
             <intent-filter>
@@ -38,16 +38,16 @@
         </activity>
 
         <activity
-            android:name=".ui.AboutDialogActivity"
+            android:name="com.pluscubed.logcat.ui.AboutDialogActivity"
             android:theme="@style/Theme.MatLog.AlertDialog"/>
 
 
         <activity
-            android:name=".ui.RecordLogDialogActivity"
+            android:name="com.pluscubed.logcat.ui.RecordLogDialogActivity"
             android:theme="@style/Theme.MatLog.AlertDialog"/>
 
 
-        <activity android:name=".ui.SettingsActivity"/>
+        <activity android:name="com.pluscubed.logcat.ui.SettingsActivity"/>
 
         <service android:name="com.pluscubed.logcat.LogcatRecordingService"/>
 

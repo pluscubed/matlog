@@ -55,7 +55,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.LogcatRecordingService;
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
 import com.pluscubed.logcat.data.FilterAdapter;
 import com.pluscubed.logcat.data.LogFileAdapter;
@@ -82,6 +81,8 @@ import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
+
+import org.omnirom.logcat.R;
 
 import java.io.File;
 import java.util.ArrayList;

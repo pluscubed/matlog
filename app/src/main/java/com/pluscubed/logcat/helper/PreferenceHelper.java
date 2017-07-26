@@ -5,11 +5,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 import com.pluscubed.logcat.widget.MultipleChoicePreference;
+
+import org.omnirom.logcat.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

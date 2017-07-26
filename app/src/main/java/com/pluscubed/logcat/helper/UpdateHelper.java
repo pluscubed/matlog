@@ -5,9 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.util.Callback;
 import com.pluscubed.logcat.util.Function;
+
+import org.omnirom.logcat.R;
 
 /**
  * Helper for applying app-wide updates of persistent data.

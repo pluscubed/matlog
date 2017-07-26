@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.R;
+import org.omnirom.logcat.R;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.io.BufferedOutputStream;

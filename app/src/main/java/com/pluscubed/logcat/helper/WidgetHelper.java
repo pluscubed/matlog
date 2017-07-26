@@ -10,9 +10,10 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.pluscubed.logcat.LogcatRecordingService;
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.RecordingWidgetProvider;
 import com.pluscubed.logcat.util.UtilLogger;
+
+import org.omnirom.logcat.R;
 
 public class WidgetHelper {
 

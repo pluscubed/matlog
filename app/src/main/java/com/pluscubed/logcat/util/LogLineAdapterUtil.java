@@ -4,9 +4,10 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
 import com.pluscubed.logcat.helper.PreferenceHelper;
+
+import org.omnirom.logcat.R;
 
 public class LogLineAdapterUtil {
 

@@ -4,9 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.SavedLog;
 import com.pluscubed.logcat.util.UtilLogger;
+
+import org.omnirom.logcat.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

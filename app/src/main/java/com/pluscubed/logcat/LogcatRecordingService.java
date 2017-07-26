@@ -26,6 +26,8 @@ import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
+import org.omnirom.logcat.R;
+
 import java.io.IOException;
 import java.util.Random;
 

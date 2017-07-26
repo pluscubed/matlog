@@ -19,13 +19,14 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.helper.PackageHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.widget.MultipleChoicePreference;
+
+import org.omnirom.logcat.R;
 
 import java.util.ArrayList;
 import java.util.List;

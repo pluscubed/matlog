@@ -10,9 +10,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.PackageHelper;
 import com.pluscubed.logcat.util.UtilLogger;
+
+import org.omnirom.logcat.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;

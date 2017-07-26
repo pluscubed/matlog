@@ -17,11 +17,12 @@ import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
 import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.Callback;
+
+import org.omnirom.logcat.R;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;

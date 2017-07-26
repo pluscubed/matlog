@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.pluscubed.logcat.R;
+import org.omnirom.logcat.R;
 import com.pluscubed.logcat.helper.SaveLogHelper;
 
 import java.text.DateFormat;

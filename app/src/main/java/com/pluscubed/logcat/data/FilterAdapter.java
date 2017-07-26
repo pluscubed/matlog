@@ -10,9 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.db.CatlogDBHelper;
 import com.pluscubed.logcat.db.FilterItem;
+
+import org.omnirom.logcat.R;
 
 import java.util.List;
 

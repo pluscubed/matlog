@@ -10,12 +10,13 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.helper.DialogHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.helper.WidgetHelper;
 import com.pluscubed.logcat.util.Callback;
+
+import org.omnirom.logcat.R;
 
 import java.util.Arrays;
 import java.util.List;
