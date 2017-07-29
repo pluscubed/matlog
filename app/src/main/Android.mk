@@ -51,7 +51,7 @@ LOCAL_JAR_EXCLUDE_FILES := none
 LOCAL_PROGUARD_FLAG_FILES := proguard-rules.pro
 LOCAL_SRC_FILES += $(call all-java-files-under, java)
 LOCAL_PACKAGE_NAME := MatLog
-LOCAL_CERTIFICATE := platform
+LOCAL_SDK_VERSION := current
 LOCAL_MODULE_TAGS := optional
 LOCAL_PRIVILEGED_MODULE := true
 include $(BUILD_PACKAGE)
