@@ -148,7 +148,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
         }
         if (attachment != null) {
-            Uri uri = Uri.fromFile(attachment);
+            Uri uri = android.support.v4.content.FileProvider.getUriForFile(context, "org.omnirom.logcat.provider", attachment);
             log.d("uri is: %s", uri);
             actionSendIntent.putExtra(Intent.EXTRA_STREAM, uri);
         }
