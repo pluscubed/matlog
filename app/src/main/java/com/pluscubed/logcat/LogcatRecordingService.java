@@ -1,13 +1,15 @@
 package com.pluscubed.logcat;
 
 import android.app.IntentService;
-import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -138,17 +140,26 @@ public class LogcatRecordingService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                 0 /* no requestCode */, stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
 
+        final String CHANNEL_ID = "matlog_logging_channel";
         // Set the icon, scrolling text and timestamp
-        Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker(tickerText)
-                .setWhen(System.currentTimeMillis())
-                .setContentTitle(getString(R.string.notification_title))
-                .setContentText(getString(R.string.notification_subtext))
-                .setContentIntent(pendingIntent)
-                .build();
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
+        notification.setSmallIcon(R.mipmap.ic_launcher);
+        notification.setTicker(tickerText);
+        notification.setWhen(System.currentTimeMillis());
+        notification.setContentTitle(getString(R.string.notification_title));
+        notification.setContentText(getString(R.string.notification_subtext));
+        notification.setContentIntent(pendingIntent);
 
-        startForeground(R.string.notification_title, notification);
+        NotificationManager manager = (NotificationManager) App.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        // Fix Oreo notifications showing
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final CharSequence name = App.getContext().getString(R.string.app_name);
+            final int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            manager.createNotificationChannel(channel);
+        }
+
+        startForeground(R.string.notification_title, notification.build());
     }
 
     protected void onHandleIntent(Intent intent) {
