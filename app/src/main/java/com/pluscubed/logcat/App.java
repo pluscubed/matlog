@@ -9,7 +9,6 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();
