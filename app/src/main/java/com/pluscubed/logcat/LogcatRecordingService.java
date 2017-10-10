@@ -150,10 +150,10 @@ public class LogcatRecordingService extends IntentService {
         notification.setContentText(getString(R.string.notification_subtext));
         notification.setContentIntent(pendingIntent);
 
-        NotificationManager manager = (NotificationManager) App.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         // Fix Oreo notifications showing
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final CharSequence name = App.getContext().getString(R.string.app_name);
+            final CharSequence name = getString(R.string.app_name);
             final int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             manager.createNotificationChannel(channel);
