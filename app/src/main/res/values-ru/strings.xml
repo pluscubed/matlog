@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- translateable strings-->
+
+
+    <string name="about">О программе</string>
+    <string name="about_matlog">О программе MatLog</string>
+
+    <string name="add_filter">Добавить фильтр</string>
+    <string name="add_filter_ellipsis">Добавить фильр…</string>
+
+    <plurals name="are_you_sure">
+        <item quantity="one">%d file will be deleted</item>
+        <item quantity="other">%d files will be deleted</item>
+        <item quantity="few">%d файлов будет удалёно</item>
+        <item quantity="many">%d файлов будет удалёно</item>
+    </plurals>
+
+    <string name="as_attachment">Как вложение</string>
+    <string name="as_text">Как текст</string>
+
+    <string name="checkbox_never_show_partial_select_help">Не показывать снова</string>
+
+    <string name="copied_to_clipboard">Скопировано в буфер обмена.</string>
+
+    <string name="copy_to_clipboard">Копировать в буфер</string>
+
+    <string name="default_in_parens">(По умолчанию)</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_all">Удалить всё</string>
+    <string name="delete_saved_log">Удалить сохранённые логи</string>
+    <string name="delimiter">, </string>
+    <string name="dialog_compiling_log">Компиляция лога…</string>
+    <string name="dialog_for_donate">For <b>bonus color\nschemes</b>, download\n<a href="market://details?id=com.pluscubed.logcat.donate">MatLog Donate</a></string>
+    <string name="dialog_for_widget">For a <b>widget</b>,\ndo Home → Long\npress → Widgets</string>
+    <string name="dialog_initializing_recorder">Загрузка рекордера…</string>
+    <string name="dialog_loading_updates">Загрузка обновлений…</string>
+    <string name="dialog_partial_select_explanation">1. Выберите <b>первую</b> линию.\n2. Теперь выберите <b>последнюю</b> линию.</string>
+    <string name="dialog_please_wait">Пожалуйста, подождите</string>
+
+    <string name="enter_filename">Имя файла:</string>
+    <string name="enter_good_filename">Введите верное имя файла.</string>
+
+    <plurals name="files_deleted">
+        <item quantity="one">%d файл будет удалён</item>
+        <item quantity="other">%d файлов будет удалёно</item>
+        <item quantity="few">%d файлов будет удалёно</item>
+        <item quantity="many">%d файлов будет удалёно</item>
+    </plurals>
+
+    <string name="filter_choice">Поиск по...</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice_tag">Тег</string>
+    <string name="filter_text_colon">Фильтр текста:</string>
+
+    <string name="first_run_pref_summary">Показать обучающее сообщение еще раз.</string>
+    <string name="first_run_pref_title">Показать сообщение</string>
+    <string name="first_run_title">Добро пожаловать в MatLog!</string>
+
+    <string name="log_cleared">Логи очищены</string>
+    <string name="log_level">Уровень лога</string>
+    <string name="log_level_colon">Уровень лога:</string>
+    <string name="log_recording_started">Идёт запись лога.</string>
+    <string name="log_saved">Лог сохранён.</string>
+
+    <string name="main_edit_text_hint">Поиск логов</string>
+
+    <string name="manage_saved_logs">Управление логами</string>
+
+    <string name="menu_title_partial_select">Частичное сохранение</string>
+
+    <string name="no_saved_logs">Сохранённые логи не найдены.</string>
+
+    <string name="notification_subtext">Нажмите, чтобы остановить запись.</string>
+    <string name="notification_ticker">Идёт запись лога</string>
+    <string name="notification_title">Идет запись лога</string>
+
+    <string name="open">Открыть</string>
+    <string name="open_log">Открыть лог</string>
+
+    <string name="pref_buffer_choice_events">События</string>
+    <string name="pref_buffer_choice_main">Основное</string>
+    <string name="pref_buffer_choice_radio">Радио</string>
+    <string name="pref_buffer_none_checked_error">Выберите хотя бы один буфер</string>
+    <string name="pref_buffer_title">Буфер лога</string>
+    <string name="pref_cat_advanced">Дополнительно</string>
+    <string name="pref_cat_appearance">Внешний вид</string>
+    <string name="pref_cat_configuration">Конфигурация</string>
+    <string name="pref_default_log_level_summary">Уровень лога при запуске, открытии файлов, и записи логов (%s)</string>
+    <string name="pref_default_log_level_title">Уровень лога</string>
+    <string name="pref_display_limit_summary">Показывать последние %1$d строк, для предотвращения OutOfMemoryError (Стандартное: %2$s)</string>
+    <string name="pref_display_limit_title">Лимит отображения</string>
+    <string name="pref_expanded_by_default_summary">Всегда раскрывать лог</string>
+    <string name="pref_expanded_by_default_title">Раскрывать по умолчанию</string>
+    <string name="pref_log_line_period_error">Введите число в диапазоне от 1 до 1000.</string>
+    <string name="pref_log_line_period_summary">Записывать на SD каждые %1$d строк (стандартно: %2$s).</string>
+    <string name="pref_log_line_period_title">Период записи</string>
+    <string name="pref_show_timestamp_summary">Показывать ID процесса и Timestamp при разворачивании лога</string>
+    <string name="pref_show_timestamp_title">Показать Pid &amp; Timestamp</string>
+    <string name="pref_text_size_title">Размер текста</string>
+    <string name="pref_theme_choice_android_name">Android</string>
+    <string name="pref_theme_choice_att_name">Ma Bell</string>
+    <string name="pref_theme_choice_dark_name">Тёмная</string>
+    <string name="pref_theme_choice_light_name">Светлая</string>
+    <string name="pref_theme_choice_sprint_name">Big Yellow</string>
+    <string name="pref_theme_choice_tmobile_name">T-Mo</string>
+    <string name="pref_theme_choice_verizon_name">Big Red</string>
+    <string name="pref_theme_summary_free">Requires donate version.</string>
+    <string name="pref_theme_title">Цветовая схема</string>
+
+    <string name="record_log">Записать лог</string>
+
+    <string name="recording_in_progress">Запись лога уже запущена.</string>
+
+    <string name="save">Сохранить</string>
+    <string name="save_as">Сохранить как…</string>
+    <string name="save_log">Сохранить лог</string>
+
+    <string name="sd_card_not_found">SD карта не найдена.</string>
+
+    <string name="select_logs_to_delete">Выберите удаляемые логи.</string>
+
+    <string name="send_as_attachment">Отправить как вложение</string>
+    <string name="send_as_text">Отправить как текст</string>
+    <string name="send_log">Отправить</string>
+    <string name="send_log_title">Отправить лог</string>
+
+    <string name="settings">Настройки</string>
+
+    <string name="simultaneous"> (Simultaneous)</string>
+
+    <string name="start_recording_log">Запись</string>
+
+    <string name="stop_recording_log">Остановить запись</string>
+
+    <string name="subject_log_report">Лог ошибки/Log report</string>
+
+    <string name="text_filter_ellipsis">Фильтр…</string>
+    <string name="text_filter_text">Фитьтр текста</string>
+    <string name="text_include_device_info">Добавить информацию об устройстве</string>
+    <string name="text_size_large_name">Большой (14pt)</string>
+    <string name="text_size_medium_name">Средний (12pt)</string>
+    <string name="text_size_small_name">Маленький (10pt)</string>
+    <string name="text_size_xlarge_name">Огромный (16pt)</string>
+    <string name="text_size_xsmall_name">Очень маленький (8pt)</string>
+
+    <string name="title_filter">Фильтр</string>
+    <string name="title_filters">Фильтры</string>
+
+    <string name="toast_invalid_display_limit">Введите число в диапазоне между %1$d и %2$d.</string>
+    <string name="toast_invalid_level">Недопустимое имя уровня: %s</string>
+    <string name="toast_invalid_selection">Недопустимый выбор. Попробуйте снова</string>
+
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Лог слишком большой; отображаются последние %d линий.</item>
+        <item quantity="other">Лог слишком большой; отображаются последние %d линий.</item>
+        <item quantity="few">Лог слишком большой; отображаются последние %d линий.</item>
+        <item quantity="many">Лог слишком большой; отображаются последние %d линий.</item>
+    </plurals>
+
+    <string name="toast_no_root">Невозможно получить root. Вы видите только логи MatLog.</string>
+    <string name="toast_pref_changed_restart_required">Настройка изменена. Перезапустите MatLog для применения изменений.</string>
+    <string name="toast_request_root">MatLog требует root (superuser) для чтения логов.</string>
+    <string name="toast_started_select_partial">Частичный выбор активирован</string>
+
+    <string name="unable_to_save_log">Ошибка сохранения. Вы ввели правильное имя?</string>
+
+    <string name="version">Версия %s</string>
+
+    <string name="widget_recording_in_progress">Запись…</string>
+    <string name="widget_start_recording">Запись\nЛога</string>
+    <string name="as_text_not_work">Отправка как текст невозможна из-за слишком большого количества символов. Попробуйте отправить как вложение</string>
+    <string name="file">Файл</string>
+    <string name="clear">Очистить</string>
+    <string name="expand_all">Раскрыть всё</string>
+    <string name="collapse_all">Свернуть всё</string>
+    <string name="pause_unpause">Воспроизвести/Пауза</string>
+    <string name="undo">Отменить</string>
+    <string name="no_logs_warning_title">Нет доступа к системным логам</string>
+    <string name="no_logs_warning">%1$s не имеет разрешения на доступ к логам, вы видите только логи приложения.&lt;br/>&lt;br/>У вас есть 2 способа предоставить разрешение: %1$s &lt;br/>- Рутируйте ваше устройство &lt;br/>- Подключите устройство к компьютеру с установленным Android SDK и выпоните команду (единоразовое действие):&lt;br/>&lt;tt>%2$s&lt;/tt></string>
+    <string name="copy_command">Копировать команду</string>
+    <string name="adb_command">Команда ADB</string>
+
+    <string name="permission_not_granted">Эта функция не будет работать без разрешения на запись во внутр. накопитель</string>
+    <string name="search">Поиск</string>
+    <string name="scrubber">Omit sensitive info</string>
+    <string name="scrubber_summary">Omit sensitive info like web urls, phone numbers or emails</string>
+</resources>

@@ -4,53 +4,53 @@
     <!-- non-translateable strings-->
 
 
-    <string name="app_name">MatLog</string>
+    <string name="app_name" translatable="false">MatLog</string>
 
-    <string name="donate_version_name">Donate</string>
+    <string name="donate_version_name" translatable="false">Donate</string>
 
-    <string name="log_level_debug">Debug</string>
-    <string name="log_level_error">Error</string>
-    <string name="log_level_info">Info</string>
-    <string name="log_level_value_debug">D</string>
-    <string name="log_level_value_error">E</string>
-    <string name="log_level_value_info">I</string>
-    <string name="log_level_value_verbose">V</string>
-    <string name="log_level_value_warn">W</string>
-    <string name="log_level_value_wtf">F</string>
-    <string name="log_level_verbose">Verbose</string>
-    <string name="log_level_warn">Warn</string>
-    <string name="log_level_wtf">What a Terrible Failure</string>
+    <string name="log_level_debug" translatable="false">Debug</string>
+    <string name="log_level_error" translatable="false">Error</string>
+    <string name="log_level_info" translatable="false">Info</string>
+    <string name="log_level_value_debug" translatable="false">D</string>
+    <string name="log_level_value_error" translatable="false">E</string>
+    <string name="log_level_value_info" translatable="false">I</string>
+    <string name="log_level_value_verbose" translatable="false">V</string>
+    <string name="log_level_value_warn" translatable="false">W</string>
+    <string name="log_level_value_wtf" translatable="false">F</string>
+    <string name="log_level_verbose" translatable="false">Verbose</string>
+    <string name="log_level_warn" translatable="false">Warn</string>
+    <string name="log_level_wtf" translatable="false">What a Terrible Failure</string>
 
-    <string name="pref_about">about</string>
-    <string name="pref_buffer">buffer</string>
-    <string name="pref_buffer_choice_events_value">events</string>
-    <string name="pref_buffer_choice_main_value">main</string>
-    <string name="pref_buffer_choice_radio_value">radio</string>
-    <string name="pref_default_log_level">default_level</string>
-    <string name="pref_display_limit">display_limit</string>
-    <string name="pref_display_limit_default">10000</string>
-    <string name="pref_expanded_by_default">expand_default</string>
-    <string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
-    <string name="pref_include_device_info">device_info</string>
-    <string name="pref_log_line_period">log_line_period</string>
-    <string name="pref_log_line_period_default">200</string>
-    <string name="pref_ran_jellybean_su_update">jellybean_su</string>
-    <string name="pref_show_timestamp">show_timestamp</string>
-    <string name="pref_text_size">text_size</string>
-    <string name="pref_theme">theme</string>
-    <string name="pref_theme_choice_android_value">Android</string>
-    <string name="pref_theme_choice_att_value">Ma Bell</string>
-    <string name="pref_theme_choice_dark_value">Dark</string>
-    <string name="pref_theme_choice_light_value">Light</string>
-    <string name="pref_theme_choice_sprint_value">Big Yellow</string>
-    <string name="pref_theme_choice_tmobile_value">T-Mo</string>
-    <string name="pref_theme_choice_verizon_value">Big Red</string>
+    <string name="pref_about" translatable="false">about</string>
+    <string name="pref_buffer" translatable="false">buffer</string>
+    <string name="pref_buffer_choice_events_value" translatable="false">events</string>
+    <string name="pref_buffer_choice_main_value" translatable="false">main</string>
+    <string name="pref_buffer_choice_radio_value" translatable="false">radio</string>
+    <string name="pref_default_log_level" translatable="false">default_level</string>
+    <string name="pref_display_limit" translatable="false">display_limit</string>
+    <string name="pref_display_limit_default" translatable="false">10000</string>
+    <string name="pref_expanded_by_default" translatable="false">expand_default</string>
+    <string name="pref_hide_partial_select_help" translatable="false">pref_hide_partial_select_help</string>
+    <string name="pref_include_device_info" translatable="false">device_info</string>
+    <string name="pref_log_line_period" translatable="false">log_line_period</string>
+    <string name="pref_log_line_period_default" translatable="false">200</string>
+    <string name="pref_ran_jellybean_su_update" translatable="false">jellybean_su</string>
+    <string name="pref_show_timestamp" translatable="false">show_timestamp</string>
+    <string name="pref_text_size" translatable="false">text_size</string>
+    <string name="pref_theme" translatable="false">theme</string>
+    <string name="pref_theme_choice_android_value" translatable="false">Android</string>
+    <string name="pref_theme_choice_att_value" translatable="false">Ma Bell</string>
+    <string name="pref_theme_choice_dark_value" translatable="false">Dark</string>
+    <string name="pref_theme_choice_light_value" translatable="false">Light</string>
+    <string name="pref_theme_choice_sprint_value" translatable="false">Big Yellow</string>
+    <string name="pref_theme_choice_tmobile_value" translatable="false">T-Mo</string>
+    <string name="pref_theme_choice_verizon_value" translatable="false">Big Red</string>
 
-    <string name="text_size_large_value">L</string>
-    <string name="text_size_medium_value">M</string>
-    <string name="text_size_small_value">S</string>
-    <string name="text_size_xlarge_value">XL</string>
-    <string name="text_size_xsmall_value">XS</string>
+    <string name="text_size_large_value" translatable="false">L</string>
+    <string name="text_size_medium_value" translatable="false">M</string>
+    <string name="text_size_small_value" translatable="false">S</string>
+    <string name="text_size_xlarge_value" translatable="false">XL</string>
+    <string name="text_size_xsmall_value" translatable="false">XS</string>
 
 
     <!-- translateable strings-->
