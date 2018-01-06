@@ -81,7 +81,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
      *
      * @param object The object to add at the end of the array.
      */
-    public void add(LogLine object) {
+    public void add(LogLine object, boolean notify) {
         if (mOriginalValues != null) {
             synchronized (mLock) {
                 mOriginalValues.add(object);
@@ -91,11 +91,13 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
         } else {
             mObjects.add(object);
         }
-        notifyItemInserted(mObjects.size());
+        if (notify) {
+            notifyItemInserted(mObjects.size());
+        }
     }
 
 
-    public void addWithFilter(LogLine object, CharSequence text) {
+    public void addWithFilter(LogLine object, CharSequence text, boolean notify) {
 
         if (mOriginalValues != null) {
 
@@ -111,14 +113,17 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
                 mOriginalValues.add(object);
 
                 mObjects.addAll(filteredObjects);
-
-                notifyItemRangeInserted(mObjects.size() - filteredObjects.size(), filteredObjects.size());
+                if (notify) {
+                    notifyItemRangeInserted(mObjects.size() - filteredObjects.size(), filteredObjects.size());
+                }
             }
         } else {
             synchronized (mLock) {
                 mObjects.add(object);
             }
-            notifyItemInserted(mObjects.size());
+            if (notify) {
+                notifyItemInserted(mObjects.size());
+            }
         }
 
 

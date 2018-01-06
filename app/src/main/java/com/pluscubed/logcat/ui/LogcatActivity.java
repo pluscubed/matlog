@@ -1615,10 +1615,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 hideProgressBar();
 
                 for (LogLine logLine : logLines) {
-                    mLogListAdapter.addWithFilter(logLine, "");
+                    mLogListAdapter.addWithFilter(logLine, "", false);
                     addToAutocompleteSuggestions(logLine);
 
                 }
+                mLogListAdapter.notifyDataSetChanged();
 
                 // scroll to bottom
                 scrollToBottom();
@@ -2012,10 +2013,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 hideProgressBar();
             }
             for (LogLine logLine : values) {
-                mLogListAdapter.addWithFilter(logLine, mSearchingString);
+                mLogListAdapter.addWithFilter(logLine, mSearchingString, false);
 
                 addToAutocompleteSuggestions(logLine);
             }
+            mLogListAdapter.notifyDataSetChanged();
 
             // how many logs to keep in memory?  this avoids OutOfMemoryErrors
             int maxNumLogLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
