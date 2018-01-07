@@ -588,7 +588,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             @Override
             public boolean onSuggestionClick(int position) {
                 List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                searchView.setQuery(suggestions.get(position), true);
+                if (!suggestions.isEmpty()) {
+                    searchView.setQuery(suggestions.get(position), true);
+                }
                 return false;
             }
         });
