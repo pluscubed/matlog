@@ -1083,7 +1083,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
-                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount))
+                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount, finalDeleteCount))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -1096,7 +1096,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                                 }
                             }
 
-                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount);
+                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount, finalDeleteCount);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1464,7 +1464,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 if (savedLog.isTruncated()) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines);
+                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                         }
                     });
