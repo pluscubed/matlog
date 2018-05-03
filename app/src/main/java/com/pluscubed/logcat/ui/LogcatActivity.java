@@ -724,11 +724,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .show();
 
         LinearLayout customView = (LinearLayout) dialog.getCustomView();
-        LinearLayout tag = (LinearLayout) customView.findViewById(R.id.dialog_searchby_tag_linear);
-        LinearLayout pid = (LinearLayout) customView.findViewById(R.id.dialog_searchby_pid_linear);
+        LinearLayout tag = customView.findViewById(R.id.dialog_searchby_tag_linear);
+        LinearLayout pid = customView.findViewById(R.id.dialog_searchby_pid_linear);
 
-        TextView tagText = (TextView) customView.findViewById(R.id.dialog_searchby_tag_text);
-        TextView pidText = (TextView) customView.findViewById(R.id.dialog_searchby_pid_text);
+        TextView tagText = customView.findViewById(R.id.dialog_searchby_tag_text);
+        TextView pidText = customView.findViewById(R.id.dialog_searchby_pid_text);
 
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
 
@@ -1085,7 +1085,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
-                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount))
+                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount, finalDeleteCount))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                         @Override

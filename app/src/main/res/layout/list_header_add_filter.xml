@@ -24,6 +24,6 @@
         android:ellipsize="marquee"
         android:text="@string/add_filter_ellipsis"
         android:textSize="16sp"
-        android:maxLines="1" />
+        android:singleLine="true" />
 
 </RelativeLayout>
