@@ -23,7 +23,7 @@ public class BuildHelper {
             "CODENAME", "INCREMENTAL", "RELEASE", "SDK_INT");
 
     public static String getBuildInformationAsString() {
-        SortedMap<String, String> keysToValues = new TreeMap<String, String>();
+        SortedMap<String, String> keysToValues = new TreeMap<>();
 
         for (String buildField : BUILD_FIELDS) {
             putKeyValue(Build.class, buildField, keysToValues);

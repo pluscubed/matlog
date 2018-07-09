@@ -55,6 +55,10 @@ android {
             manifestPlaceholders = [appName: "MatLog DEBUG"]
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 def supportLibrariesVersion = "27.1.1"
@@ -67,4 +71,5 @@ dependencies {
     implementation "com.android.support:support-v13:$supportLibrariesVersion"
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    implementation 'com.mikhaellopez:circularprogressbar:2.0.0'
 }

@@ -33,7 +33,7 @@ public enum ColorScheme {
             R.color.main_foreground_tmobile, R.array.light_theme_colors, R.color.spinner_droptown_tmobile,
             R.color.main_bubble_background_tmobile, true, R.color.main_bubble_background_light_2),;
 
-    private static Map<String, ColorScheme> preferenceNameToColorScheme = new HashMap<String, ColorScheme>();
+    private static Map<String, ColorScheme> preferenceNameToColorScheme = new HashMap<>();
     private int nameResource;
     private int backgroundColorResource;
     private int foregroundColorResource;

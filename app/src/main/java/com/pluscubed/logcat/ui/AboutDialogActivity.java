@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -35,8 +34,6 @@ public class AboutDialogActivity extends AppCompatActivity {
 
     public static class AboutDialog extends DialogFragment {
 
-        private Handler handler = new Handler();
-
         @Override
         public void onDismiss(DialogInterface dialog) {
             super.onDismiss(dialog);
@@ -62,10 +59,9 @@ public class AboutDialogActivity extends AppCompatActivity {
 
             InputStream is = getResources().openRawResource(resourceId);
 
-            BufferedReader buff = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
 
-            try {
+            try (BufferedReader buff = new BufferedReader(new InputStreamReader(is))) {
                 while (buff.ready()) {
                     sb.append(buff.readLine()).append("\n");
                 }

@@ -28,10 +28,8 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,21 +37,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.data.ColorScheme;
 import com.pluscubed.logcat.data.FilterAdapter;
@@ -115,6 +111,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     private static final int COMPLETE_PARTIAL_SELECT_REQUEST = 5;
     private static final int SHOW_RECORD_LOG_REQUEST = 6;
     private static final int SHOW_RECORD_LOG_REQUEST_SHORTCUT = 7;
+
+    private static final String INTENT_FILENAME = "filename";
 
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 
@@ -201,18 +199,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogHelper.stopRecordingLog(LogcatActivity.this);
-            }
-        });
+        findViewById(R.id.fab).setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
 
         ((RecyclerView) findViewById(R.id.list)).setLayoutManager(new LinearLayoutManager(this));
 
         ((RecyclerView) findViewById(R.id.list)).setItemAnimator(null);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_actionbar));
+        setSupportActionBar(findViewById(R.id.toolbar_actionbar));
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
@@ -246,17 +239,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 String logFilename = DialogHelper.createLogFilename();
                 String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
 
-                DialogHelper.startRecordingWithProgressDialog(logFilename, "", defaultLogLevel, new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, this);
+                DialogHelper.startRecordingWithProgressDialog(logFilename, "", defaultLogLevel, this::finish, this);
 
                 break;
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void runUpdatesIfNecessaryAndShowWelcomeMessage() {
 
         if (UpdateHelper.areUpdatesNecessary(this)) {
@@ -313,10 +302,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         Intent intent = getIntent();
 
-        if (intent == null || !intent.hasExtra("filename")) {
+        if (intent == null || !intent.hasExtra(INTENT_FILENAME)) {
             startMainLog();
         } else {
-            String filename = intent.getStringExtra("filename");
+            String filename = intent.getStringExtra(INTENT_FILENAME);
             openLogFile(filename);
         }
 
@@ -381,8 +370,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         doAfterInitialMessage(intent);
 
         // launched from the widget or notification
-        if (intent != null && !Intents.ACTION_LAUNCH.equals(intent.getAction()) && intent.hasExtra("filename")) {
-            String filename = intent.getStringExtra("filename");
+        if (intent != null && !Intents.ACTION_LAUNCH.equals(intent.getAction()) && intent.hasExtra(INTENT_FILENAME)) {
+            String filename = intent.getStringExtra(INTENT_FILENAME);
             openLogFile(filename);
         }
     }
@@ -407,34 +396,28 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     private void onSettingsActivityResult(final Intent data) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                updateBackgroundColor();
-                if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
-                        && mCurrentlyOpenLog == null) {
-                    // log buffer changed, so update list
-                    restartMainLog();
-                } else {
-                    // settings activity returned - text size might have changed, so update list
-                    expandOrCollapseAll(false);
-                    mLogListAdapter.notifyDataSetChanged();
-                }
+        mHandler.post(() -> {
+            updateBackgroundColor();
+            if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
+                    && mCurrentlyOpenLog == null) {
+                // log buffer changed, so update list
+                restartMainLog();
+            } else {
+                // settings activity returned - text size might have changed, so update list
+                expandOrCollapseAll(false);
+                mLogListAdapter.notifyDataSetChanged();
             }
         });
 
     }
 
     private void startMainLog() {
-        Runnable mainLogRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mLogListAdapter != null) {
-                    mLogListAdapter.clear();
-                }
-                mTask = new LogReaderAsyncTask();
-                mTask.execute((Void) null);
+        Runnable mainLogRunnable = () -> {
+            if (mLogListAdapter != null) {
+                mLogListAdapter.clear();
             }
+            mTask = new LogReaderAsyncTask();
+            mTask.execute((Void) null);
         };
 
         if (mTask != null) {
@@ -618,12 +601,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                     mLogListAdapter.clear();
                 }
                 Snackbar.make(findViewById(android.R.id.content), R.string.log_cleared, Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.undo), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startMainLog();
-                            }
-                        })
+                        .setAction(getString(R.string.undo), v -> startMainLog())
                         .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
                         .show();
                 return true;
@@ -699,12 +677,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             logLine.setHighlighted(true);
             partiallySelectedLogLines.add(logLine);
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mLogListAdapter.notifyItemChanged(((RecyclerView) findViewById(R.id.list)).getChildAdapterPosition(itemView));
-                }
-            });
+            mHandler.post(() -> mLogListAdapter.notifyItemChanged(((RecyclerView) findViewById(R.id.list)).getChildAdapterPosition(itemView)));
 
             if (partiallySelectedLogLines.size() == 2) {
                 // last line
@@ -743,27 +716,21 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         pidText.setBackgroundColor(backgroundColor);
         tagText.setBackgroundColor(backgroundColor);
 
-        tag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String tagQuery = (logLine.getTag().contains(" "))
-                        ? ('"' + logLine.getTag() + '"')
-                        : logLine.getTag();
-                setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
-                dialog.dismiss();
-                //TODO: put the cursor at the end
-                                /*searchEditText.setSelection(searchEditText.length());*/
-            }
+        tag.setOnClickListener(v -> {
+            String tagQuery = (logLine.getTag().contains(" "))
+                    ? ('"' + logLine.getTag() + '"')
+                    : logLine.getTag();
+            setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+            dialog.dismiss();
+            //TODO: put the cursor at the end
+                            /*searchEditText.setSelection(searchEditText.length());*/
         });
 
-        pid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
-                dialog.dismiss();
-                //TODO: put the cursor at the end
-                                /*searchEditText.setSelection(searchEditText.length());*/
-            }
+        pid.setOnClickListener(v -> {
+            setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+            dialog.dismiss();
+            //TODO: put the cursor at the end
+                            /*searchEditText.setSelection(searchEditText.length());*/
         });
     }
 
@@ -787,56 +754,47 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     private void showFiltersDialog() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.e("t", "Started thread");
-                final List<FilterItem> filters = new ArrayList<>();
+        new Thread(() -> {
+            Log.e("t", "Started thread");
+            final List<FilterItem> filters = new ArrayList<>();
 
-                CatlogDBHelper dbHelper = null;
-                try {
-                    dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                    filters.addAll(dbHelper.findFilterItems());
-                } finally {
-                    if (dbHelper != null) {
-                        dbHelper.close();
-                    }
+            CatlogDBHelper dbHelper = null;
+            try {
+                dbHelper = new CatlogDBHelper(LogcatActivity.this);
+                filters.addAll(dbHelper.findFilterItems());
+            } finally {
+                if (dbHelper != null) {
+                    dbHelper.close();
                 }
+            }
 
-                Collections.sort(filters);
+            Collections.sort(filters);
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
-                        ListView view = new ListView(LogcatActivity.this);
-                        view.setAdapter(filterAdapter);
-                        view.setDivider(null);
-                        view.setDividerHeight(0);
-                        View footer = getLayoutInflater().inflate(R.layout.list_header_add_filter, view, false);
-                        view.addFooterView(footer);
+            mHandler.post(() -> {
+                final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
+                ListView view = new ListView(LogcatActivity.this);
+                view.setAdapter(filterAdapter);
+                view.setDivider(null);
+                view.setDividerHeight(0);
+                View footer = getLayoutInflater().inflate(R.layout.list_header_add_filter, view, false);
+                view.addFooterView(footer);
 
-                        final MaterialDialog dialog = new MaterialDialog.Builder(LogcatActivity.this)
-                                .title(R.string.title_filters)
-                                .customView(view, false)
-                                .negativeText(android.R.string.cancel).show();
+                final MaterialDialog dialog = new MaterialDialog.Builder(LogcatActivity.this)
+                        .title(R.string.title_filters)
+                        .customView(view, false)
+                        .negativeText(android.R.string.cancel).show();
 
-                        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if (position == parent.getCount() - 1) {
-                                    showAddFilterDialog(filterAdapter);
-                                } else {
-                                    // load filter
-                                    String text = filterAdapter.getItem(position).getText();
-                                    setSearchText(text);
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
+                view.setOnItemClickListener((parent, view1, position, id) -> {
+                    if (position == parent.getCount() - 1) {
+                        showAddFilterDialog(filterAdapter);
+                    } else {
+                        // load filter
+                        String text = filterAdapter.getItem(position).getText();
+                        setSearchText(text);
+                        dialog.dismiss();
                     }
                 });
-            }
+            });
         }).start();
     }
 
@@ -857,32 +815,25 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         final MaterialDialog alertDialog = new MaterialDialog.Builder(this)
                 .title(R.string.add_filter)
                 .positiveText(android.R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        handleNewFilterText(editText.getText().toString(), filterAdapter);
-                        dialog.dismiss();
-                    }
+                .onPositive((dialog, which) -> {
+                    handleNewFilterText(editText.getText().toString(), filterAdapter);
+                    dialog.dismiss();
                 })
                 .negativeText(android.R.string.cancel)
                 .customView(editText, true)
                 .build();
 
         // when 'Done' is clicked (i.e. enter button), do the same as when "OK" is clicked
-        editText.setOnEditorActionListener(new OnEditorActionListener() {
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // dismiss soft keyboard
 
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // dismiss soft keyboard
+                handleNewFilterText(editText.getText().toString(), filterAdapter);
 
-                    handleNewFilterText(editText.getText().toString(), filterAdapter);
-
-                    alertDialog.dismiss();
-                    return true;
-                }
-                return false;
+                alertDialog.dismiss();
+                return true;
             }
+            return false;
         });
 
         alertDialog.show();
@@ -896,35 +847,29 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    CatlogDBHelper dbHelper = null;
-                    FilterItem item = null;
-                    try {
-                        dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                        item = dbHelper.addFilter(trimmed);
-                    } finally {
-                        if (dbHelper != null) {
-                            dbHelper.close();
-                        }
+            new Thread(() -> {
+                CatlogDBHelper dbHelper = null;
+                FilterItem item = null;
+                try {
+                    dbHelper = new CatlogDBHelper(LogcatActivity.this);
+                    item = dbHelper.addFilter(trimmed);
+                } finally {
+                    if (dbHelper != null) {
+                        dbHelper.close();
                     }
-
-                    final FilterItem finalItem = item;
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalItem != null) { // null indicates duplicate
-                                filterAdapter.add(finalItem);
-                                filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
-                                filterAdapter.notifyDataSetChanged();
-
-                                addToAutocompleteSuggestions(trimmed);
-                            }
-                        }
-                    });
-
                 }
+
+                final FilterItem finalItem = item;
+                mHandler.post(() -> {
+                    if (finalItem != null) { // null indicates duplicate
+                        filterAdapter.add(finalItem);
+                        filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
+                        filterAdapter.notifyDataSetChanged();
+
+                        addToAutocompleteSuggestions(trimmed);
+                    }
+                });
+
             }).start();
         }
     }
@@ -951,17 +896,14 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                     .customView(helpView, true)
                     .negativeText(android.R.string.cancel)
                     .positiveText(android.R.string.ok)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            partialSelectMode = true;
-                            partiallySelectedLogLines.clear();
-                            Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
+                    .onPositive((dialog, which) -> {
+                        partialSelectMode = true;
+                        partiallySelectedLogLines.clear();
+                        Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
 
-                            if (checkBox.isChecked()) {
-                                // hide this help dialog in the future
-                                PreferenceHelper.setHidePartialSelectHelpPreference(LogcatActivity.this, true);
-                            }
+                        if (checkBox.isChecked()) {
+                            // hide this help dialog in the future
+                            PreferenceHelper.setHidePartialSelectHelpPreference(LogcatActivity.this, true);
                         }
                     })
                     .show();
@@ -1017,7 +959,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        List<CharSequence> filenames = new ArrayList<CharSequence>(SaveLogHelper.getLogFilenames());
+        List<CharSequence> filenames = new ArrayList<>(SaveLogHelper.getLogFilenames());
 
         if (filenames.isEmpty()) {
             Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
@@ -1038,33 +980,20 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .customView(layout, false)
                 .negativeText(android.R.string.cancel)
                 .neutralText(R.string.delete_all)
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        boolean[] allChecked = new boolean[logFileAdapter.getCount()];
+                .onNeutral((dialog, which) -> {
+                    boolean[] allChecked = new boolean[logFileAdapter.getCount()];
 
-                        for (int i = 0; i < allChecked.length; i++) {
-                            allChecked[i] = true;
-                        }
-                        verifyDelete(filenameArray, allChecked, dialog);
+                    for (int i = 0; i < allChecked.length; i++) {
+                        allChecked[i] = true;
                     }
+                    verifyDelete(filenameArray, allChecked, dialog);
                 })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        verifyDelete(filenameArray, logFileAdapter.getCheckedItems(), dialog);
-                    }
-                })
+                .onPositive((dialog, which) -> verifyDelete(filenameArray, logFileAdapter.getCheckedItems(), dialog))
                 .positiveText(R.string.delete);
 
         builder.show();
 
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                logFileAdapter.checkOrUncheck(position);
-            }
-        });
+        view.setOnItemClickListener((parent, view1, position, id) -> logFileAdapter.checkOrUncheck(position));
     }
 
     protected void verifyDelete(final CharSequence[] filenameArray,
@@ -1088,25 +1017,21 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
                     .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount, finalDeleteCount))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        // ok, delete
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // ok, delete
-
-                            for (int i = 0; i < checkedItems.length; i++) {
-                                if (checkedItems[i]) {
-                                    SaveLogHelper.deleteLogIfExists(filenameArray[i].toString());
-                                }
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            if (checkedItems[i]) {
+                                SaveLogHelper.deleteLogIfExists(filenameArray[i].toString());
                             }
-
-                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount, finalDeleteCount);
-                            Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
-
-                            dialog.dismiss();
-                            parentDialog.dismiss();
-
                         }
+
+                        String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount, finalDeleteCount);
+                        Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                        parentDialog.dismiss();
+
                     });
             builder.setNegativeButton(android.R.string.cancel, null);
             builder.show();
@@ -1131,37 +1056,22 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
-        includeDeviceInfoCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        includeDeviceInfoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked));
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked);
-            }
-        });
-
-        final CheckBox includeDmesgCheckBox = (CheckBox) includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
+        final CheckBox includeDmesgCheckBox = includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDmesgCheckBox.setChecked(PreferenceHelper.getIncludeDmesgPreference(this));
-        includeDmesgCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked);
-            }
-        });
+        includeDmesgCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked));
 
         new MaterialDialog.Builder(LogcatActivity.this)
                 .title(R.string.share_log)
                 .customView(includeDeviceInfoView, false)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-                        sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
-                        materialDialog.dismiss();
-                    }
+                .onPositive((materialDialog, dialogAction) -> {
+                    sendLogToTargetApp(false, includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
+                    materialDialog.dismiss();
                 }).show();
     }
 
@@ -1177,41 +1087,26 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
-        final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+        final CheckBox includeDeviceInfoCheckBox = includeDeviceInfoView.findViewById(android.R.id.checkbox);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
-        includeDeviceInfoCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        includeDeviceInfoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked));
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked);
-            }
-        });
-
-        final CheckBox includeDmesgCheckBox = (CheckBox) includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
+        final CheckBox includeDmesgCheckBox = includeDeviceInfoView.findViewById(R.id.checkbox_dmesg);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDmesgCheckBox.setChecked(PreferenceHelper.getIncludeDmesgPreference(this));
-        includeDmesgCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked);
-            }
-        });
+        includeDmesgCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> PreferenceHelper.setIncludeDmesgPreference(LogcatActivity.this, isChecked));
 
         new MaterialDialog.Builder(LogcatActivity.this)
                 .title(R.string.save_log_zip)
                 .customView(includeDeviceInfoView, false)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-                        saveLogToTargetApp(includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
-                        materialDialog.dismiss();
-                    }
+                .onPositive((materialDialog, dialogAction) -> {
+                    saveLogToTargetApp(includeDeviceInfoCheckBox.isChecked(), includeDmesgCheckBox.isChecked());
+                    materialDialog.dismiss();
                 }).show();
     }
 
@@ -1228,32 +1123,26 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             @Override
             public void run() {
-                ui.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (asText || mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
-                            MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
-                            progressDialog.title(R.string.dialog_please_wait);
-                            progressDialog.content(getString(R.string.dialog_compiling_log));
-                            progressDialog.progress(true, 0);
-                            mDialog = progressDialog.show();
-                            mDialog.setCanceledOnTouchOutside(false);
-                            mDialog.setCancelable(false);
-                        }
+                ui.post(() -> {
+                    if (asText || mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
+                        MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
+                        progressDialog.title(R.string.dialog_please_wait);
+                        progressDialog.content(getString(R.string.dialog_compiling_log));
+                        progressDialog.progress(true, 0);
+                        mDialog = progressDialog.show();
+                        mDialog.setCanceledOnTouchOutside(false);
+                        mDialog.setCancelable(false);
                     }
                 });
                 final SendLogDetails sendLogDetails = getSendLogDetails(asText, includeDeviceInfo, includeDmesg);
-                ui.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        startChooser(LogcatActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
-                                sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
-                        if (mDialog != null && mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-                        if (asText && sendLogDetails.getBody().length() > 100000) {
-                            Snackbar.make(findViewById(android.R.id.content), getString(R.string.as_text_not_work), Snackbar.LENGTH_LONG).show();
-                        }
+                ui.post(() -> {
+                    startChooser(LogcatActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
+                            sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
+                    if (mDialog != null && mDialog.isShowing()) {
+                        mDialog.dismiss();
+                    }
+                    if (asText && sendLogDetails.getBody().length() > 100000) {
+                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.as_text_not_work), Snackbar.LENGTH_LONG).show();
                     }
                 });
             }
@@ -1273,29 +1162,23 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             @Override
             public void run() {
-                ui.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
-                            MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
-                            progressDialog.title(R.string.dialog_please_wait);
-                            progressDialog.content(getString(R.string.dialog_compiling_log));
-                            progressDialog.progress(true, 0);
-                            mDialog = progressDialog.show();
-                            mDialog.setCanceledOnTouchOutside(false);
-                            mDialog.setCancelable(false);
-                        }
+                ui.post(() -> {
+                    if (mCurrentlyOpenLog == null || includeDeviceInfo || includeDmesg) {
+                        MaterialDialog.Builder progressDialog = new MaterialDialog.Builder(LogcatActivity.this);
+                        progressDialog.title(R.string.dialog_please_wait);
+                        progressDialog.content(getString(R.string.dialog_compiling_log));
+                        progressDialog.progress(true, 0);
+                        mDialog = progressDialog.show();
+                        mDialog.setCanceledOnTouchOutside(false);
+                        mDialog.setCancelable(false);
                     }
                 });
                 final File zipFile = saveLogAsZip(includeDeviceInfo, includeDmesg);
-                ui.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mDialog != null && mDialog.isShowing()) {
-                            mDialog.dismiss();
-                        }
-                        Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                ui.post(() -> {
+                    if (mDialog != null && mDialog.isShowing()) {
+                        mDialog.dismiss();
                     }
+                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
                 });
             }
         }).start();
@@ -1434,15 +1317,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
-            @Override
-            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
-                if (DialogHelper.isInvalidFilename(charSequence)) {
-                    Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-                } else {
-                    String filename = charSequence.toString();
-                    saveLog(filename);
-                }
+        MaterialDialog.InputCallback onClickListener = (materialDialog, charSequence) -> {
+            if (DialogHelper.isInvalidFilename(charSequence)) {
+                Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+            } else {
+                String filename = charSequence.toString();
+                saveLog(filename);
             }
         };
 
@@ -1476,25 +1356,19 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SaveLogHelper.deleteLogIfExists(filename);
-                final boolean saved = SaveLogHelper.saveLog(logLines, filename);
+        new Thread(() -> {
+            SaveLogHelper.deleteLogIfExists(filename);
+            final boolean saved = SaveLogHelper.saveLog(logLines, filename);
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (saved) {
-                            Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                            openLogFile(filename);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
-                        }
-                        cancelPartialSelect();
-                    }
-                });
-            }
+            mHandler.post(() -> {
+                if (saved) {
+                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                    openLogFile(filename);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                }
+                cancelPartialSelect();
+            });
         }).start();
     }
 
@@ -1504,24 +1378,18 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         final List<CharSequence> logLines = getCurrentLogAsListOfStrings();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SaveLogHelper.deleteLogIfExists(filename);
-                final boolean saved = SaveLogHelper.saveLog(logLines, filename);
+        new Thread(() -> {
+            SaveLogHelper.deleteLogIfExists(filename);
+            final boolean saved = SaveLogHelper.saveLog(logLines, filename);
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (saved) {
-                            Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                            openLogFile(filename);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
+            mHandler.post(() -> {
+                if (saved) {
+                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                    openLogFile(filename);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                }
+            });
         }).start();
 
     }
@@ -1539,7 +1407,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        final List<CharSequence> filenames = new ArrayList<CharSequence>(SaveLogHelper.getLogFilenames());
+        final List<CharSequence> filenames = new ArrayList<>(SaveLogHelper.getLogFilenames());
 
         if (filenames.isEmpty()) {
             Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
@@ -1561,13 +1429,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         final MaterialDialog dialog = builder.show();
 
 
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dialog.dismiss();
-                String filename = filenames.get(position).toString();
-                openLogFile(filename);
-            }
+        view.setOnItemClickListener((parent, view1, position, id) -> {
+            dialog.dismiss();
+            String filename = filenames.get(position).toString();
+            openLogFile(filename);
         });
 
     }
@@ -1576,7 +1441,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         // do in background to avoid jank
 
-        final AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>() {
+        @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>() {
 
             @Override
             protected void onPreExecute() {
@@ -1584,6 +1449,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 resetDisplayedLog(filename);
 
                 showProgressBar();
+                ((CircularProgressBar) findViewById(R.id.main_progress_bar)).enableIndeterminateMode(false);
             }
 
             @Override
@@ -1594,17 +1460,18 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 SavedLog savedLog = SaveLogHelper.openLog(filename, maxLines);
                 List<String> lines = savedLog.getLogLines();
                 List<LogLine> logLines = new ArrayList<>();
-                for (String line : lines) {
+                for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {
+                    String line = lines.get(lineNumber);
                     logLines.add(LogLine.newLogLine(line, !mCollapsedMode));
+                    final int finalLineNumber = lineNumber;
+                    runOnUiThread(() -> ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setProgress(finalLineNumber * 100 / linesSize));
                 }
 
                 // notify the user if the saved file was truncated
                 if (savedLog.isTruncated()) {
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
-                            Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
-                        }
+                    mHandler.post(() -> {
+                        String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
+                        Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                     });
                 }
 
@@ -1631,14 +1498,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         // if the main log task is running, we can only run AFTER it's been canceled
 
         if (mTask != null) {
-            mTask.setOnFinished(new Runnable() {
-
-                @Override
-                public void run() {
-                    openFileTask.execute((Void) null);
-
-                }
-            });
+            mTask.setOnFinished(() -> openFileTask.execute((Void) null));
             mTask.unpause();
             mTask.killReader();
             mTask = null;
@@ -1651,14 +1511,13 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     }
 
     void hideProgressBar() {
-        findViewById(R.id.main_dark_progress_bar).setVisibility(View.GONE);
-        findViewById(R.id.main_light_progress_bar).setVisibility(View.GONE);
+        findViewById(R.id.main_progress_bar).setVisibility(View.GONE);
     }
 
     private void showProgressBar() {
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
-        findViewById(R.id.main_dark_progress_bar).setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
-        findViewById(R.id.main_light_progress_bar).setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
+        ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setColor(colorScheme.getSelectedColor(this));
+        findViewById(R.id.main_progress_bar).setVisibility(View.VISIBLE);
     }
 
 
@@ -1701,15 +1560,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         builder.setTitle(R.string.log_level)
                 .setCancelable(true)
-                .setSingleChoiceItems(logLevels, mLogListAdapter.getLogLevelLimit(), new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(logLevels, mLogListAdapter.getLogLevelLimit(), (dialog, which) -> {
+                    mLogListAdapter.setLogLevelLimit(which);
+                    logLevelChanged();
+                    dialog.dismiss();
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mLogListAdapter.setLogLevelLimit(which);
-                        logLevelChanged();
-                        dialog.dismiss();
-
-                    }
                 });
 
         builder.show();
@@ -1764,27 +1619,20 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return;
         }
 
-        MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
-
-            @Override
-            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
-                if (DialogHelper.isInvalidFilename(charSequence)) {
-                    cancelPartialSelect();
-                    Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-                } else {
-                    String filename = charSequence.toString();
-                    savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
-                }
+        MaterialDialog.InputCallback onClickListener = (materialDialog, charSequence) -> {
+            if (DialogHelper.isInvalidFilename(charSequence)) {
+                cancelPartialSelect();
+                Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+            } else {
+                String filename = charSequence.toString();
+                savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
             }
         };
 
 
-        MaterialDialog.SingleButtonCallback onCancelListener = new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (which == DialogAction.NEGATIVE) {
-                    cancelPartialSelect();
-                }
+        MaterialDialog.SingleButtonCallback onCancelListener = (dialog, which) -> {
+            if(which == DialogAction.NEGATIVE) {
+                cancelPartialSelect();
             }
         };
 
@@ -1804,13 +1652,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
         partiallySelectedLogLines.clear();
         if (changed) {
-            mHandler.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    mLogListAdapter.notifyDataSetChanged();
-                }
-            });
+            mHandler.post(mLogListAdapter::notifyDataSetChanged);
         }
     }
 
@@ -1859,11 +1701,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         final int color = colorScheme.getBackgroundColor(LogcatActivity.this);
 
-        mHandler.post(new Runnable() {
-            public void run() {
-                findViewById(R.id.main_background).setBackgroundColor(color);
-            }
-        });
+        mHandler.post(() -> findViewById(R.id.main_background).setBackgroundColor(color));
 
         //TODO:
         //mListView.setCacheColorHint(color);
@@ -1892,7 +1730,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     @SuppressLint("RestrictedApi")
     public void invalidateDarkOrLightMenuItems(Context context, Menu menu) {
-        if (menu != null && menu instanceof MenuBuilder) {
+        if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
             /*final boolean darkMode = ThemeUtils.isDarkMode(context);
             final int textColorPrimary = Utils.resolveColor(context, android.R.attr.textColorPrimary);
@@ -1916,6 +1754,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         ((RecyclerView) findViewById(R.id.list)).scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {
 
         private final Object mLock = new Object();
@@ -1934,6 +1773,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             resetDisplayedLog(null);
 
             showProgressBar();
+            ((CircularProgressBar) findViewById(R.id.main_progress_bar)).enableIndeterminateMode(true);
         }
 
         @Override
@@ -1987,7 +1827,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             return null;
         }
 
-        public void killReader() {
+        void killReader() {
             if (!mKilled) {
                 synchronized (mLock) {
                     if (!mKilled && mReader != null) {
@@ -2047,24 +1887,24 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             }
         }
 
-        public void pause() {
+        private void pause() {
             synchronized (mLock) {
                 mPaused = true;
             }
         }
 
-        public void unpause() {
+        private void unpause() {
             synchronized (mLock) {
                 mPaused = false;
                 mLock.notify();
             }
         }
 
-        public boolean isPaused() {
+        private boolean isPaused() {
             return mPaused;
         }
 
-        public void setOnFinished(Runnable onFinished) {
+        private void setOnFinished(Runnable onFinished) {
             this.mOnFinishedRunnable = onFinished;
         }
 

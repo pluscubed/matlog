@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.helper.DialogHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.helper.WidgetHelper;
-import com.pluscubed.logcat.util.Callback;
 
 import org.omnirom.logcat.R;
 
@@ -73,49 +69,35 @@ public class RecordLogDialogActivity extends AppCompatActivity {
             MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                     .title(R.string.record_log)
                     .content(R.string.enter_filename)
-                    .input("", logFilename, new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
-                            if (DialogHelper.isInvalidFilename(charSequence)) {
-                                Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-                            } else {
-                                materialDialog.dismiss();
-                                String filename = charSequence.toString();
-                                Runnable runnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        activity.finish();
-                                    }
-                                };
-                                DialogHelper.startRecordingWithProgressDialog(filename,
-                                        queryFilterText.toString(), logLevelText.toString(), runnable, getActivity());
-                            }
+                    .input("", logFilename, (materialDialog, charSequence) -> {
+                        if (DialogHelper.isInvalidFilename(charSequence)) {
+                            Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+                        } else {
+                            materialDialog.dismiss();
+                            String filename = charSequence.toString();
+                            Runnable runnable = activity::finish;
+                            DialogHelper.startRecordingWithProgressDialog(filename,
+                                    queryFilterText.toString(), logLevelText.toString(), runnable, getActivity());
                         }
                     })
                     .neutralText(R.string.text_filter_ellipsis)
                     .negativeText(android.R.string.cancel)
                     .autoDismiss(false)
-                    .onAny(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            WidgetHelper.updateWidgets(getActivity());
-                            switch (which) {
-                                case NEUTRAL:
-                                    DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
-                                            logLevelText.toString(), suggestions,
-                                            new Callback<FilterQueryWithLevel>() {
-                                                @Override
-                                                public void onCallback(FilterQueryWithLevel result) {
-                                                    queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
-                                                    logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
-                                                }
-                                            });
-                                    break;
-                                case NEGATIVE:
-                                    dialog.dismiss();
-                                    getActivity().finish();
-                                    break;
-                            }
+                    .onAny((dialog1, which) -> {
+                        WidgetHelper.updateWidgets(getActivity());
+                        switch (which) {
+                            case NEUTRAL:
+                                DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
+                                        logLevelText.toString(), suggestions,
+                                        result -> {
+                                            queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
+                                            logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
+                                        });
+                                break;
+                            case NEGATIVE:
+                                dialog1.dismiss();
+                                getActivity().finish();
+                                break;
                         }
                     }).build();
             //noinspection ConstantConditions

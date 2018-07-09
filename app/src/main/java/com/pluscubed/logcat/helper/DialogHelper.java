@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
@@ -46,22 +44,16 @@ public class DialogHelper {
 
         final Handler handler = new Handler(Looper.getMainLooper());
         progressDialog.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                        if (onPostExecute != null) {
-                            onPostExecute.run();
-                        }
-                    }
-                });
-            }
+        new Thread(() -> {
+            ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
+            handler.post(() -> {
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                if (onPostExecute != null) {
+                    onPostExecute.run();
+                }
+            });
         }).start();
 
     }
@@ -86,15 +78,15 @@ public class DialogHelper {
         @SuppressLint("InflateParams") View filterView = inflater.inflate(R.layout.dialog_recording_filter, null, false);
 
         // add suggestions to autocompletetextview
-        final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.text1);
+        final AutoCompleteTextView autoCompleteTextView = filterView.findViewById(android.R.id.text1);
         autoCompleteTextView.setText(queryFilterText);
 
-        SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
+        SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<>(
                 context, R.layout.list_item_dropdown, filterQuerySuggestions);
         autoCompleteTextView.setAdapter(suggestionAdapter);
 
         // set values on spinner to be the log levels
-        final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
+        final Spinner spinner = filterView.findViewById(R.id.spinner);
 
         // put the word "default" after whatever the default log level is
         CharSequence[] logLevels = context.getResources().getStringArray(R.array.log_levels);
@@ -117,17 +109,14 @@ public class DialogHelper {
                 .customView(filterView, true)
                 .negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        int logLevelIdx = spinner.getSelectedItemPosition();
-                        String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
-                        String logLevelValue = logLevelValues[logLevelIdx];
+                .onPositive((dialog, which) -> {
+                    int logLevelIdx = spinner.getSelectedItemPosition();
+                    String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
+                    String logLevelValue = logLevelValues[logLevelIdx];
 
-                        String filterQuery = autoCompleteTextView.getText().toString();
+                    String filterQuery = autoCompleteTextView.getText().toString();
 
-                        callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
-                    }
+                    callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
                 })
                 .show();
 

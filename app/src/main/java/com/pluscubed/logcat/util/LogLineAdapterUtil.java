@@ -88,7 +88,7 @@ public class LogLineAdapterUtil {
 
     public static boolean logLevelIsAcceptableGivenLogLevelLimit(int logLevel, int logLevelLimit) {
 
-        int minVal = 0;
+        int minVal;
         switch (logLevel) {
 
             case Log.VERBOSE:

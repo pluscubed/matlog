@@ -62,13 +62,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
      * the original array of data.
      */
     private final Object mLock = new Object();
-    private Comparator<T> stringComparator = new Comparator<T>() {
-
-        @Override
-        public int compare(T object1, T object2) {
-            return object1.toString().compareToIgnoreCase(object2.toString());
-        }
-    };
+    private Comparator<T> stringComparator = (object1, object2) -> object1.toString().compareToIgnoreCase(object2.toString());
     /**
      * Contains the list of objects that represent the data of this ArrayAdapter.
      * The content of this list is referred to as "the array" in the documentation.
@@ -114,7 +108,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
      *                           instantiating views.
      */
     public SortedFilterArrayAdapter(Context context, int textViewResourceId) {
-        init(context, textViewResourceId, 0, new ArrayList<T>());
+        init(context, textViewResourceId, 0, new ArrayList<>());
     }
 
     /**
@@ -126,7 +120,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
      * @param textViewResourceId The id of the TextView within the layout resource to be populated
      */
     public SortedFilterArrayAdapter(Context context, int resource, int textViewResourceId) {
-        init(context, resource, textViewResourceId, new ArrayList<T>());
+        init(context, resource, textViewResourceId, new ArrayList<>());
     }
 
     /**
@@ -191,7 +185,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
     public static ArrayAdapter<CharSequence> createFromResource(Context context,
                                                                 int textArrayResId, int textViewResId) {
         CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
-        return new ArrayAdapter<CharSequence>(context, textViewResId, strings);
+        return new ArrayAdapter<>(context, textViewResId, strings);
     }
 
     /**
@@ -359,7 +353,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
                 text = (TextView) view;
             } else {
                 //  Otherwise, find the TextView field within the layout
-                text = (TextView) view.findViewById(mFieldId);
+                text = view.findViewById(mFieldId);
             }
         } catch (ClassCastException e) {
             log.e("You must supply a resource ID for a TextView");
@@ -412,13 +406,13 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
 
             if (mOriginalValues == null) {
                 synchronized (mLock) {
-                    mOriginalValues = new ArrayList<T>(mObjects);
+                    mOriginalValues = new ArrayList<>(mObjects);
                 }
             }
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<T> list = new ArrayList<T>(mOriginalValues);
+                    ArrayList<T> list = new ArrayList<>(mOriginalValues);
                     Collections.sort(list, stringComparator);
                     results.values = list;
                     results.count = list.size();
@@ -429,7 +423,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
                 final ArrayList<T> values = mOriginalValues;
                 final int count = values.size();
 
-                final ArrayList<T> newValues = new ArrayList<T>(count);
+                final ArrayList<T> newValues = new ArrayList<>(count);
 
                 for (int i = 0; i < count; i++) {
                     final T value = values.get(i);

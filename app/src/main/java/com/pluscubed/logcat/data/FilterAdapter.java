@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,26 +32,23 @@ public class FilterAdapter extends ArrayAdapter<FilterItem> {
 
         final FilterItem filterItem = getItem(position);
 
-        TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(android.R.id.text1);
         textView.setText(filterItem.getText());
         // add listener to the delete button
-        ImageView button = (ImageView) convertView.findViewById(android.R.id.button1);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //delete
-                CatlogDBHelper dbHelper = null;
-                try {
-                    dbHelper = new CatlogDBHelper(getContext());
-                    dbHelper.deleteFilter(filterItem.getId());
-                } finally {
-                    if (dbHelper != null) {
-                        dbHelper.close();
-                    }
+        ImageView button = convertView.findViewById(android.R.id.button1);
+        button.setOnClickListener(v -> {
+            //delete
+            CatlogDBHelper dbHelper = null;
+            try {
+                dbHelper = new CatlogDBHelper(getContext());
+                dbHelper.deleteFilter(filterItem.getId());
+            } finally {
+                if (dbHelper != null) {
+                    dbHelper.close();
                 }
-                remove(filterItem);
-                notifyDataSetChanged();
             }
+            remove(filterItem);
+            notifyDataSetChanged();
         });
 
         return convertView;

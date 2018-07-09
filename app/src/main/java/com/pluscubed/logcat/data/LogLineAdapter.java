@@ -374,11 +374,11 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
             SearchCriteria searchCriteria = new SearchCriteria(query);
 
             // search by log level
-            ArrayList<LogLine> allValues = new ArrayList<LogLine>();
+            ArrayList<LogLine> allValues = new ArrayList<>();
 
             ArrayList<LogLine> logLines;
             synchronized (mLock) {
-                logLines = new ArrayList<LogLine>(inputList);
+                logLines = new ArrayList<>(inputList);
             }
 
             for (LogLine logLine : logLines) {
@@ -395,7 +395,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
                 final ArrayList<LogLine> values = allValues;
                 final int count = values.size();
 
-                final ArrayList<LogLine> newValues = new ArrayList<LogLine>(count);
+                final ArrayList<LogLine> newValues = new ArrayList<>(count);
 
                 for (int i = 0; i < count; i++) {
                     final LogLine value = values.get(i);

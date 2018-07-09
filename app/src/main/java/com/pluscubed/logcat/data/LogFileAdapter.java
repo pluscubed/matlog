@@ -47,10 +47,10 @@ public class LogFileAdapter extends ArrayAdapter<CharSequence> {
             view = inflater.inflate(resId, parent, false);
         }
 
-        CheckBox box = (CheckBox) view.findViewById(android.R.id.checkbox);
-        RadioButton button = (RadioButton) view.findViewById(android.R.id.button1);
-        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+        CheckBox box = view.findViewById(android.R.id.checkbox);
+        RadioButton button = view.findViewById(android.R.id.button1);
+        TextView text1 = view.findViewById(android.R.id.text1);
+        TextView text2 = view.findViewById(android.R.id.text2);
 
         CharSequence filename = objects.get(position);
 

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -100,9 +99,7 @@ public class SaveLogHelper {
 
         File catlogDir = getSavedLogsDirectory();
 
-        File file = new File(catlogDir, filename);
-
-        return file;
+        return new File(catlogDir, filename);
     }
 
     public static void deleteLogIfExists(String filename) {
@@ -147,17 +144,11 @@ public class SaveLogHelper {
             return Collections.emptyList();
         }
 
-        List<File> files = new ArrayList<File>(Arrays.asList(filesArray));
+        List<File> files = new ArrayList<>(Arrays.asList(filesArray));
 
-        Collections.sort(files, new Comparator<File>() {
+        Collections.sort(files, (object1, object2) -> Long.compare(object2.lastModified(), object1.lastModified()));
 
-            @Override
-            public int compare(File object1, File object2) {
-                return Long.valueOf(object2.lastModified()).compareTo(object1.lastModified());
-            }
-        });
-
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (File file : files) {
             result.add(file.getName());
@@ -172,7 +163,7 @@ public class SaveLogHelper {
         File catlogDir = getSavedLogsDirectory();
         File logFile = new File(catlogDir, filename);
 
-        LinkedList<String> logLines = new LinkedList<String>();
+        LinkedList<String> logLines = new LinkedList<>();
         boolean truncated = false;
 
         BufferedReader bufferedReader = null;

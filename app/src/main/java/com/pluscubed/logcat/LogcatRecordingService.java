@@ -252,12 +252,7 @@ public class LogcatRecordingService extends IntentService {
 
 
     private void makeToast(final int stringResId, final int toastLength) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show();
-            }
-        });
+        handler.post(Toast.makeText(LogcatRecordingService.this, stringResId, toastLength)::show);
 
     }
 
