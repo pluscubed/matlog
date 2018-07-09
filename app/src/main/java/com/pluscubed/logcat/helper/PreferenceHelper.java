@@ -160,13 +160,13 @@ public class PreferenceHelper {
                     context.getText(R.string.pref_text_size).toString(),
                     context.getText(R.string.text_size_medium_value).toString());
 
-            if (textSizePref.equals(context.getText(R.string.text_size_xsmall_value))) {
+            if (textSizePref.contentEquals(context.getText(R.string.text_size_xsmall_value))) {
                 cacheTextsize(context, R.dimen.text_size_xsmall);
-            } else if (textSizePref.equals(context.getText(R.string.text_size_small_value))) {
+            } else if (textSizePref.contentEquals(context.getText(R.string.text_size_small_value))) {
                 cacheTextsize(context, R.dimen.text_size_small);
-            } else if (textSizePref.equals(context.getText(R.string.text_size_medium_value))) {
+            } else if (textSizePref.contentEquals(context.getText(R.string.text_size_medium_value))) {
                 cacheTextsize(context, R.dimen.text_size_medium);
-            } else if (textSizePref.equals(context.getText(R.string.text_size_large_value))) {
+            } else if (textSizePref.contentEquals(context.getText(R.string.text_size_large_value))) {
                 cacheTextsize(context, R.dimen.text_size_large);
             } else { // xlarge
                 cacheTextsize(context, R.dimen.text_size_xlarge);

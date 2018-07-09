@@ -51,11 +51,6 @@ public class CrazyLoggerService extends IntentService {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }

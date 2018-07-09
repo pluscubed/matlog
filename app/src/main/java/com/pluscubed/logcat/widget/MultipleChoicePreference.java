@@ -36,7 +36,7 @@ public class MultipleChoicePreference extends ListPreference {
         // convert comma-separated list to boolean array
 
         String value = getValue();
-        Set<String> commaSeparated = new HashSet<String>(Arrays.asList(StringUtil.split(value, DELIMITER)));
+        Set<String> commaSeparated = new HashSet<>(Arrays.asList(StringUtil.split(value, DELIMITER)));
 
         CharSequence[] entryValues = getEntryValues();
         final boolean[] checked = new boolean[entryValues.length];
@@ -44,28 +44,18 @@ public class MultipleChoicePreference extends ListPreference {
             checked[i] = commaSeparated.contains(entryValues[i]);
         }
 
-        builder.setMultiChoiceItems(getEntries(), checked, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(getEntries(), checked, (dialog, which, isChecked) -> checked[which] = isChecked);
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                checked[which] = isChecked;
-            }
-        });
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            checkedDialogEntryIndexes = checked;
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            /*
+             * Clicking on an item simulates the positive button
+             * click, and dismisses the dialog.
+             */
+            MultipleChoicePreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+            dialog.dismiss();
 
-                checkedDialogEntryIndexes = checked;
-
-				/*
-                 * Clicking on an item simulates the positive button
-                 * click, and dismisses the dialog.
-                 */
-                MultipleChoicePreference.this.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
-                dialog.dismiss();
-
-            }
         });
     }
 

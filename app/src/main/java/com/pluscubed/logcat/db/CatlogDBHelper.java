@@ -48,7 +48,7 @@ public class CatlogDBHelper extends SQLiteOpenHelper {
 
         synchronized (CatlogDBHelper.class) {
 
-            List<FilterItem> filters = new ArrayList<FilterItem>();
+            List<FilterItem> filters = new ArrayList<>();
 
             Cursor cursor = null;
             try {

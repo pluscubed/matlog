@@ -38,7 +38,7 @@ public class StringUtil {
      * @return the split string
      */
     public static String[] split(String str, String delimiter) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         int lastIndex = 0;
         int index = str.indexOf(delimiter);
         while (index != -1) {
@@ -122,10 +122,7 @@ public class StringUtil {
             }
         }
 
-        int dist = distance[str1.length()][str2.length()];
-
-
-        return dist;
+        return distance[str1.length()][str2.length()];
     }
 
     private static int findCommonPrefixLength(CharSequence str1, CharSequence str2) {

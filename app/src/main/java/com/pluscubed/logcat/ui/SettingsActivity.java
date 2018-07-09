@@ -8,7 +8,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.design.widget.Snackbar;
@@ -36,7 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
 
         FragmentManager fm = getFragmentManager();
@@ -146,42 +145,30 @@ public class SettingsActivity extends AppCompatActivity {
             bufferPreference.setOnPreferenceChangeListener(this);
             setBufferPreferenceSummary(bufferPreference.getValue());
 
-            boolean donateInstalled = PackageHelper.isCatlogDonateInstalled(getActivity());
-
             String themeSummary = PreferenceHelper.getColorScheme(getActivity()).getDisplayableName(getActivity());
 
             mThemePreference.setSummary(themeSummary);
-            mThemePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    //TODO: Implement themes using color picker and remove this
-                    Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            "Themes are not implemented yet. Stay tuned for updates!", Snackbar.LENGTH_LONG)
-                            .show();
-                    return true;
-                }
+            mThemePreference.setOnPreferenceClickListener(preference -> {
+                //TODO: Implement themes using color picker and remove this
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        "Themes are not implemented yet. Stay tuned for updates!", Snackbar.LENGTH_LONG)
+                        .show();
+                return true;
             });
 
             mAboutPreference = findPreference(getString(R.string.pref_about));
-            mAboutPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    // launch about activity
-                    Intent intent = new Intent(getActivity(), AboutDialogActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
+            mAboutPreference.setOnPreferenceClickListener(preference -> {
+                // launch about activity
+                Intent intent = new Intent(getActivity(), AboutDialogActivity.class);
+                startActivity(intent);
+                return true;
             });
             mAboutPreference.setSummary(getString(R.string.version, PackageHelper.getVersionName(getActivity())));
 
             scrubberPreference = (SwitchPreference) getPreferenceScreen().findPreference("scrubber");
-            scrubberPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    LogLine.isScrubberEnabled = (boolean) newValue;
-                    return true;
-                }
+            scrubberPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                LogLine.isScrubberEnabled = (boolean) newValue;
+                return true;
             });
         }
 
@@ -300,7 +287,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             String[] commaSeparated = StringUtil.split(StringUtil.nullToEmpty(value), MultipleChoicePreference.DELIMITER);
 
-            List<CharSequence> checkedEntries = new ArrayList<CharSequence>();
+            List<CharSequence> checkedEntries = new ArrayList<>();
 
             for (String entryValue : commaSeparated) {
                 int idx = ArrayUtil.indexOf(bufferPreference.getEntryValues(), entryValue);
