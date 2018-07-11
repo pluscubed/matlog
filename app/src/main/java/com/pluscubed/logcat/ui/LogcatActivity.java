@@ -465,8 +465,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         log.d("onDestroy() called");
 
         if (mTask != null) {
-            mTask.unpause();
             mTask.killReader();
+            mTask.cancel(true);
             mTask = null;
         }
     }
@@ -722,11 +722,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .show();
 
         LinearLayout customView = (LinearLayout) dialog.getCustomView();
-        LinearLayout tag = (LinearLayout) customView.findViewById(R.id.dialog_searchby_tag_linear);
-        LinearLayout pid = (LinearLayout) customView.findViewById(R.id.dialog_searchby_pid_linear);
+        LinearLayout tag = customView.findViewById(R.id.dialog_searchby_tag_linear);
+        LinearLayout pid = customView.findViewById(R.id.dialog_searchby_pid_linear);
 
-        TextView tagText = (TextView) customView.findViewById(R.id.dialog_searchby_tag_text);
-        TextView pidText = (TextView) customView.findViewById(R.id.dialog_searchby_pid_text);
+        TextView tagText = customView.findViewById(R.id.dialog_searchby_tag_text);
+        TextView pidText = customView.findViewById(R.id.dialog_searchby_pid_text);
 
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
 
@@ -940,7 +940,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             // don't show the scroll bar
             helpView.setVerticalScrollBarEnabled(false);
             helpView.setHorizontalScrollBarEnabled(false);
-            final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
+            final CheckBox checkBox = helpView.findViewById(android.R.id.checkbox);
 
             new MaterialDialog.Builder(this)
                     .title(R.string.menu_title_partial_select)
@@ -1026,7 +1026,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         @SuppressLint("InflateParams") LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_delete_logfiles, null);
 
-        ListView view = (ListView) layout.findViewById(R.id.list);
+        ListView view = layout.findViewById(R.id.list);
         view.setAdapter(logFileAdapter);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
@@ -1125,7 +1125,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
-        final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+        final CheckBox includeDeviceInfoCheckBox = includeDeviceInfoView.findViewById(android.R.id.checkbox);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
@@ -1811,7 +1811,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
                 String line;
                 LinkedList<LogLine> initialLines = new LinkedList<>();
-                while ((line = mReader.readLine()) != null) {
+                while ((line = mReader.readLine()) != null && !isCancelled()) {
                     if (mPaused) {
                         synchronized (mLock) {
                             if (mPaused) {
