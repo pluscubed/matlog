@@ -59,9 +59,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_compat_margin"
             android:visibility="gone"
-            app:borderWidth="0dp"
             app:elevation="6dp"
-            app:pressedTranslationZ="12dp"
             app:srcCompat="@drawable/ic_stop_white_24dp"
             tools:visibility="visible"/>
 

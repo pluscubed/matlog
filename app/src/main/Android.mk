@@ -18,31 +18,25 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_BUILD_APPS),)
-support_library_root_dir := frameworks/support
-else
-support_library_root_dir := prebuilts/sdk/current/support
-endif
-
-LOCAL_STATIC_JAVA_LIBRARIES += android-support-v4 \
+LOCAL_STATIC_ANDROID_LIBRARIES := \
+    $(ANDROID_SUPPORT_DESIGN_TARGETS) \
+    android-support-v4 \
     android-support-v7-appcompat \
     android-support-v7-recyclerview \
-    android-support-annotations \
-    android-support-design
+    android-support-v13 \
+    android-support-annotations
 
-LOCAL_STATIC_JAVA_AAR_LIBRARIES += material-dialogs-core-matlog \
-    material-dialogs-commons-matlog \
-    material-progressbar-library-matlog
+LOCAL_STATIC_JAVA_AAR_LIBRARIES := material-dialogs-core-matlog-target \
+    material-dialogs-commons-matlog-target \
+    material-progressbar-library-matlog-target
 
-LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
-                      $(support_library_root_dir)/v7/appcompat/res \
-                      $(support_library_root_dir)/v7/recyclerview/res \
-                      $(support_library_root_dir)/design/res
+LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res
+LOCAL_RESOURCE_DIR += $(foreach lib, $(LOCAL_STATIC_JAVA_AAR_LIBRARIES),\
+  $(call intermediates-dir-for,JAVA_LIBRARIES,$(lib),,COMMON)/aar/res)
+
+LOCAL_USE_AAPT2 := true
 
 LOCAL_AAPT_FLAGS := --auto-add-overlay \
-    --extra-packages android.support.v7.appcompat \
-    --extra-packages android.support.v7.recyclerview \
-    --extra-packages android.support.design \
     --extra-packages com.afollestad.materialdialogs \
     --extra-packages com.afollestad.materialdialogs.commons \
     --extra-packages me.zhanghai.android.materialprogressbar
@@ -63,4 +57,32 @@ LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \
     material-dialogs-commons-matlog:libs/aar/material-dialogs-commons-0.9.4.2.aar \
     material-progressbar-library-matlog:libs/aar/material-progressbar-library-1.3.0.aar
 
-include $(BUILD_MULTI_PREBUILT)
+include $(BUILD_HOST_PREBUILT)
+
+# Enumerate target prebuilts to avoid linker warnings
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_CLASS := JAVA_LIBRARIES
+LOCAL_MODULE := material-dialogs-core-matlog-target
+LOCAL_SRC_FILES := libs/aar/material-dialogs-core-0.9.4.2.aar
+LOCAL_UNINSTALLABLE_MODULE := true
+
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_CLASS := JAVA_LIBRARIES
+LOCAL_MODULE := material-dialogs-commons-matlog-target
+LOCAL_SRC_FILES := libs/aar/material-dialogs-commons-0.9.4.2.aar
+LOCAL_UNINSTALLABLE_MODULE := true
+
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE_CLASS := JAVA_LIBRARIES
+LOCAL_MODULE := material-progressbar-library-matlog-target
+LOCAL_SRC_FILES := libs/aar/material-progressbar-library-1.3.0.aar
+LOCAL_UNINSTALLABLE_MODULE := true
+
+include $(BUILD_PREBUILT)

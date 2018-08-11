@@ -21,3 +21,4 @@
 
 -keep class android.support.v7.widget.SearchView {*;}
 -keep class com.pluscubed.logcat.RecordingWidgetProvider {*;}
+-keep class me.zhanghai.android.materialprogressbar.** { *; }
