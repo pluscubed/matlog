@@ -3,6 +3,7 @@ package com.pluscubed.logcat.util;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.SparseIntArray;
 
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
@@ -14,55 +15,32 @@ public class LogLineAdapterUtil {
 
     private static final int NUM_COLORS = 17;
 
-    public static int getBackgroundColorForLogLevel(Context context, int logLevel) {
-        int result = android.R.color.black;
-        switch (logLevel) {
-            case Log.DEBUG:
-                result = R.color.background_debug;
-                break;
-            case Log.ERROR:
-                result = R.color.background_error;
-                break;
-            case Log.INFO:
-                result = R.color.background_info;
-                break;
-            case Log.VERBOSE:
-                result = R.color.background_verbose;
-                break;
-            case Log.WARN:
-                result = R.color.background_warn;
-                break;
-            case LOG_WTF:
-                result = R.color.background_wtf;
-                break;
-        }
+    private static final SparseIntArray BACKGROUND_COLORS = new SparseIntArray(6);
+    private static final SparseIntArray FOREGROUND_COLORS = new SparseIntArray(6);
 
-        return ContextCompat.getColor(context,result);
+    static {
+        BACKGROUND_COLORS.append(Log.DEBUG, R.color.background_debug);
+        BACKGROUND_COLORS.append(Log.ERROR, R.color.background_error);
+        BACKGROUND_COLORS.append(Log.INFO, R.color.background_info);
+        BACKGROUND_COLORS.append(Log.VERBOSE, R.color.background_verbose);
+        BACKGROUND_COLORS.append(Log.WARN, R.color.background_warn);
+        BACKGROUND_COLORS.append(LOG_WTF, R.color.background_wtf);
+        FOREGROUND_COLORS.append(Log.DEBUG, R.color.foreground_debug);
+        FOREGROUND_COLORS.append(Log.ERROR, R.color.foreground_error);
+        FOREGROUND_COLORS.append(Log.INFO, R.color.foreground_info);
+        FOREGROUND_COLORS.append(Log.VERBOSE, R.color.foreground_verbose);
+        FOREGROUND_COLORS.append(Log.WARN, R.color.foreground_warn);
+        FOREGROUND_COLORS.append(LOG_WTF, R.color.foreground_wtf);
+    }
+
+    public static int getBackgroundColorForLogLevel(Context context, int logLevel) {
+        int result = BACKGROUND_COLORS.get(logLevel, android.R.color.black);
+        return ContextCompat.getColor(context, result);
     }
 
     public static int getForegroundColorForLogLevel(Context context, int logLevel) {
-        int result = android.R.color.primary_text_dark;
-        switch (logLevel) {
-            case Log.DEBUG:
-                result = R.color.foreground_debug;
-                break;
-            case Log.ERROR:
-                result = R.color.foreground_error;
-                break;
-            case Log.INFO:
-                result = R.color.foreground_info;
-                break;
-            case Log.VERBOSE:
-                result = R.color.foreground_verbose;
-                break;
-            case Log.WARN:
-                result = R.color.foreground_warn;
-                break;
-            case LOG_WTF:
-                result = R.color.foreground_wtf;
-                break;
-        }
-        return ContextCompat.getColor(context,result);
+        int result = FOREGROUND_COLORS.get(logLevel, android.R.color.primary_text_dark);
+        return ContextCompat.getColor(context, result);
     }
 
     public static synchronized int getOrCreateTagColor(Context context, String tag) {
