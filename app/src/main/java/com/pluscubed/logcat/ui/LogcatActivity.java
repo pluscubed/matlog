@@ -464,8 +464,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         log.d("onDestroy() called");
 
         if (mTask != null) {
-            mTask.unpause();
             mTask.killReader();
+            mTask.cancel(true);
             mTask = null;
         }
     }
@@ -587,7 +587,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             @Override
             public boolean onSuggestionClick(int position) {
                 List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                searchView.setQuery(suggestions.get(position), true);
+                if (!suggestions.isEmpty()) {
+                    searchView.setQuery(suggestions.get(position), true);
+                }
                 return false;
             }
         });
@@ -942,7 +944,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             // don't show the scroll bar
             helpView.setVerticalScrollBarEnabled(false);
             helpView.setHorizontalScrollBarEnabled(false);
-            final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
+            final CheckBox checkBox = helpView.findViewById(android.R.id.checkbox);
 
             new MaterialDialog.Builder(this)
                     .title(R.string.menu_title_partial_select)
@@ -1028,7 +1030,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         @SuppressLint("InflateParams") LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_delete_logfiles, null);
 
-        ListView view = (ListView) layout.findViewById(R.id.list);
+        ListView view = layout.findViewById(R.id.list);
         view.setAdapter(logFileAdapter);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
@@ -1098,7 +1100,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                                 }
                             }
 
-                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount);
+                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount, finalDeleteCount);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1125,7 +1127,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
-        final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+        final CheckBox includeDeviceInfoCheckBox = includeDeviceInfoView.findViewById(android.R.id.checkbox);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
@@ -1600,7 +1602,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 if (savedLog.isTruncated()) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines);
+                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -1948,7 +1950,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
                 String line;
                 LinkedList<LogLine> initialLines = new LinkedList<>();
-                while ((line = mReader.readLine()) != null) {
+                while ((line = mReader.readLine()) != null && !isCancelled()) {
                     if (mPaused) {
                         synchronized (mLock) {
                             if (mPaused) {

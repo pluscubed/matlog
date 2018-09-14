@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.1.4'
     }
 }
 
@@ -13,11 +13,5 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'https://maven.google.com' }
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
-    distributionType = Wrapper.DistributionType.ALL
 }
