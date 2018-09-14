@@ -24,10 +24,12 @@ public class PreferenceHelper {
     private static Boolean showTimestampAndPid = null;
     private static ColorScheme colorScheme = null;
     private static int displayLimit = -1;
+    private static String filterPattern = null;
     private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 
     public static void clearCache() {
         defaultLogLevel = null;
+        filterPattern = null;
         textSize = -1;
         showTimestampAndPid = null;
         colorScheme = null;
@@ -77,8 +79,7 @@ public class PreferenceHelper {
             editor.putBoolean(widgetExists, true);
         }
 
-        editor.commit();
-
+        editor.apply();
 
     }
 
@@ -102,6 +103,30 @@ public class PreferenceHelper {
         return displayLimit;
     }
 
+    public static String getFilterPatternPreference(Context context) {
+
+        if (filterPattern == null) {
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            String defaultValue = context.getText(R.string.pref_filter_pattern_default).toString();
+
+            filterPattern = sharedPrefs.getString(context.getText(R.string.pref_filter_pattern).toString(), defaultValue);
+
+        }
+
+        return filterPattern;
+    }
+
+    public static void setFilterPatternPreference(Context context, String value) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = sharedPrefs.edit();
+
+        editor.putString(context.getText(R.string.pref_filter_pattern).toString(), value);
+
+        editor.apply();
+    }
+
     public static int getLogLinePeriodPreference(Context context) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -122,7 +147,7 @@ public class PreferenceHelper {
 
         editor.putString(context.getText(R.string.pref_display_limit).toString(), Integer.toString(value));
 
-        editor.commit();
+        editor.apply();
     }
 
     public static void setLogLinePeriodPreference(Context context, int value) {
@@ -131,7 +156,7 @@ public class PreferenceHelper {
 
         editor.putString(context.getText(R.string.pref_log_line_period).toString(), Integer.toString(value));
 
-        editor.commit();
+        editor.apply();
     }
 
     public static char getDefaultLogLevelPreference(Context context) {

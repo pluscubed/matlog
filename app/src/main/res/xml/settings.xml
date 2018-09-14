@@ -72,6 +72,13 @@
             android:summary="@string/pref_display_limit_summary"
             android:title="@string/pref_display_limit_title" />
 
+        <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+            android:defaultValue="@string/pref_filter_pattern_default"
+            android:key="@string/pref_filter_pattern"
+            android:persistent="true"
+            android:summary="@string/pref_filter_pattern_summary"
+            android:title="@string/pref_filter_pattern_title" />
+
         <SwitchPreference
             android:key="scrubber"
             android:title="@string/scrubber"

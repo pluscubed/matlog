@@ -240,7 +240,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
         holder.logLine = logLine;
 
-        TextView t = (TextView) holder.itemView.findViewById(R.id.log_level_text);
+        TextView t = holder.itemView.findViewById(R.id.log_level_text);
         t.setText(logLine.getProcessIdText());
         t.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
         t.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
@@ -250,14 +250,14 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
         float textSize = PreferenceHelper.getTextSizePreference(context);
 
         //OUTPUT TEXT VIEW
-        TextView output = (TextView) holder.itemView.findViewById(R.id.log_output_text);
+        TextView output = holder.itemView.findViewById(R.id.log_output_text);
         output.setSingleLine(!logLine.isExpanded());
         output.setText(logLine.getLogOutput());
         output.setTextColor(textColor);
 
 
         //TAG TEXT VIEW
-        TextView tag = (TextView) holder.itemView.findViewById(R.id.tag_text);
+        TextView tag = holder.itemView.findViewById(R.id.tag_text);
         tag.setSingleLine(!logLine.isExpanded());
         tag.setText(logLine.getTag());
         tag.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
@@ -273,9 +273,9 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
                 && PreferenceHelper.getShowTimestampAndPidPreference(context)
                 && logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...'
 
-        TextView pidText = (TextView) holder.itemView.findViewById(R.id.pid_text);
+        TextView pidText = holder.itemView.findViewById(R.id.pid_text);
         pidText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-        TextView timestampText = (TextView) holder.itemView.findViewById(R.id.timestamp_text);
+        TextView timestampText = holder.itemView.findViewById(R.id.timestamp_text);
         timestampText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
 
         if (extraInfoIsVisible) {

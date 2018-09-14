@@ -124,6 +124,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     private boolean mAutoscrollToBottom = true;
     private boolean mCollapsedMode;
 
+    public static String mFilterPattern = null;
+
     private boolean mDynamicallyEnteringSearchText;
     private boolean partialSelectMode;
     private List<LogLine> partiallySelectedLogLines = new ArrayList<>(2);
@@ -208,6 +210,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         setSupportActionBar(findViewById(R.id.toolbar_actionbar));
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
+
+        mFilterPattern = PreferenceHelper.getFilterPatternPreference(this);
 
         log.d("initial collapsed mode is %s", mCollapsedMode);
 

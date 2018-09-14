@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
         private static final int MAX_DISPLAY_LIMIT = 100000;
         private static final int MIN_DISPLAY_LIMIT = 1000;
 
-        private EditTextPreference logLinePeriodPreference, displayLimitPreference;
+        private EditTextPreference logLinePeriodPreference, displayLimitPreference, filterPatternPreference;
         private ListPreference textSizePreference, defaultLevelPreference;
         private MultipleChoicePreference bufferPreference;
         private Preference mThemePreference;
@@ -114,13 +114,14 @@ public class SettingsActivity extends AppCompatActivity {
         private void setUpPreferences() {
 
             displayLimitPreference = (EditTextPreference) findPreference(getString(R.string.pref_display_limit));
-
             int displayLimitValue = PreferenceHelper.getDisplayLimitPreference(getActivity());
-
             displayLimitPreference.setSummary(getString(R.string.pref_display_limit_summary,
                     displayLimitValue, getString(R.string.pref_display_limit_default)));
-
             displayLimitPreference.setOnPreferenceChangeListener(this);
+
+            filterPatternPreference = (EditTextPreference) findPreference(getString(R.string.pref_filter_pattern));
+            filterPatternPreference.setSummary(getString(R.string.pref_filter_pattern_summary));
+            filterPatternPreference.setOnPreferenceChangeListener(this);
 
             logLinePeriodPreference = (EditTextPreference) findPreference(getString(R.string.pref_log_line_period));
 
@@ -265,6 +266,20 @@ public class SettingsActivity extends AppCompatActivity {
                 int index = ArrayUtil.indexOf(listPreference.getEntryValues(), newValue);
                 CharSequence newEntry = listPreference.getEntries()[index];
                 setDefaultLevelPreferenceSummary(newEntry);
+
+                return true;
+
+            } else if (preference.getKey().equals(getString(R.string.pref_filter_pattern))) {
+                // display buffer preference; update summary
+
+                String value = ((String) newValue).trim();
+
+                PreferenceHelper.setFilterPatternPreference(getActivity(), value);
+                filterPatternPreference.setSummary(getString(R.string.pref_filter_pattern_summary));
+
+                LogcatActivity.mFilterPattern = value;
+                // notify that a restart is required
+                Toast.makeText(getActivity(), R.string.toast_pref_changed_restart_required, Toast.LENGTH_LONG).show();
 
                 return true;
 
