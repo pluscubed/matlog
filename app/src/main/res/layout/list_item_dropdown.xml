@@ -28,4 +28,4 @@
     android:paddingRight="16dp"
     android:textSize="16sp"
     tools:text="TESTSDFSDFD"
-    android:maxLines="1" />
+    android:singleLine="true" />

@@ -1,29 +1,17 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.22.2'
-    }
-}
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "org.omnirom.logcat"
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion 21
+        targetSdkVersion 27
         versionName '1.1.1'
         versionCode 6
 
@@ -66,14 +54,14 @@ android {
     }
 }
 
-def supportLibrariesVersion = "26.0.0-beta2"
+def supportLibrariesVersion = "27.1.1"
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportLibrariesVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibrariesVersion"
-    compile "com.android.support:support-annotations:$supportLibrariesVersion"
-    compile "com.android.support:design:$supportLibrariesVersion"
-    compile "com.android.support:support-v13:$supportLibrariesVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibrariesVersion"
+    implementation "com.android.support:support-annotations:$supportLibrariesVersion"
+    implementation "com.android.support:design:$supportLibrariesVersion"
+    implementation "com.android.support:support-v13:$supportLibrariesVersion"
 
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.4.7'
 }
