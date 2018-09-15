@@ -1,12 +1,12 @@
 package com.pluscubed.logcat.util;
 
-import android.app.Activity;
+import android.content.Context;
 
 /**
  * Wrapper for fdroid build flavor to build without Crashlytics
  */
 public class CrashlyticsWrapper {
-    public static void initCrashlytics(Activity activity) {
+    public static void initCrashlytics(Context context) {
         // Do nothing
     }
 }
