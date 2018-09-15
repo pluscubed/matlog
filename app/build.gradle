@@ -72,6 +72,8 @@ android {
         }
         fdroid {
             dimension "store"
+            applicationId "com.pluscubed.matloglibre"
+            manifestPlaceholders = [appName: "@string/app_name_libre"]
         }
     }
 }

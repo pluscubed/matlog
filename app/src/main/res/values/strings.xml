@@ -5,6 +5,7 @@
 
 
     <string name="app_name" translatable="false">MatLog</string>
+    <string name="app_name_libre" translatable="false">MatLog Libre</string>
 
     <string name="donate_version_name" translatable="false">Donate</string>
 
