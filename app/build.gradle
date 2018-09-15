@@ -74,6 +74,7 @@ android {
             dimension "store"
             applicationId "com.pluscubed.matloglibre"
             manifestPlaceholders = [appName: "@string/app_name_libre"]
+            ext.enableCrashlytics = false
         }
     }
 }
@@ -89,7 +90,7 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.4.5'
 
-    implementation 'com.google.firebase:firebase-core:16.0.3'
+    playImplementation 'com.google.firebase:firebase-core:16.0.3'
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }
@@ -99,3 +100,5 @@ dependencies {
     })
     testImplementation 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'
