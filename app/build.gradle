@@ -1,10 +1,11 @@
 buildscript {
     repositories {
+        jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.22.2'
     }
 }
 apply plugin: 'com.android.application'
@@ -16,20 +17,20 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     dataBinding.enabled = true
 
     defaultConfig {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
-        targetSdkVersion 25
-        versionName '1.0.2'
-        versionCode 4
+        targetSdkVersion 26
+        versionName '1.1.2'
+        versionCode 7
 
         testApplicationId "com.pluscubed.matlog.test"
-        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [appName: "@string/app_name"]
 
@@ -71,16 +72,21 @@ android {
     }
 }
 
-def supportLibrariesVersion = "25.3.0"
+def supportLibrariesVersion = "26.1.0"
 
 dependencies {
-    //noinspection GradleCompatible
     compile "com.android.support:appcompat-v7:$supportLibrariesVersion"
     compile "com.android.support:recyclerview-v7:$supportLibrariesVersion"
     compile "com.android.support:support-annotations:$supportLibrariesVersion"
     compile "com.android.support:design:$supportLibrariesVersion"
-    compile 'com.afollestad.material-dialogs:commons:0.9.4.2'
-    gplayCompile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
+    compile "com.android.support:support-v13:$supportLibrariesVersion"
+    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
+    gplayCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar')
         transitive = true;
     }
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
 }

@@ -22,9 +22,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:paddingBottom="8dp"
-            android:singleLine="true"
             android:text="@string/filter_choice_tag"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:maxLines="1" />
 
         <TextView
             android:id="@id/dialog_searchby_tag_text"
@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:padding="8dp"
-            android:singleLine="true"
             android:textColor="@color/secondary_text_default_material_dark"
             android:textSize="12sp"
             android:typeface="monospace"
-            tools:text="text" />
+            tools:text="text"
+            android:maxLines="1" />
 
     </LinearLayout>
 
@@ -54,9 +54,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:paddingBottom="8dp"
-            android:singleLine="true"
             android:text="@string/filter_choice_pid"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:maxLines="1" />
 
         <TextView
             android:id="@id/dialog_searchby_pid_text"
@@ -64,11 +64,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:padding="8dp"
-            android:singleLine="true"
             android:textColor="@color/secondary_text_default_material_dark"
             android:textSize="12sp"
             android:typeface="monospace"
-            tools:text="text" />
+            tools:text="text"
+            android:maxLines="1" />
 
     </LinearLayout>
 

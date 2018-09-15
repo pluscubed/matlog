@@ -19,6 +19,7 @@
 package com.pluscubed.logcat.data;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -65,11 +66,11 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
     /**
      * Constructor
-     *
-     * @param objects            The objects to represent in the ListView.
      */
-    public LogLineAdapter(List<LogLine> objects) {
-        mObjects = objects;
+    public LogLineAdapter() {
+        mObjects = new ArrayList<>();
+
+        setHasStableIds(true);
     }
 
 
@@ -283,7 +284,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
         int selectedBackground = logLine.isHighlighted()
                 ? PreferenceHelper.getColorScheme(context).getSelectedColor(context)
-                : context.getResources().getColor(android.R.color.transparent);
+                : ContextCompat.getColor(context,android.R.color.transparent);
         holder.itemView.setBackgroundColor(selectedBackground);
     }
 
@@ -292,7 +293,9 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
      */
     @Override
     public long getItemId(int position) {
-        return position;
+        synchronized (mLock) {
+            return mObjects.get(position).getOriginalLine().hashCode();
+        }
     }
 
     @Override
@@ -342,7 +345,7 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
 
             if (mOriginalValues == null) {
                 synchronized (mLock) {
-                    mOriginalValues = new ArrayList<LogLine>(mObjects);
+                    mOriginalValues = new ArrayList<>(mObjects);
                 }
             }
 

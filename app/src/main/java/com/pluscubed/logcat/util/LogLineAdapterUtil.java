@@ -1,6 +1,7 @@
 package com.pluscubed.logcat.util;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.pluscubed.logcat.R;
@@ -36,7 +37,7 @@ public class LogLineAdapterUtil {
                 break;
         }
 
-        return context.getResources().getColor(result);
+        return ContextCompat.getColor(context,result);
     }
 
     public static int getForegroundColorForLogLevel(Context context, int logLevel) {
@@ -61,7 +62,7 @@ public class LogLineAdapterUtil {
                 result = R.color.foreground_wtf;
                 break;
         }
-        return context.getResources().getColor(result);
+        return ContextCompat.getColor(context,result);
     }
 
     public static synchronized int getOrCreateTagColor(Context context, String tag) {

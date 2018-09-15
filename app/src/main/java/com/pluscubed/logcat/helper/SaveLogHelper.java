@@ -196,11 +196,7 @@ public class SaveLogHelper {
             }
         }
 
-        SavedLog result = new SavedLog();
-        result.setLogLines(logLines);
-        result.setTruncated(truncated);
-
-        return result;
+        return new SavedLog(logLines, truncated);
     }
 
     public static synchronized boolean saveLog(CharSequence logString, String filename) {

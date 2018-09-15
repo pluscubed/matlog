@@ -26,6 +26,6 @@
     android:gravity="center_vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:singleLine="true"
     android:textSize="16sp"
-    tools:text="TESTSDFSDFD" />
+    tools:text="TESTSDFSDFD"
+    android:maxLines="1" />

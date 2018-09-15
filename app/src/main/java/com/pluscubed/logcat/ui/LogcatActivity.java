@@ -21,12 +21,11 @@ import android.support.annotation.WorkerThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -53,6 +52,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.R;
@@ -85,7 +85,6 @@ import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -197,7 +196,6 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CrashlyticsWrapper.initCrashlytics(this);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logcat);
 
         LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);
@@ -214,7 +212,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         });
 
         binding.list.setLayoutManager(new LinearLayoutManager(this));
-        binding.list.setItemAnimator(new DefaultItemAnimator());
+
+        binding.list.setItemAnimator(null);
 
         setSupportActionBar(binding.toolbar.toolbarActionbar);
 
@@ -348,7 +347,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
 
                 if (logLevelLimit == -1) {
-                    String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+                    String invalidLevel = getString(R.string.toast_invalid_level, level);
                     Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
                 } else {
                     mLogListAdapter.setLogLevelLimit(logLevelLimit);
@@ -468,8 +467,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         log.d("onDestroy() called");
 
         if (mTask != null) {
-            mTask.unpause();
             mTask.killReader();
+            mTask.cancel(true);
             mTask = null;
         }
     }
@@ -564,7 +563,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         //used to workaround issue where the search text is cleared on expanding the SearchView
 
         mSearchViewMenuItem = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
+        final SearchView searchView = (SearchView) mSearchViewMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -725,11 +724,11 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .show();
 
         LinearLayout customView = (LinearLayout) dialog.getCustomView();
-        LinearLayout tag = (LinearLayout) customView.findViewById(R.id.dialog_searchby_tag_linear);
-        LinearLayout pid = (LinearLayout) customView.findViewById(R.id.dialog_searchby_pid_linear);
+        LinearLayout tag = customView.findViewById(R.id.dialog_searchby_tag_linear);
+        LinearLayout pid = customView.findViewById(R.id.dialog_searchby_pid_linear);
 
-        TextView tagText = (TextView) customView.findViewById(R.id.dialog_searchby_tag_text);
-        TextView pidText = (TextView) customView.findViewById(R.id.dialog_searchby_pid_text);
+        TextView tagText = customView.findViewById(R.id.dialog_searchby_tag_text);
+        TextView pidText = customView.findViewById(R.id.dialog_searchby_pid_text);
 
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
 
@@ -856,10 +855,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         final MaterialDialog alertDialog = new MaterialDialog.Builder(this)
                 .title(R.string.add_filter)
                 .positiveText(android.R.string.ok)
-                .callback(new MaterialDialog.ButtonCallback() {
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         handleNewFilterText(editText.getText().toString(), filterAdapter);
                         dialog.dismiss();
                     }
@@ -944,17 +942,16 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             // don't show the scroll bar
             helpView.setVerticalScrollBarEnabled(false);
             helpView.setHorizontalScrollBarEnabled(false);
-            final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
+            final CheckBox checkBox = helpView.findViewById(android.R.id.checkbox);
 
             new MaterialDialog.Builder(this)
                     .title(R.string.menu_title_partial_select)
                     .customView(helpView, true)
                     .negativeText(android.R.string.cancel)
                     .positiveText(android.R.string.ok)
-                    .callback(new MaterialDialog.ButtonCallback() {
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onPositive(MaterialDialog dialog) {
-                            super.onPositive(dialog);
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             partialSelectMode = true;
                             partiallySelectedLogLines.clear();
                             Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
@@ -1031,7 +1028,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         @SuppressLint("InflateParams") LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_delete_logfiles, null);
 
-        ListView view = (ListView) layout.findViewById(R.id.list);
+        ListView view = layout.findViewById(R.id.list);
         view.setAdapter(logFileAdapter);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this);
@@ -1039,10 +1036,9 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 .customView(layout, false)
                 .negativeText(android.R.string.cancel)
                 .neutralText(R.string.delete_all)
-                .callback(new MaterialDialog.ButtonCallback() {
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onNeutral(MaterialDialog dialog) {
-                        super.onNeutral(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         boolean[] allChecked = new boolean[logFileAdapter.getCount()];
 
                         for (int i = 0; i < allChecked.length; i++) {
@@ -1050,10 +1046,10 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                         }
                         verifyDelete(filenameArray, allChecked, dialog);
                     }
-
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         verifyDelete(filenameArray, logFileAdapter.getCheckedItems(), dialog);
                     }
                 })
@@ -1089,7 +1085,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             builder.setTitle(R.string.delete_saved_log)
                     .setCancelable(true)
-                    .setMessage(String.format(getText(R.string.are_you_sure).toString(), finalDeleteCount))
+                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, finalDeleteCount, finalDeleteCount))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                         @Override
@@ -1102,7 +1098,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                                 }
                             }
 
-                            String toastText = String.format(getText(R.string.files_deleted).toString(), finalDeleteCount);
+                            String toastText = getResources().getQuantityString(R.plurals.files_deleted, finalDeleteCount, finalDeleteCount);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 
                             dialog.dismiss();
@@ -1131,7 +1127,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams") View includeDeviceInfoView = inflater.inflate(R.layout.dialog_send_log, null, false);
-        final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+        final CheckBox includeDeviceInfoCheckBox = includeDeviceInfoView.findViewById(android.R.id.checkbox);
 
         // allow user to choose whether or not to include device info in report, use preferences for persistence
         includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
@@ -1304,7 +1300,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                 } else {
@@ -1470,7 +1466,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 if (savedLog.isTruncated()) {
                     mHandler.post(new Runnable() {
                         public void run() {
-                            String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
+                            String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
                             Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -1584,7 +1580,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     private void setUpAdapter() {
 
-        mLogListAdapter = new LogLineAdapter(new ArrayList<LogLine>());
+        mLogListAdapter = new LogLineAdapter();
         mLogListAdapter.setClickListener(this);
 
         binding.list.setAdapter(mLogListAdapter);
@@ -1613,6 +1609,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
             }
         });
+
+        binding.list.setHasFixedSize(true);
     }
 
     private void completePartialSelect() {
@@ -1632,7 +1630,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         MaterialDialog.InputCallback onClickListener = new MaterialDialog.InputCallback() {
 
             @Override
-            public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+            public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                 if (DialogHelper.isInvalidFilename(charSequence)) {
                     cancelPartialSelect();
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
@@ -1644,12 +1642,12 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         };
 
 
-        MaterialDialog.ButtonCallback onCancelListener = new MaterialDialog.ButtonCallback() {
-
+        MaterialDialog.SingleButtonCallback onCancelListener = new MaterialDialog.SingleButtonCallback() {
             @Override
-            public void onNegative(MaterialDialog dialog) {
-                super.onNegative(dialog);
-                cancelPartialSelect();
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if(which == DialogAction.NEGATIVE) {
+                    cancelPartialSelect();
+                }
             }
         };
 
@@ -1755,33 +1753,30 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
     }
 
-    public void invalidateDarkOrLightMenuItems(Context context, final Menu menu) {
-        if (menu != null && menu.getClass().getSimpleName().equals("MenuBuilder")) {
-            try {
-                Field field = menu.getClass().getDeclaredField("mOptionalIconsVisible");
-                field.setAccessible(true);
-                field.setBoolean(menu, true);
+    @SuppressLint("RestrictedApi")
+    public void invalidateDarkOrLightMenuItems(Context context, Menu menu) {
+        if (menu != null && menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+            /*final boolean darkMode = ThemeUtils.isDarkMode(context);
+            final int textColorPrimary = Utils.resolveColor(context, android.R.attr.textColorPrimary);
 
-                /*final boolean darkMode = ThemeUtils.isDarkMode(context);
-                final int textColorPrimary = Utils.resolveColor(context, android.R.attr.textColorPrimary);
-
-                mToolbar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < menu.size(); i++) {
-                            MenuItemImpl item = (MenuItemImpl) menu.getItem(i);
-                            int color = darkMode || item.isActionButton() ? Color.WHITE : textColorPrimary;
-                            if (item.getIcon() != null) {
-                                item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-                            }
+            mToolbar.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < menu.size(); i++) {
+                        MenuItemImpl item = (MenuItemImpl) menu.getItem(i);
+                        int color = darkMode || item.isActionButton() ? Color.WHITE : textColorPrimary;
+                        if (item.getIcon() != null) {
+                            item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_IN);
                         }
                     }
-                });*/
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                }
+            });*/
         }
+    }
+
+    private void scrollToBottom() {
+        binding.list.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
     private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {
@@ -1818,7 +1813,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
                 String line;
                 LinkedList<LogLine> initialLines = new LinkedList<>();
-                while ((line = mReader.readLine()) != null) {
+                while ((line = mReader.readLine()) != null && !isCancelled()) {
                     if (mPaused) {
                         synchronized (mLock) {
                             if (mPaused) {
@@ -1936,9 +1931,5 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
         }
 
 
-    }
-
-    private void scrollToBottom() {
-        binding.list.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 }

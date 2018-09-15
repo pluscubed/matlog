@@ -11,6 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
+        android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.MatLog">
 

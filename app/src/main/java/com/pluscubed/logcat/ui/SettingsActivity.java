@@ -117,7 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             int displayLimitValue = PreferenceHelper.getDisplayLimitPreference(getActivity());
 
-            displayLimitPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary),
+            displayLimitPreference.setSummary(getString(R.string.pref_display_limit_summary,
                     displayLimitValue, getString(R.string.pref_display_limit_default)));
 
             displayLimitPreference.setOnPreferenceChangeListener(this);
@@ -126,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             int logLinePrefValue = PreferenceHelper.getLogLinePeriodPreference(getActivity());
 
-            logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary),
+            logLinePeriodPreference.setSummary(getString(R.string.pref_log_line_period_summary,
                     logLinePrefValue, getString(R.string.pref_log_line_period_default)));
 
             logLinePeriodPreference.setOnPreferenceChangeListener(this);
@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     //TODO: Implement themes using color picker and remove this
                     Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            "Themes are not implemented yet. Stay tuned for updates! (they will be free, don't worry)", Snackbar.LENGTH_LONG)
+                            "Themes are not implemented yet. Stay tuned for updates!", Snackbar.LENGTH_LONG)
                             .show();
                     return true;
                 }
@@ -173,7 +173,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            mAboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(getActivity())));
+            mAboutPreference.setSummary(getString(R.string.version, PackageHelper.getVersionName(getActivity())));
 
             scrubberPreference = (SwitchPreference) getPreferenceScreen().findPreference("scrubber");
             scrubberPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -187,7 +187,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         private void setDefaultLevelPreferenceSummary(CharSequence entry) {
             defaultLevelPreference.setSummary(
-                    String.format(getString(R.string.pref_default_log_level_summary), entry));
+                    getString(R.string.pref_default_log_level_summary, entry));
 
         }
 
@@ -204,7 +204,7 @@ public class SettingsActivity extends AppCompatActivity {
                     int value = Integer.parseInt(input);
                     if (value >= MIN_DISPLAY_LIMIT && value <= MAX_DISPLAY_LIMIT) {
                         PreferenceHelper.setDisplayLimitPreference(getActivity(), value);
-                        displayLimitPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary),
+                        displayLimitPreference.setSummary(getString(R.string.pref_display_limit_summary,
                                 value, getString(R.string.pref_display_limit_default)));
 
                         // notify that a restart is required
@@ -217,7 +217,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
 
-                String invalidEntry = String.format(getString(R.string.toast_invalid_display_limit), MIN_DISPLAY_LIMIT, MAX_DISPLAY_LIMIT);
+                String invalidEntry = getString(R.string.toast_invalid_display_limit, MIN_DISPLAY_LIMIT, MAX_DISPLAY_LIMIT);
                 Toast.makeText(getActivity(), invalidEntry, Toast.LENGTH_LONG).show();
                 return false;
 
@@ -232,7 +232,7 @@ public class SettingsActivity extends AppCompatActivity {
                     int value = Integer.parseInt(input);
                     if (value >= MIN_LOG_LINE_PERIOD && value <= MAX_LOG_LINE_PERIOD) {
                         PreferenceHelper.setLogLinePeriodPreference(getActivity(), value);
-                        logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary),
+                        logLinePeriodPreference.setSummary(getString(R.string.pref_log_line_period_summary,
                                 value, getString(R.string.pref_log_line_period_default)));
                         return true;
                     }

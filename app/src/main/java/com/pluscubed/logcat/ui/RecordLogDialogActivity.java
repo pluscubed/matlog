@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.FilterQueryWithLevel;
@@ -72,7 +74,7 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                     .content(R.string.enter_filename)
                     .input("", logFilename, new MaterialDialog.InputCallback() {
                         @Override
-                        public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+                        public void onInput(@NonNull MaterialDialog materialDialog, CharSequence charSequence) {
                             if (DialogHelper.isInvalidFilename(charSequence)) {
                                 Toast.makeText(getActivity(), R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                             } else {
@@ -92,32 +94,27 @@ public class RecordLogDialogActivity extends AppCompatActivity {
                     .neutralText(R.string.text_filter_ellipsis)
                     .negativeText(android.R.string.cancel)
                     .autoDismiss(false)
-                    .callback(new MaterialDialog.ButtonCallback() {
+                    .onAny(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onAny(MaterialDialog dialog) {
-                            super.onAny(dialog);
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             WidgetHelper.updateWidgets(getActivity());
-                        }
-
-                        @Override
-                        public void onNeutral(MaterialDialog dialog) {
-                            super.onNeutral(dialog);
-                            DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
-                                    logLevelText.toString(), suggestions,
-                                    new Callback<FilterQueryWithLevel>() {
-                                        @Override
-                                        public void onCallback(FilterQueryWithLevel result) {
-                                            queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
-                                            logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public void onNegative(MaterialDialog dialog) {
-                            super.onNegative(dialog);
-                            dialog.dismiss();
-                            getActivity().finish();
+                            switch (which) {
+                                case NEUTRAL:
+                                    DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
+                                            logLevelText.toString(), suggestions,
+                                            new Callback<FilterQueryWithLevel>() {
+                                                @Override
+                                                public void onCallback(FilterQueryWithLevel result) {
+                                                    queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
+                                                    logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
+                                                }
+                                            });
+                                    break;
+                                case NEGATIVE:
+                                    dialog.dismiss();
+                                    getActivity().finish();
+                                    break;
+                            }
                         }
                     }).build();
             //noinspection ConstantConditions
