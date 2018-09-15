@@ -79,6 +79,7 @@ import com.pluscubed.logcat.intents.Intents;
 import com.pluscubed.logcat.reader.LogcatReader;
 import com.pluscubed.logcat.reader.LogcatReaderLoader;
 import com.pluscubed.logcat.util.ArrayUtil;
+import com.pluscubed.logcat.util.CrashlyticsWrapper;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
@@ -194,6 +195,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashlyticsWrapper.initCrashlytics(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_logcat);
 
         LogLine.isScrubberEnabled = PreferenceHelper.isScrubberEnabled(this);

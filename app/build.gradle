@@ -66,6 +66,10 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    productFlavors {
+        gplay {}
+        fdroid {}
+    }
 }
 
 def supportLibrariesVersion = "26.1.0"
@@ -76,9 +80,8 @@ dependencies {
     compile "com.android.support:support-annotations:$supportLibrariesVersion"
     compile "com.android.support:design:$supportLibrariesVersion"
     compile "com.android.support:support-v13:$supportLibrariesVersion"
-
     compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    gplayCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar')
         transitive = true;
     }
 
