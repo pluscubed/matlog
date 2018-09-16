@@ -1,16 +1,20 @@
 Categories:System
-License:GPL-3.0
+License:GPL-3.0-or-later
 Web Site:https://pluscubed.com
 Source Code:https://github.com/pluscubed/matlog
 Issue Tracker:https://github.com/pluscubed/matlog/issues
 Changelog:https://github.com/pluscubed/matlog/releases
 
-Auto Name:MatLog
+Name:MatLog Libre
+Auto Name:${appName}
 Summary:Material Design logcat reader based on CatLog
 Description:
-Debug your apps. Find error stacktraces. See what your phone is saying about you behind your back. It's all there in the system log, aka logcat!
+Debug your apps. Find error stacktraces. See what your phone is saying about you
+behind your back. It's all there in the system log, aka logcat!
 
-MatLog shows a scrolling (tailed) view of the Android "logcat" system log, hence the goofy name. It also allows you to record logs in real time, send logs via email, and filter using a variety of criteria.
+MatLog shows a scrolling (tailed) view of the Android "logcat" system log, hence
+the goofy name. It also allows you to record logs in real time, send logs via
+email, and filter using a variety of criteria.
 
 * Color-coded tag names
 * Easy-to-read column display
@@ -33,11 +37,8 @@ Repo:https://github.com/pluscubed/matlog.git
 Build:1.1.2,7
     commit=1.1.2
     subdir=app
-    init=lines="$(grep -n -A 2 -B 1 fabric src/main/AndroidManifest.xml | cut -d' ' -f1 | tr -d ' :-' | sed -n '1p;4p;' | paste -d',' -s)" && \
-        [[ -n $lines ]] && \
-        sed -ie "${lines}d" src/main/AndroidManifest.xml
     gradle=fdroid
-    prebuild=sed -i -e '/fabric/d' -e '/crashlytics/,+2d' ../build.gradle build.gradle
+    prebuild=sed -i -e '/fabric/d' -e '/crashlytics/,+2d' -e '/firebase/d' -e '/google-services/d' ''../build.gradle build.gradle
 
 Auto Update Mode:Version %v
 Update Check Mode:Tags ^[0-9.]*$

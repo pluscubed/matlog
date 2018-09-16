@@ -6,7 +6,7 @@
 
 set -ue
 
-appid="com.pluscubed.matlog"
+appid="com.pluscubed.matloglibre"
 
 if [[ ! -d fdroidserver ]]; then
     echo "Cloning fdroidserver"
@@ -16,10 +16,6 @@ fi
 if [[ ! -d fdroiddata ]]; then
     echo "Cloning fdroiddata"
     git clone https://github.com/f-droid/fdroiddata.git
-fi
-
-if [[ ! -f fdroiddata/metadata/$appid.txt ]]; then
-    cp $appid.txt fdroiddata/metadata/
 fi
 
 pushd fdroiddata
@@ -34,12 +30,14 @@ echo "Cleaning up metadata file"
 ../fdroidserver/fdroid rewritemeta "$appid"
 
 echo "Filling automated fields in metadata file (e.g. Auto Name and Current Version)"
-../fdroidserver/fdroid checkupdates --auto "$appid"
+../fdroidserver/fdroid checkupdates --auto --allow-dirty "$appid"
 
 echo "Making sure that fdroid lint doesn't report any warnings. If it does, fix them."
 ../fdroidserver/fdroid lint "$appid"
 
 echo "Testing build recipe"
 ../fdroidserver/fdroid build -v -l "$appid"
+
+cp metadata/$appid.txt ../
 
 popd
