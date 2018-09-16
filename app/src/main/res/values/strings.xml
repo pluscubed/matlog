@@ -30,6 +30,8 @@
     <string name="pref_default_log_level" translatable="false">default_level</string>
     <string name="pref_display_limit" translatable="false">display_limit</string>
     <string name="pref_display_limit_default" translatable="false">10000</string>
+    <string name="pref_filter_pattern" translatable="false">display_limit</string>
+    <string name="pref_filter_pattern_default" translatable="false">ResourceType|memtrack|android.os.Debug|BufferItemConsumer|DPM.*|MDM.*|ChimeraUtils|BatteryExternalStats.*|chatty.*|DisplayPowerController|WidgetHelper|WearableService|DigitalWidget.*|^ANDR-PERF-.*</string>
     <string name="pref_expanded_by_default" translatable="false">expand_default</string>
     <string name="pref_hide_partial_select_help" translatable="false">pref_hide_partial_select_help</string>
     <string name="pref_include_device_info" translatable="false">device_info</string>
@@ -140,6 +142,8 @@
     <string name="pref_default_log_level_title">Default Log Level</string>
     <string name="pref_display_limit_summary">Show only the last %1$d logs, to avoid OutOfMemoryErrors. (Default: %2$s)</string>
     <string name="pref_display_limit_title">Log Display Limit</string>
+    <string name="pref_filter_pattern_summary">Filter out these TAGS from logs</string>
+    <string name="pref_filter_pattern_title">Filter Out Tags</string>
     <string name="pref_expanded_by_default_summary">Show full log text by default.</string>
     <string name="pref_expanded_by_default_title">Expand by Default</string>
     <string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
@@ -234,4 +238,8 @@
     <string name="scrubber">Omit sensitive info</string>
     <string name="scrubber_summary">Omit sensitive info like web urls, phone numbers or emails</string>
 
+    <string name="text_include_dmesg">Include kernel log</string>
+    <string name="pref_include_dmesg" translatable="false">dmesg</string>
+    <string name="save_log_zip">Save zip</string>
+    <string name="share_log">Share</string>
 </resources>

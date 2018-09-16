@@ -22,8 +22,8 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 
     private static final String DUMMY_NULL = "";
     private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
-    private List<ReaderThread> readerThreads = new LinkedList<ReaderThread>();
-    private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
+    private List<ReaderThread> readerThreads = new LinkedList<>();
+    private BlockingQueue<String> queue = new ArrayBlockingQueue<>(1);
 
     public MultipleLogcatReader(boolean recordingMode,
                                 Map<String, String> lastLines) throws IOException {
@@ -85,7 +85,7 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 
     @Override
     public List<Process> getProcesses() {
-        List<Process> result = new ArrayList<Process>();
+        List<Process> result = new ArrayList<>();
         for (ReaderThread thread : readerThreads) {
             result.addAll(thread.reader.getProcesses());
         }

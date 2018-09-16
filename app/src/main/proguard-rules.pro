@@ -15,15 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontobfuscate
--optimizations !code/allocation/variable
 
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
--keep class com.crashlytics.** { *; }
--keep class io.fabric.** { *; }
--dontwarn com.crashlytics.**
--dontwarn io.fabric.**
 
 -keep class android.support.v7.widget.SearchView {*;}
 -keep class com.pluscubed.logcat.RecordingWidgetProvider {*;}
+-keep class me.zhanghai.android.materialprogressbar.** { *; }

@@ -20,11 +20,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -34,7 +36,8 @@ public class SaveLogHelper {
 
     public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
     public static final String TEMP_LOG_FILENAME = "logcat.txt";
-    public static final String TEMP_ZIP_FILENAME = "logcat_and_device_info.zip";
+    public static final String TEMP_DMESG_FILENAME = "dmesg.txt";
+    private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
     private static final String LEGACY_SAVED_LOGS_DIR = "catlog_saved_logs";
     private static final String CATLOG_DIR = "matlog";
@@ -95,9 +98,7 @@ public class SaveLogHelper {
 
         File catlogDir = getSavedLogsDirectory();
 
-        File file = new File(catlogDir, filename);
-
-        return file;
+        return new File(catlogDir, filename);
     }
 
     public static void deleteLogIfExists(String filename) {
@@ -142,17 +143,11 @@ public class SaveLogHelper {
             return Collections.emptyList();
         }
 
-        List<File> files = new ArrayList<File>(Arrays.asList(filesArray));
+        List<File> files = new ArrayList<>(Arrays.asList(filesArray));
 
-        Collections.sort(files, new Comparator<File>() {
+        Collections.sort(files, (object1, object2) -> Long.compare(object2.lastModified(), object1.lastModified()));
 
-            @Override
-            public int compare(File object1, File object2) {
-                return Long.valueOf(object2.lastModified()).compareTo(object1.lastModified());
-            }
-        });
-
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         for (File file : files) {
             result.add(file.getName());
@@ -167,7 +162,7 @@ public class SaveLogHelper {
         File catlogDir = getSavedLogsDirectory();
         File logFile = new File(catlogDir, filename);
 
-        LinkedList<String> logLines = new LinkedList<String>();
+        LinkedList<String> logLines = new LinkedList<>();
         boolean truncated = false;
 
         BufferedReader bufferedReader = null;
@@ -312,15 +307,24 @@ public class SaveLogHelper {
 
     public static File saveTemporaryZipFile(String filename, List<File> files) {
         try {
-            return saveTemporaryZipFileAndThrow(filename, files);
+            return saveZipFileAndThrow(getTempDirectory(), filename, files);
         } catch (IOException e) {
             log.e(e, "unexpected error");
         }
         return null;
     }
 
-    private static File saveTemporaryZipFileAndThrow(String filename, List<File> files) throws IOException {
-        File zipFile = new File(getTempDirectory(), filename);
+    public static File saveZipFile(String filename, List<File> files) {
+        try {
+            return saveZipFileAndThrow(getSavedLogsDirectory(), filename, files);
+        } catch (IOException e) {
+            log.e(e, "unexpected error");
+        }
+        return null;
+    }
+
+    private static File saveZipFileAndThrow(File dir, String filename, List<File> files) throws IOException {
+        File zipFile = new File(dir, filename);
 
         ZipOutputStream output = null;
         try {
@@ -373,5 +377,33 @@ public class SaveLogHelper {
             total += r;
         }
         return total;
+    }
+
+    public static String createLogFilename(boolean withDate) {
+        if (withDate) {
+            Date date = new Date();
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+
+            DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+            DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+
+            String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+            String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+            String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+            String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+            String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+            String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
+
+            return TEMP_ZIP_FILENAME + "-" + year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".zip";
+        } else {
+            return TEMP_ZIP_FILENAME + ".zip";
+        }
+    }
+
+    public static void cleanTemp() {
+        for (File file : getTempDirectory().listFiles()) {
+            file.delete();
+        }
     }
 }

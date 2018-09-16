@@ -84,10 +84,16 @@
         android:title="@string/title_filters" />
 
     <item
-        android:id="@+id/menu_send_log"
-        android:alphabeticShortcut="@string/send_log"
-        android:icon="@drawable/ic_send_white_24dp"
-        android:title="@string/send_log" />
+        android:id="@+id/menu_send_log_zip"
+        android:alphabeticShortcut="@string/share_log"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share_log" />
+
+    <item
+        android:id="@+id/menu_save_log_zip"
+        android:alphabeticShortcut="@string/save_log_zip"
+        android:icon="@drawable/ic_save_white_24dp"
+        android:title="@string/save_log_zip" />
 
     <item
         android:id="@+id/menu_settings"

@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import com.pluscubed.logcat.R;
-import com.pluscubed.logcat.databinding.ListItemLogcatBinding;
 
 /**
  * ViewHolder to show log entries
@@ -18,15 +17,13 @@ public class LogLineViewHolder extends RecyclerView.ViewHolder implements PopupM
     public static final int CONTEXT_MENU_FILTER_ID = 0;
     public static final int CONTEXT_MENU_COPY_ID = 1;
 
-    final ListItemLogcatBinding binding;
     LogLine logLine;
 
     private final OnClickListener clickListener;
 
-    public LogLineViewHolder(ListItemLogcatBinding binding, final OnClickListener clickListener) {
-        super(binding.getRoot());
+    public LogLineViewHolder(View itemView, final OnClickListener clickListener) {
+        super(itemView);
 
-        this.binding = binding;
         this.clickListener = clickListener;
 
         itemView.setOnClickListener(this);

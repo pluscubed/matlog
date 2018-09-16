@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.pluscubed.logcat.reader.ScrubberUtils;
+import com.pluscubed.logcat.ui.LogcatActivity;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
@@ -62,11 +63,22 @@ public class LogLine {
         if (matcher.find(startIdx)) {
             char logLevelChar = matcher.group(1).charAt(0);
 
-            logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
-            logLine.setTag(matcher.group(2));
+            String logText = originalLine.substring(matcher.end());
+            if (logText.matches("^maxLineHeight.*|Failed to read.*")) {
+                logLine.setLogLevel(convertCharToLogLevel('V'));
+            } else {
+                logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
+            }
+
+            String tagText = matcher.group(2);
+            if (tagText.matches(LogcatActivity.mFilterPattern)) {
+                logLine.setLogLevel(convertCharToLogLevel('V'));
+            }
+
+            logLine.setTag(tagText);
             logLine.setProcessId(Integer.parseInt(matcher.group(3)));
 
-            logLine.setLogOutput(originalLine.substring(matcher.end()));
+            logLine.setLogOutput(logText);
 
         } else {
             log.d("Line doesn't match pattern: %s", originalLine);

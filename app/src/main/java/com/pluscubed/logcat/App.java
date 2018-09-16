@@ -13,6 +13,5 @@ public class App extends Application {
         CrashlyticsWrapper.initCrashlytics(this);
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
     }
 }
