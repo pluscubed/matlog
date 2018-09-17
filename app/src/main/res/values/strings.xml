@@ -30,7 +30,7 @@
     <string name="pref_default_log_level" translatable="false">default_level</string>
     <string name="pref_display_limit" translatable="false">display_limit</string>
     <string name="pref_display_limit_default" translatable="false">10000</string>
-    <string name="pref_filter_pattern" translatable="false">display_limit</string>
+    <string name="pref_filter_pattern" translatable="false">filter_pattern</string>
     <string name="pref_filter_pattern_default" translatable="false">ResourceType|memtrack|android.os.Debug|BufferItemConsumer|DPM.*|MDM.*|ChimeraUtils|BatteryExternalStats.*|chatty.*|DisplayPowerController|WidgetHelper|WearableService|DigitalWidget.*|^ANDR-PERF-.*</string>
     <string name="pref_expanded_by_default" translatable="false">expand_default</string>
     <string name="pref_hide_partial_select_help" translatable="false">pref_hide_partial_select_help</string>
