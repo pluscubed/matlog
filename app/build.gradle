@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath 'io.fabric.tools:gradle:1.26.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -80,7 +80,7 @@ android {
     }
 }
 
-def supportLibrariesVersion = "28.0.0-rc02"
+def supportLibrariesVersion = "28.0.0"
 
 dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
