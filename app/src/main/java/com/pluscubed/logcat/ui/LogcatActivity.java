@@ -20,6 +20,7 @@ import android.support.annotation.WorkerThread;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
@@ -148,12 +149,16 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
             actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
         }
         if (attachment != null) {
-            Uri uri = android.support.v4.content.FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", attachment);
+            Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", attachment);
             log.d("uri is: %s", uri);
             actionSendIntent.putExtra(Intent.EXTRA_STREAM, uri);
         }
 
-        context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title)));
+        try {
+            context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title)));
+        } catch (Exception e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
