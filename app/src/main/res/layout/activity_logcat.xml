@@ -24,8 +24,8 @@
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
             android:id="@+id/main_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_gravity="center"
             app:cpb_indeterminate_mode="true"
             android:layout_margin="8dp"
