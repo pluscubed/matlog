@@ -88,7 +88,7 @@ public class WidgetHelper {
 
     private static PendingIntent getPendingIntent(Context context, int appWidgetId) {
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(context, RecordingWidgetProvider.class);
         intent.setAction(RecordingWidgetProvider.ACTION_RECORD_OR_STOP);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         // gotta make this unique for this appwidgetid - otherwise, the PendingIntents conflict
@@ -97,7 +97,7 @@ public class WidgetHelper {
         intent.setData(data);
 
         return PendingIntent.getBroadcast(context,
-                0 /* no requestCode */, intent, PendingIntent.FLAG_ONE_SHOT);
+                0 /* no requestCode */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private static int[] findAppWidgetIds(Context context) {
