@@ -28,8 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:cpb_indeterminate_mode="true"
-            app:cpb_background_progressbar_width="0dp"
-            android:visibility="gone" />
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
