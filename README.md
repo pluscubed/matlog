@@ -4,7 +4,12 @@ It's CatLog, but with material goodness.
 
 Graphical log reader for Android.
 
-[![Get it on Google Play](http://i.imgur.com/PeDVOwW.png)](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+      alt="Get it on Google Play"
+      height="90">](https://play.google.com/store/apps/details?id=com.pluscubed.matlog)
+[<img src="https://f-droid.org/badge/get-it-on.png"
+      alt="Get it on F-Droid"
+      height="90">](https://f-droid.org/app/com.pluscubed.matloglibre)
 
 Based on Nolan Lawson's CatLog: [Google Play][1], [GitHub][2]
 
@@ -36,7 +41,7 @@ If that still doesn't work, you can contact the creator of your ROM to file a bu
 License
 ---------
 ```
-Copyright (C) 2017  Daniel Ciao
+Copyright (C) 2018  Daniel Ciao
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
