@@ -17,6 +17,7 @@ repositories {
 
 android {
     compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.pluscubed.matlog"
@@ -91,7 +92,7 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
-    playImplementation 'com.google.firebase:firebase-core:16.0.3'
+    playImplementation 'com.google.firebase:firebase-core:16.0.4'
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }
