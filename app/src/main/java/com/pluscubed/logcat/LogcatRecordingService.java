@@ -143,7 +143,7 @@ public class LogcatRecordingService extends IntentService {
         final String CHANNEL_ID = "matlog_logging_channel";
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-        notification.setSmallIcon(R.mipmap.ic_launcher);
+        notification.setSmallIcon(R.drawable.notif_icon);
         notification.setTicker(tickerText);
         notification.setWhen(System.currentTimeMillis());
         notification.setContentTitle(getString(R.string.notification_title));

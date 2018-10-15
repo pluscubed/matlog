@@ -123,7 +123,7 @@
 
     <string name="no_saved_logs">No saved logs found.</string>
 
-    <string name="notification_subtext">Select to stop recording.</string>
+    <string name="notification_subtext">Touch to stop recording</string>
     <string name="notification_ticker">Log recording started</string>
     <string name="notification_title">Log recording in progress</string>
 
