@@ -10,6 +10,7 @@ import android.text.Html;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.pluscubed.logcat.BuildConfig;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.util.UtilLogger;
 
@@ -41,7 +42,7 @@ public class SuperUserHelper {
         Handler handler = new Handler(Looper.getMainLooper());
 
         handler.post(() -> {
-            final String command = String.format("adb shell pm grant %s android.permission.READ_LOGS", context.getPackageName());
+            final String command = String.format("adb shell pm grant %s android.permission.READ_LOGS", BuildConfig.APPLICATION_ID);
             new MaterialDialog.Builder(context)
                     .title(R.string.no_logs_warning_title)
                     .content(Html.fromHtml(context.getString(R.string.no_logs_warning, context.getString(R.string.app_name), command)))
