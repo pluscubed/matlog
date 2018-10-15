@@ -38,6 +38,11 @@ Next, see if your ROM offers system-wide settings to disable logging.  Be sure t
 
 If that still doesn't work, you can contact the creator of your ROM to file a bug/RFE.
 
+Development
+-------------
+- Select `fdroid` build variants to build and run immediately
+- For `play` variants, place `google-services.json` in app/src/main/play
+
 License
 ---------
 ```
