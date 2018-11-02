@@ -30,6 +30,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [appName: "@string/app_name"]
+        if(project.hasProperty("RELEASE_STORE_FILE")){
+            manifestPlaceholders.put("FABRIC_API_KEY", FABRIC_API_KEY)
+        }
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -92,7 +95,7 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
-    playImplementation 'com.google.firebase:firebase-core:16.0.4'
+    playImplementation 'com.google.firebase:firebase-core:16.0.5'
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }

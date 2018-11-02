@@ -41,7 +41,10 @@ If that still doesn't work, you can contact the creator of your ROM to file a bu
 Development
 -------------
 - Select `fdroid` build variants to build and run immediately
-- For `play` variants, place `google-services.json` in app/src/main/play
+- For `play` variants:
+    - Put `google-services.json` from Firebase in app/src/main/play/
+    - Put `fabric.properties` in app/
+    - Put signing keys and Fabric API key in local.properties
 
 License
 ---------
