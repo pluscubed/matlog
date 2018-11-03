@@ -144,3 +144,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+app/play/
+app/fdroid/
