@@ -235,7 +235,11 @@ public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> impl
             // XXX hack - I sometimes get array index out of bounds exceptions here
             // no idea how to solve it, so this is the best I can do
             //TODO: Fix
-            logLine = LogLine.newLogLine("", PreferenceHelper.getExpandedByDefaultPreference(context));
+            logLine = LogLine.newLogLine(
+                    "",
+                    PreferenceHelper.getExpandedByDefaultPreference(context),
+                    PreferenceHelper.getFilterPatternPreference(context)
+            );
         }
 
         holder.logLine = logLine;

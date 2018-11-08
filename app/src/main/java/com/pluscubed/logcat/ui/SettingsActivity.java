@@ -277,7 +277,6 @@ public class SettingsActivity extends AppCompatActivity {
                 PreferenceHelper.setFilterPatternPreference(getActivity(), value);
                 filterPatternPreference.setSummary(getString(R.string.pref_filter_pattern_summary));
 
-                LogcatActivity.mFilterPattern = value;
                 // notify that a restart is required
                 Toast.makeText(getActivity(), R.string.toast_pref_changed_restart_required, Toast.LENGTH_LONG).show();
 

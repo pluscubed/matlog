@@ -88,7 +88,7 @@ public class LogcatRecordingService extends IntentService {
             LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
             mReader = loader.loadReader();
 
-            while (!mReader.readyToRecord() && !mKilled) {
+            while (mReader != null && !mReader.readyToRecord() && !mKilled) {
                 mReader.readLine();
                 // keep skipping lines until we find one that is past the last log line, i.e.
                 // it's ready to record
@@ -194,12 +194,13 @@ public class LogcatRecordingService extends IntentService {
 
             String line;
             int lineCount = 0;
-            int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
-            while ((line = mReader.readLine()) != null && !mKilled) {
+            int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(this);
+            String filterPattern = PreferenceHelper.getFilterPatternPreference(this);
+            while (mReader != null && (line = mReader.readLine()) != null && !mKilled) {
 
                 // filter
                 if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {
-                    if (!checkLogLine(line, searchCriteria, logLevelLimit)) {
+                    if (!checkLogLine(line, searchCriteria, logLevelLimit, filterPattern)) {
                         continue;
                     }
                 }
@@ -229,8 +230,8 @@ public class LogcatRecordingService extends IntentService {
         }
     }
 
-    private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevelLimit) {
-        LogLine logLine = LogLine.newLogLine(line, false);
+    private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevelLimit, String filterPattern) {
+        LogLine logLine = LogLine.newLogLine(line, false, filterPattern);
         return searchCriteria.matches(logLine)
                 && LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit);
     }

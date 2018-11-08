@@ -126,7 +126,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
     private boolean mAutoscrollToBottom = true;
     private boolean mCollapsedMode;
 
-    public static String mFilterPattern = null;
+    private String mFilterPattern = null;
 
     private boolean mDynamicallyEnteringSearchText;
     private boolean partialSelectMode;
@@ -1472,7 +1472,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 List<LogLine> logLines = new ArrayList<>();
                 for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {
                     String line = lines.get(lineNumber);
-                    logLines.add(LogLine.newLogLine(line, !mCollapsedMode));
+                    logLines.add(LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern));
                     final int finalLineNumber = lineNumber;
                     runOnUiThread(() -> ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setProgress(finalLineNumber * 100 / linesSize));
                 }
@@ -1635,7 +1635,8 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                 Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
             } else {
                 String filename = charSequence.toString();
-                savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
+                if (partiallySelectedLogLines.size() == 2)
+                    savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
             }
         };
 
@@ -1808,7 +1809,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
                             }
                         }
                     }
-                    LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode);
+                    LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern);
                     if (!mReader.readyToRecord()) {
                         // "ready to record" in this case means all the initial lines have been flushed from the reader
                         initialLines.add(logLine);

@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.pluscubed.logcat.reader.ScrubberUtils;
-import com.pluscubed.logcat.ui.LogcatActivity;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.UtilLogger;
 
@@ -41,7 +40,7 @@ public class LogLine {
 
     public static boolean isScrubberEnabled = false;
 
-    public static LogLine newLogLine(String originalLine, boolean expanded) {
+    public static LogLine newLogLine(String originalLine, boolean expanded, String filterPattern) {
 
         LogLine logLine = new LogLine();
         logLine.setExpanded(expanded);
@@ -71,7 +70,7 @@ public class LogLine {
             }
 
             String tagText = matcher.group(2);
-            if (tagText.matches(LogcatActivity.mFilterPattern)) {
+            if (tagText.matches(filterPattern)) {
                 logLine.setLogLevel(convertCharToLogLevel('V'));
             }
 
