@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.pluscubed.logcat.data.LogLine;
@@ -30,6 +29,8 @@ import com.pluscubed.logcat.util.UtilLogger;
 
 import java.io.IOException;
 import java.util.Random;
+
+import androidx.core.app.NotificationCompat;
 
 /**
  * Reads logs.

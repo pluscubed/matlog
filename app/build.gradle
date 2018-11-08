@@ -27,7 +27,7 @@ android {
         versionCode 9
 
         testApplicationId "com.pluscubed.matlog.test"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [appName: "@string/app_name"]
         if(project.hasProperty("RELEASE_STORE_FILE")){
@@ -52,7 +52,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
             } else {
@@ -84,14 +84,11 @@ android {
     }
 }
 
-def supportLibrariesVersion = "28.0.0"
-
 dependencies {
-    implementation "com.android.support:appcompat-v7:$supportLibrariesVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibrariesVersion"
-    implementation "com.android.support:support-annotations:$supportLibrariesVersion"
-    implementation "com.android.support:design:$supportLibrariesVersion"
-    implementation "com.android.support:support-v13:$supportLibrariesVersion"
+    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "androidx.annotation:annotation:1.0.0"
+    implementation "com.google.android.material:material:1.0.0"
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
@@ -100,7 +97,7 @@ dependencies {
         transitive = true;
     }
 
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'

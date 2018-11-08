@@ -10,14 +10,12 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.helper.PackageHelper;
@@ -28,6 +26,9 @@ import com.pluscubed.logcat.widget.MultipleChoicePreference;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class SettingsActivity extends AppCompatActivity {
 

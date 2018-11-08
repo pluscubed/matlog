@@ -1,7 +1,6 @@
 package com.pluscubed.logcat.data;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import com.pluscubed.logcat.helper.SaveLogHelper;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public class LogFileAdapter extends ArrayAdapter<CharSequence> {
     private List<CharSequence> objects;

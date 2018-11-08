@@ -7,7 +7,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -32,7 +32,7 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
             android:scrollbars="vertical" />
 
         <!--TODO: Change border width back to 0.5dp when design library is fixed-->
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
