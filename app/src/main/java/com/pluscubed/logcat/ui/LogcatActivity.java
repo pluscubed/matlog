@@ -489,7 +489,7 @@ public class LogcatActivity extends AppCompatActivity implements FilterListener,
 
     @Override
     public void onBackPressed() {
-        if (mSearchViewMenuItem.isActionViewExpanded()) {
+        if (mSearchViewMenuItem != null && mSearchViewMenuItem.isActionViewExpanded()) {
             mSearchViewMenuItem.collapseActionView();
         } else if (mCurrentlyOpenLog != null) {
             startMainLog();
