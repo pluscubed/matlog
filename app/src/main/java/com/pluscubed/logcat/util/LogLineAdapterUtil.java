@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 
 import java.util.HashMap;
-
-import androidx.core.content.ContextCompat;
 
 public class LogLineAdapterUtil {
 

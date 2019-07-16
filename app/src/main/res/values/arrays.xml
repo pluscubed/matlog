@@ -1,5 +1,15 @@
 <resources>
 
+    <string-array name="theme_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="theme_names">
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+    </string-array>
+
     <string-array name="pref_buffer_choices">
         <item>@string/pref_buffer_choice_main</item>
         <item>@string/pref_buffer_choice_events</item>

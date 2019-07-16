@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import com.pluscubed.logcat.helper.DialogHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.helper.ServiceHelper;
@@ -13,8 +15,6 @@ import com.pluscubed.logcat.ui.RecordLogDialogActivity;
 import com.pluscubed.logcat.util.UtilLogger;
 
 import java.util.Arrays;
-
-import androidx.annotation.NonNull;
 
 public class RecordingWidgetProvider extends AppWidgetProvider {
 

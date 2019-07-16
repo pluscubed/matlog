@@ -21,6 +21,27 @@
         <!--<item name="activatedBackground">@drawable/activated_background_light</item>-->
     </style>
 
+    <style name="Theme.MatLog.Light" parent="Base.Theme.MatLog.Light">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="toolbarShadow">@drawable/shadow</item>
+    </style>
+
+    <style name="Base.Theme.MatLog.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/light_primary</item>
+        <item name="colorPrimaryDark">@color/light_primary_dark</item>
+        <item name="colorAccent">@color/light_accent</item>
+        <!--<item name="selectableItemBackground">@drawable/item_background_light</item>
+        <item name="android:selectableItemBackground">@drawable/item_background_light</item>-->
+
+        <item name="android:textColor">?android:textColorPrimary</item>
+
+        <item name="actionModeBackground">?colorPrimary</item>
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <!--<item name="activatedBackground">@drawable/activated_background_light</item>-->
+    </style>
+
     <style name="Theme.MatLog.AlertDialog" parent="@style/Theme.AppCompat.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -33,5 +54,4 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
 </resources>

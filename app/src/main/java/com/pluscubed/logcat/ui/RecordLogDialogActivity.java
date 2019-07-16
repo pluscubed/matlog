@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.DialogHelper;
@@ -15,9 +17,7 @@ import com.pluscubed.logcat.helper.WidgetHelper;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class RecordLogDialogActivity extends AppCompatActivity {
+public class RecordLogDialogActivity extends BaseActivity {
 
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 

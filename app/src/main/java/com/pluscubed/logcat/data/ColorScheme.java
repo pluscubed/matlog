@@ -2,13 +2,13 @@ package com.pluscubed.logcat.data;
 
 import android.content.Context;
 
+import androidx.core.content.ContextCompat;
+
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.util.ArrayUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.core.content.ContextCompat;
 
 
 public enum ColorScheme {

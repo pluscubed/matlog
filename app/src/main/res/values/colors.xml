@@ -115,9 +115,13 @@
     <color name="android_theme_tag_color_16">#FFCC3399</color>
     <color name="android_theme_tag_color_17">#FFFFCC00</color>
 
-    <color name="primary">#F44336</color>
-    <color name="primary_dark">#D32F2F</color>
-    <color name="accent">#448AFF</color>
+    <color name="primary">#212121</color>
+    <color name="primary_dark">#212121</color>
+    <color name="accent">#6F9FF3</color>
+
+    <color name="light_primary">#F44336</color>
+    <color name="light_primary_dark">#F44336</color>
+    <color name="light_accent">#448AFF</color>
 
 
 </resources>

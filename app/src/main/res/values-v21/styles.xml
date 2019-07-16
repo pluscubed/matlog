@@ -5,4 +5,9 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="toolbarShadow">@null</item>
     </style>
+
+    <style name="Theme.MatLog.Light" parent="Base.Theme.MatLog.Light">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="toolbarShadow">@null</item>
+    </style>
 </resources>

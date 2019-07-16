@@ -242,4 +242,8 @@
     <string name="pref_include_dmesg" translatable="false">dmesg</string>
     <string name="save_log_zip">Save zip</string>
     <string name="share_log">Share</string>
+
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="pref_app_theme">App theme</string>
 </resources>

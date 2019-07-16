@@ -8,13 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.db.CatlogDBHelper;
 import com.pluscubed.logcat.db.FilterItem;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 public class FilterAdapter extends ArrayAdapter<FilterItem> {
 

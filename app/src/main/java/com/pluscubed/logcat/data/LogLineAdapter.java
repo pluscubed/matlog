@@ -27,6 +27,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.PreferenceHelper;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
@@ -37,9 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class LogLineAdapter extends RecyclerView.Adapter<LogLineViewHolder> implements Filterable {
 

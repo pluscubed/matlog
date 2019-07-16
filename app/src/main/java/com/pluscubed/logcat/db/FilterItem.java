@@ -1,8 +1,8 @@
 package com.pluscubed.logcat.db;
 
-import java.util.Comparator;
-
 import androidx.annotation.NonNull;
+
+import java.util.Comparator;
 
 
 public class FilterItem implements Comparable<FilterItem> {

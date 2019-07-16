@@ -9,14 +9,14 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.SaveLogHelper;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 public class LogFileAdapter extends ArrayAdapter<CharSequence> {
     private List<CharSequence> objects;

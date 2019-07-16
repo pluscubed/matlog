@@ -190,4 +190,7 @@
     <string name="share_log">Поделиться</string>
     <string name="pref_filter_pattern_title">Исключение тегов</string>
     <string name="pref_filter_pattern_summary">Исключить записи с этими тегами из лога</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="pref_app_theme">Тема приложения</string>
 </resources>

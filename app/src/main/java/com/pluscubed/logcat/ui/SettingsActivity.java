@@ -1,8 +1,10 @@
 package com.pluscubed.logcat.ui;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -14,6 +16,10 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.pluscubed.logcat.R;
@@ -27,10 +33,7 @@ import com.pluscubed.logcat.widget.MultipleChoicePreference;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             // set result and finish
             setResultAndFinish();
@@ -103,7 +105,6 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
-
             setUpPreferences();
         }
 
@@ -112,9 +113,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void setUpPreferences() {
+            setCurrentValue("ui.theme");
+            setCurrentValue("theme");
 
             displayLimitPreference = (EditTextPreference) findPreference(getString(R.string.pref_display_limit));
+
             int displayLimitValue = PreferenceHelper.getDisplayLimitPreference(getActivity());
+
             displayLimitPreference.setSummary(getString(R.string.pref_display_limit_summary,
                     displayLimitValue, getString(R.string.pref_display_limit_default)));
             displayLimitPreference.setOnPreferenceChangeListener(this);
@@ -140,23 +145,14 @@ public class SettingsActivity extends AppCompatActivity {
             defaultLevelPreference.setOnPreferenceChangeListener(this);
             setDefaultLevelPreferenceSummary(defaultLevelPreference.getEntry());
 
-            mThemePreference = findPreference(getString(R.string.pref_theme));
+            mThemePreference = findPreference("ui.theme");
             mThemePreference.setOnPreferenceChangeListener(this);
 
             bufferPreference = (MultipleChoicePreference) findPreference(getString(R.string.pref_buffer));
             bufferPreference.setOnPreferenceChangeListener(this);
             setBufferPreferenceSummary(bufferPreference.getValue());
 
-            String themeSummary = PreferenceHelper.getColorScheme(getActivity()).getDisplayableName(getActivity());
-
-            mThemePreference.setSummary(themeSummary);
-            mThemePreference.setOnPreferenceClickListener(preference -> {
-                //TODO: Implement themes using color picker and remove this
-                Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        "Themes are not implemented yet. Stay tuned for updates!", Snackbar.LENGTH_LONG)
-                        .show();
-                return true;
-            });
+            mThemePreference.setOnPreferenceChangeListener(this);
 
             mAboutPreference = findPreference(getString(R.string.pref_about));
             mAboutPreference.setOnPreferenceClickListener(preference -> {
@@ -177,19 +173,13 @@ public class SettingsActivity extends AppCompatActivity {
         private void setDefaultLevelPreferenceSummary(CharSequence entry) {
             defaultLevelPreference.setSummary(
                     getString(R.string.pref_default_log_level_summary, entry));
-
         }
 
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-
             if (preference.getKey().equals(getString(R.string.pref_display_limit))) {
-
                 // display buffer preference; update summary
-
                 String input = ((String) newValue).trim();
-
                 try {
-
                     int value = Integer.parseInt(input);
                     if (value >= MIN_DISPLAY_LIMIT && value <= MAX_DISPLAY_LIMIT) {
                         PreferenceHelper.setDisplayLimitPreference(getActivity(), value);
@@ -201,11 +191,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                         return true;
                     }
-
-                } catch (NumberFormatException ignore) {
-                }
-
-
+                } catch (NumberFormatException ignore) { }
                 String invalidEntry = getString(R.string.toast_invalid_display_limit, MIN_DISPLAY_LIMIT, MAX_DISPLAY_LIMIT);
                 Toast.makeText(getActivity(), invalidEntry, Toast.LENGTH_LONG).show();
                 return false;
@@ -213,11 +199,8 @@ public class SettingsActivity extends AppCompatActivity {
             } else if (preference.getKey().equals(getString(R.string.pref_log_line_period))) {
 
                 // log line period preference; update summary
-
                 String input = ((String) newValue).trim();
-
                 try {
-
                     int value = Integer.parseInt(input);
                     if (value >= MIN_LOG_LINE_PERIOD && value <= MAX_LOG_LINE_PERIOD) {
                         PreferenceHelper.setLogLinePeriodPreference(getActivity(), value);
@@ -225,35 +208,25 @@ public class SettingsActivity extends AppCompatActivity {
                                 value, getString(R.string.pref_log_line_period_default)));
                         return true;
                     }
-
                 } catch (NumberFormatException ignore) {
                 }
-
-
                 Toast.makeText(getActivity(), R.string.pref_log_line_period_error, Toast.LENGTH_LONG).show();
                 return false;
 
             } else if (preference.getKey().equals(getString(R.string.pref_theme))) {
-                // update summary
-                /*int index = ArrayUtil.indexOf(mThemePreference.getEntryValues(), newValue.toString());
-                CharSequence newEntry = mThemePreference.getEntries()[index];
-                mThemePreference.setSummary(newEntry);*/
-
+                setCurrentValue(preference.getKey());
                 return true;
             } else if (preference.getKey().equals(getString(R.string.pref_buffer))) {
                 // buffers pref
-
                 // check to make sure nothing was left unchecked
                 if (TextUtils.isEmpty(newValue.toString())) {
                     Toast.makeText(getActivity(), R.string.pref_buffer_none_checked_error, Toast.LENGTH_SHORT).show();
                     return false;
                 }
-
                 // notify the LogcatActivity that the buffer has changed
                 if (!newValue.toString().equals(bufferPreference.getValue())) {
                     bufferChanged = true;
                 }
-
                 setBufferPreferenceSummary(newValue.toString());
                 return true;
             } else if (preference.getKey().equals(getString(R.string.pref_default_log_level))) {
@@ -266,7 +239,6 @@ public class SettingsActivity extends AppCompatActivity {
                 int index = ArrayUtil.indexOf(listPreference.getEntryValues(), newValue);
                 CharSequence newEntry = listPreference.getEntries()[index];
                 setDefaultLevelPreferenceSummary(newEntry);
-
                 return true;
 
             } else if (preference.getKey().equals(getString(R.string.pref_filter_pattern))) {
@@ -280,21 +252,21 @@ public class SettingsActivity extends AppCompatActivity {
                 // notify that a restart is required
                 Toast.makeText(getActivity(), R.string.toast_pref_changed_restart_required, Toast.LENGTH_LONG).show();
 
+            } else if (preference.getKey().equals("ui.theme")){
+                setCurrentValue(preference.getKey());
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("org.openintents.action.REFRESH_THEME"));
                 return true;
-
-            } else { // text size pref
-
+            } else {
+                // text size pref
                 // update the summary to reflect changes
-
                 ListPreference listPreference = (ListPreference) preference;
-
                 int index = ArrayUtil.indexOf(listPreference.getEntryValues(), newValue);
                 CharSequence newEntry = listPreference.getEntries()[index];
                 listPreference.setSummary(newEntry);
 
                 return true;
             }
-
+            return false;
         }
 
 
@@ -316,6 +288,11 @@ public class SettingsActivity extends AppCompatActivity {
                 summary += getString(R.string.simultaneous);
             }
             bufferPreference.setSummary(summary);
+        }
+
+        private void setCurrentValue(String key){
+            ListPreference preference = (ListPreference) findPreference(key);
+            preference.setSummary(preference.getEntry());
         }
     }
 }

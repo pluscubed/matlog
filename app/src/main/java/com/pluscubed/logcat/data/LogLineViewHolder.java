@@ -4,9 +4,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.pluscubed.logcat.R;
-
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.pluscubed.logcat.R;
 
 /**
  * ViewHolder to show log entries

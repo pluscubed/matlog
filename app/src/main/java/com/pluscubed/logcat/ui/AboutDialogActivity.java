@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.PackageHelper;
@@ -17,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class AboutDialogActivity extends AppCompatActivity {
+public class AboutDialogActivity extends BaseActivity {
 
     private static UtilLogger log = new UtilLogger(AboutDialogActivity.class);
 
