@@ -16,13 +16,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.0'
 
     defaultConfig {
         applicationId "com.pluscubed.matlog"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionName '1.2.3'
         versionCode 11
 
@@ -87,14 +87,14 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "androidx.annotation:annotation:1.0.0"
+    implementation "androidx.annotation:annotation:1.1.0"
     implementation "com.google.android.material:material:1.0.0"
 
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
     playImplementation 'com.google.firebase:firebase-core:16.0.5'
     playImplementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true;
+        transitive = true
     }
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
