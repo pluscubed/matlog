@@ -96,7 +96,7 @@
     <string name="pref_log_line_period_summary">Записывать на SD каждые %1$d строк (стандартно: %2$s).</string>
     <string name="pref_log_line_period_title">Период записи</string>
     <string name="pref_show_timestamp_summary">Показывать ID процесса и Timestamp при разворачивании лога</string>
-    <string name="pref_show_timestamp_title">Показать Pid &amp; Timestamp</string>
+    <string name="pref_show_timestamp_title">Показать PID и Timestamp</string>
     <string name="pref_text_size_title">Размер текста</string>
     <string name="pref_theme_choice_android_name">Android</string>
     <string name="pref_theme_choice_att_name">Ma Bell</string>
@@ -185,4 +185,9 @@
     <string name="search">Поиск</string>
     <string name="scrubber">Omit sensitive info</string>
     <string name="scrubber_summary">Omit sensitive info like web urls, phone numbers or emails</string>
+    <string name="text_include_dmesg">Добавить лог ядра</string>
+    <string name="save_log_zip">Сохранить в ZIP</string>
+    <string name="share_log">Поделиться</string>
+    <string name="pref_filter_pattern_title">Исключение тегов</string>
+    <string name="pref_filter_pattern_summary">Исключить записи с этими тегами из лога</string>
 </resources>
