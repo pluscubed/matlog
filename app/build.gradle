@@ -90,6 +90,7 @@ dependencies {
     implementation "androidx.annotation:annotation:1.1.0"
     implementation "com.google.android.material:material:1.0.0"
 
+    implementation 'com.l4digital.fastscroll:fastscroll:2.0.1'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
     playImplementation 'com.google.firebase:firebase-core:16.0.5'
