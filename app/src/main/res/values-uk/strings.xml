@@ -26,7 +26,7 @@
     <string name="default_in_parens">(За замовчуванням)</string>
     <string name="delete">Видалити</string>
     <string name="delete_all">Видалити все</string>
-    <string name="delete_saved_log">Видалити збереженні логи</string>
+    <string name="delete_saved_log">Видалити збережені логи</string>
     <string name="delimiter">, </string>
     <string name="dialog_compiling_log">Компіляція логу…</string>
     <string name="dialog_for_donate">Як до <b>кольорових\nсхем</b>, завантажте\n<a href="market://details?id=com.pluscubed.logcat.donate">MatLog Donate</a></string>
@@ -157,7 +157,7 @@
     </plurals>
 
     <string name="toast_no_root">Неможливо отримати root. Ви бачите тільки логи MatLog.</string>
-    <string name="toast_pref_changed_restart_required">Параметр змінено. Перезапустіть MatLog, щоб прийняти зміни.</string>
+    <string name="toast_pref_changed_restart_required">Параметр змінено. Перезапустіть MatLog, щоб застосувати зміни.</string>
     <string name="toast_request_root">MatLog потребує root (superuser) для читання логів.</string>
     <string name="toast_started_select_partial">Частковий вибір активовано</string>
 
@@ -175,7 +175,7 @@
     <string name="pause_unpause">Відтворити/Пауза</string>
     <string name="undo">Відмінити</string>
     <string name="no_logs_warning_title">Немає доступу до системних логів</string>
-    <string name="no_logs_warning">%1$s немає дозволу на доступ до логів, ви бачите тільки логи додатку.&lt;br/>&lt;br/>У вас є 2 способи надати дозвіл: %1$s &lt;br/>- Рутуйте ваш пристрій &lt;br/>- Підключіть пристрій до комп\'ютеру з вствновленим Android SDK і виконайте команду (одноразова дія):&lt;br/>&lt;tt>%2$s&lt;/tt></string>
+    <string name="no_logs_warning">%1$s немає дозволу на доступ до логів, ви бачите тільки логи додатку.&lt;br/>&lt;br/>У вас є 2 способи надати дозвіл: %1$s &lt;br/>- Рутуйте ваш пристрій &lt;br/>- Підключіть пристрій до комп\'ютеру з встановленим Android SDK і виконайте команду (одноразова дія):&lt;br/>&lt;tt>%2$s&lt;/tt></string>
     <string name="copy_command">Копіювати команду</string>
     <string name="adb_command">Команда ADB</string>
 
