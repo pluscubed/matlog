@@ -13,7 +13,6 @@
         android:layout_height="?actionBarSize"
         android:background="?colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetStart="16dp"
         app:popupTheme="?popupTheme"
         tools:showIn="@layout/activity_logcat" />

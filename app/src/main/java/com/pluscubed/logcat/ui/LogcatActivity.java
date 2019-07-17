@@ -37,9 +37,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -213,7 +214,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         ((RecyclerView) findViewById(R.id.list)).setItemAnimator(null);
 
-        setSupportActionBar(findViewById(R.id.toolbar_actionbar));
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+        toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
+        setSupportActionBar(toolbar);
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 

@@ -1,10 +1,8 @@
 package com.pluscubed.logcat.ui;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -17,11 +15,10 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.LogLine;
 import com.pluscubed.logcat.helper.PackageHelper;
@@ -39,7 +36,9 @@ public class SettingsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+        toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
         setSupportActionBar(toolbar);
 
         FragmentManager fm = getFragmentManager();

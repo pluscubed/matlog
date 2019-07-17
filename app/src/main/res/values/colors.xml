@@ -29,7 +29,7 @@
     <color name="main_bubble_background_tmobile">#33333333</color>
     <color name="main_bubble_background_verizon">#FFEEEEEE</color>
 
-    <color name="main_background_dark">#FF000000</color>
+    <color name="main_background_dark">#212121</color>
     <color name="main_background_light">#FAFAFA</color>
     <color name="main_background_android">#FFA4C639</color>
     <color name="main_background_verizon">#FF000000</color>
@@ -115,12 +115,12 @@
     <color name="android_theme_tag_color_16">#FFCC3399</color>
     <color name="android_theme_tag_color_17">#FFFFCC00</color>
 
-    <color name="primary">#212121</color>
-    <color name="primary_dark">#212121</color>
+    <color name="primary">#151515</color>
+    <color name="primary_dark">#151515</color>
     <color name="accent">#6F9FF3</color>
 
-    <color name="light_primary">#F44336</color>
-    <color name="light_primary_dark">#F44336</color>
+    <color name="light_primary">#fff</color>
+    <color name="light_primary_dark">#DDDDDD</color>
     <color name="light_accent">#448AFF</color>
 
 

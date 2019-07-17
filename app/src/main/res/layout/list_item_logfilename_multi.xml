@@ -28,8 +28,8 @@
         android:layout_marginTop="16dp"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
-        android:textColor="@color/primary_text_default_material_dark"
         android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="TEST"
         android:singleLine="true" />
 
@@ -43,7 +43,6 @@
         android:layout_marginRight="24dp"
         android:layout_marginStart="80dp"
         android:ellipsize="marquee"
-        android:textColor="@color/secondary_text_default_material_dark"
         android:textSize="14sp"
         tools:text="TEST"
         android:singleLine="true" />
