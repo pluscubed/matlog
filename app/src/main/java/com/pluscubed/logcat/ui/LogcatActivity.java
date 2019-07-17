@@ -97,7 +97,6 @@ import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_FILTER_ID
 
 
 public class LogcatActivity extends BaseActivity implements FilterListener, LogLineViewHolder.OnClickListener {
-
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     // how often to check to see if we've gone over the max size
@@ -210,13 +209,13 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         findViewById(R.id.fab).setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
 
-        ((RecyclerView) findViewById(R.id.list)).setLayoutManager(new LinearLayoutManager(this));
-
-        ((RecyclerView) findViewById(R.id.list)).setItemAnimator(null);
-
         Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
         toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
         setSupportActionBar(toolbar);
+
+        RecyclerView list = findViewById(R.id.list);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setItemAnimator(null);
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
