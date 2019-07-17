@@ -21,7 +21,7 @@ public abstract class ThemeWrapper {
         switch (Theme.values()[getThemeIndex()]) {
             case LIGHT:
                 theme = R.style.Theme_MatLog_Light;
-                if (!isLightScheme(ctx)){
+                if (isDarkScheme(ctx)){
                     PreferenceHelper.setColorScheme(ctx, ColorScheme.Light);
                 }
                 break;
@@ -52,6 +52,10 @@ public abstract class ThemeWrapper {
 
     public static  boolean isLightScheme(Context context) {
         return PreferenceHelper.getColorScheme(context) == ColorScheme.Light;
+    }
+
+    public static  boolean isDarkScheme(Context context) {
+        return PreferenceHelper.getColorScheme(context) == ColorScheme.Dark;
     }
 
     /**
