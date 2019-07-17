@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- translateable strings-->
+    <string name="about">Про додаток</string>
+    <string name="about_matlog">Про додаток MatLog</string>
+
+    <string name="add_filter">Додати фільтр</string>
+    <string name="add_filter_ellipsis">Додати фільтр…</string>
+
+    <plurals name="are_you_sure">
+        <item quantity="one">%d файл буде видалено</item>
+        <item quantity="other">%d файлів буде видалено</item>
+        <item quantity="few">%d файлів буде видалено</item>
+        <item quantity="many">%d файлів буде видалено</item>
+    </plurals>
+
+    <string name="as_attachment">Як вкладення</string>
+    <string name="as_text">Як текст</string>
+
+    <string name="checkbox_never_show_partial_select_help">Не показувати знову</string>
+
+    <string name="copied_to_clipboard">Скопійовано в буфер обміну.</string>
+
+    <string name="copy_to_clipboard">Копіювати в буфер</string>
+
+    <string name="default_in_parens">(За замовчуванням)</string>
+    <string name="delete">Видалити</string>
+    <string name="delete_all">Видалити все</string>
+    <string name="delete_saved_log">Видалити збережені логи</string>
+    <string name="delimiter">, </string>
+    <string name="dialog_compiling_log">Компіляція логу…</string>
+    <string name="dialog_for_donate">Як до <b>кольорових\nсхем</b>, завантажте\n<a href="market://details?id=com.pluscubed.logcat.donate">MatLog Donate</a></string>
+    <string name="dialog_for_widget">Для <b>віджета</b>,\nна Головна → Довгий\nтап→ Віджети</string>
+    <string name="dialog_initializing_recorder">Завантаження рекордера…</string>
+    <string name="dialog_loading_updates">Завантаження оновлень…</string>
+    <string name="dialog_partial_select_explanation">1. Виберіть <b>першу</b> стрічку.\n2. Тепер виберіть <b>останню</b> стрічку.</string>
+    <string name="dialog_please_wait">Будь ласка, зачекайте</string>
+
+    <string name="enter_filename">Ім\'я файлу:</string>
+    <string name="enter_good_filename">Введіть коректне ім\'я файлу.</string>
+
+    <plurals name="files_deleted">
+        <item quantity="one">%d файл буде видалено</item>
+        <item quantity="other">%d файлів буде видалено</item>
+        <item quantity="few">%d файлів буде видалено</item>
+        <item quantity="many">%d файлів буде видалено</item>
+    </plurals>
+
+    <string name="filter_choice">Пошук по...</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice_tag">Тег</string>
+    <string name="filter_text_colon">Фільтр тексту:</string>
+
+    <string name="first_run_pref_summary">Показувати навчальне повідомлення ще раз.</string>
+    <string name="first_run_pref_title">Показувати повідомлення</string>
+    <string name="first_run_title">Раді вітати в MatLog!</string>
+
+    <string name="log_cleared">Логи очищені</string>
+    <string name="log_level">Рівень логу</string>
+    <string name="log_level_colon">Рівень логу:</string>
+    <string name="log_recording_started">Йде запис логу.</string>
+    <string name="log_saved">Лог збереженно.</string>
+
+    <string name="main_edit_text_hint">Пошук логів</string>
+
+    <string name="manage_saved_logs">Керування логами</string>
+
+    <string name="menu_title_partial_select">Часткове збереження</string>
+
+    <string name="no_saved_logs">Збережені логи не знайдені.</string>
+
+    <string name="notification_subtext">Натисніть, щоб зупинити запис.</string>
+    <string name="notification_ticker">Йде запис логу</string>
+    <string name="notification_title">Йде запис логу</string>
+
+    <string name="open">Відкрити</string>
+    <string name="open_log">Відкрити лог</string>
+
+    <string name="pref_buffer_choice_events">Події</string>
+    <string name="pref_buffer_choice_main">Основне</string>
+    <string name="pref_buffer_choice_radio">Радіо</string>
+    <string name="pref_buffer_none_checked_error">Оберіть хоч один буфер</string>
+    <string name="pref_buffer_title">Буфер логу</string>
+    <string name="pref_cat_advanced">Додатково</string>
+    <string name="pref_cat_appearance">Зовнішній вигляд</string>
+    <string name="pref_cat_configuration">Конфігурація</string>
+    <string name="pref_default_log_level_summary">Рівень логу при старті, відкритті файлів, і записі логів (%s)</string>
+    <string name="pref_default_log_level_title">Рівень логу</string>
+    <string name="pref_display_limit_summary">Показувати останні %1$d стрічок, для запобігання OutOfMemoryError (Стандартно: %2$s)</string>
+    <string name="pref_display_limit_title">Ліміт відображення</string>
+    <string name="pref_expanded_by_default_summary">Завжди розгортати лог</string>
+    <string name="pref_expanded_by_default_title">Розгортати за замовчуванням</string>
+    <string name="pref_log_line_period_error">Введіть число в діапазоні від 1 до 1000.</string>
+    <string name="pref_log_line_period_summary">Записувати на SD кожні %1$d стрічок (стандартно: %2$s).</string>
+    <string name="pref_log_line_period_title">Період запису</string>
+    <string name="pref_show_timestamp_summary">Показувати ID процесу і Timestamp при розгортанні логу</string>
+    <string name="pref_show_timestamp_title">Показувати PID і Timestamp</string>
+    <string name="pref_text_size_title">Розмір тексту</string>
+    <string name="pref_theme_choice_android_name">Android</string>
+    <string name="pref_theme_choice_att_name">Ma Bell</string>
+    <string name="pref_theme_choice_dark_name">Темна</string>
+    <string name="pref_theme_choice_light_name">Світла</string>
+    <string name="pref_theme_choice_sprint_name">Жовта</string>
+    <string name="pref_theme_choice_tmobile_name">T-Mo</string>
+    <string name="pref_theme_choice_verizon_name">Червона</string>
+    <string name="pref_theme_summary_free">Тільки в донатній версії.</string>
+    <string name="pref_theme_title">Кольорова схема</string>
+
+    <string name="record_log">Записати лог</string>
+
+    <string name="recording_in_progress">Запис логу вже запущено.</string>
+
+    <string name="save">Зберегти</string>
+    <string name="save_as">Зберегти як…</string>
+    <string name="save_log">Зберегти лог</string>
+
+    <string name="sd_card_not_found">SD карта не знайдена.</string>
+
+    <string name="select_logs_to_delete">Виберіть логи для видалення.</string>
+
+    <string name="send_as_attachment">Надіслати як вкладення</string>
+    <string name="send_as_text">Надіслати як текст</string>
+    <string name="send_log">Надіслати</string>
+    <string name="send_log_title">Надіслати лог</string>
+
+    <string name="settings">Налаштування</string>
+
+    <string name="simultaneous">(Simultaneous)</string>
+
+    <string name="start_recording_log">Запис</string>
+
+    <string name="stop_recording_log">Зупинити запис</string>
+
+    <string name="subject_log_report">Лог помилки/Log report</string>
+
+    <string name="text_filter_ellipsis">Фільтр…</string>
+    <string name="text_filter_text">Фільтр тексту</string>
+    <string name="text_include_device_info">Додати інформацію про пристрій</string>
+    <string name="text_size_large_name">Великий (14pt)</string>
+    <string name="text_size_medium_name">Середній (12pt)</string>
+    <string name="text_size_small_name">Маленький (10pt)</string>
+    <string name="text_size_xlarge_name">Дуже великий (16pt)</string>
+    <string name="text_size_xsmall_name">Дуже маленький (8pt)</string>
+
+    <string name="title_filter">Фільтр</string>
+    <string name="title_filters">Фільтри</string>
+
+    <string name="toast_invalid_display_limit">Введіть число в діапазоні між %1$d і %2$d.</string>
+    <string name="toast_invalid_level">Неприпустиме ім\'я рівня: %s</string>
+    <string name="toast_invalid_selection">Неприпустимий вибір. Спробуйте ще раз</string>
+
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Лог дуже великий; відображається останні %d стрічок.</item>
+        <item quantity="other">Лог дуже великий; відображається останні %d стрічок..</item>
+        <item quantity="few">Лог дуже великий; відображається останні %d стрічок.</item>
+        <item quantity="many">Лог дуже великий; відображається останні %d стрічок.</item>
+    </plurals>
+
+    <string name="toast_no_root">Неможливо отримати root. Ви бачите тільки логи MatLog.</string>
+    <string name="toast_pref_changed_restart_required">Параметр змінено. Перезапустіть MatLog, щоб застосувати зміни.</string>
+    <string name="toast_request_root">MatLog потребує root (superuser) для читання логів.</string>
+    <string name="toast_started_select_partial">Частковий вибір активовано</string>
+
+    <string name="unable_to_save_log">Помилка збереження. Ви ввели коректне ім\'я?</string>
+
+    <string name="version">Версія %s</string>
+
+    <string name="widget_recording_in_progress">Запис…</string>
+    <string name="widget_start_recording">Запис\nЛогу</string>
+    <string name="as_text_not_work">Надсилання як текст неможливе через дуже велику кількість символів. Спробуйте надіслати як вкладення</string>
+    <string name="file">Файл</string>
+    <string name="clear">Очистити</string>
+    <string name="expand_all">Розгорнути все</string>
+    <string name="collapse_all">Згорнути все</string>
+    <string name="pause_unpause">Відтворити/Пауза</string>
+    <string name="undo">Відмінити</string>
+    <string name="no_logs_warning_title">Немає доступу до системних логів</string>
+    <string name="no_logs_warning">%1$s немає дозволу на доступ до логів, ви бачите тільки логи додатку.&lt;br/>&lt;br/>У вас є 2 способи надати дозвіл: %1$s &lt;br/>- Рутуйте ваш пристрій &lt;br/>- Підключіть пристрій до комп\'ютеру з встановленим Android SDK і виконайте команду (одноразова дія):&lt;br/>&lt;tt>%2$s&lt;/tt></string>
+    <string name="copy_command">Копіювати команду</string>
+    <string name="adb_command">Команда ADB</string>
+
+    <string name="permission_not_granted">Ця функція не буде працювати без дозволу на запис в пам\'ять пристрою</string>
+    <string name="search">Пошук</string>
+    <string name="scrubber">Пропустити конфіденційну інформацію</string>
+    <string name="scrubber_summary">Пропустити конфіденційну інформацію, наприклад, веб-адреси, телефонні номери або електронні листи</string>
+    <string name="text_include_dmesg">Додати лог ядра</string>
+    <string name="save_log_zip">Зберегти в ZIP</string>
+    <string name="share_log">Надіслати</string>
+    <string name="pref_filter_pattern_title">Виключення тегів</string>
+    <string name="pref_filter_pattern_summary">Виключити записи з цими тегами з логу</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="pref_app_theme">Тема додатку</string>
+</resources>
