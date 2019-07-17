@@ -50,12 +50,18 @@ public abstract class ThemeWrapper {
         return getThemeIndex() == Theme.LIGHT.ordinal();
     }
 
-    public static  boolean isLightScheme(Context context) {
-        return PreferenceHelper.getColorScheme(context) == ColorScheme.Light;
+    private static  boolean isLightScheme(Context context) {
+        ColorScheme scheme = PreferenceHelper.getColorScheme(context);
+        return scheme == ColorScheme.Light
+                || scheme == ColorScheme.Tmobile
+                || scheme == ColorScheme.Att;
     }
 
-    public static  boolean isDarkScheme(Context context) {
-        return PreferenceHelper.getColorScheme(context) == ColorScheme.Dark;
+    private static  boolean isDarkScheme(Context context) {
+        ColorScheme scheme = PreferenceHelper.getColorScheme(context);
+        return  scheme == ColorScheme.Dark
+                || scheme == ColorScheme.Verizon
+                || scheme == ColorScheme.Sprint;
     }
 
     /**
