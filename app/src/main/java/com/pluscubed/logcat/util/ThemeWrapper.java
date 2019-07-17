@@ -1,9 +1,12 @@
 package com.pluscubed.logcat.util;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.pluscubed.logcat.App;
 import com.pluscubed.logcat.R;
+import com.pluscubed.logcat.data.ColorScheme;
+import com.pluscubed.logcat.helper.PreferenceHelper;
 
 /**
  * Created by Snow Volf on 16.07.2019, 20:40
@@ -18,9 +21,15 @@ public abstract class ThemeWrapper {
         switch (Theme.values()[getThemeIndex()]) {
             case LIGHT:
                 theme = R.style.Theme_MatLog_Light;
+                if (!isLightScheme(ctx)){
+                    PreferenceHelper.setColorScheme(ctx, ColorScheme.Light);
+                }
                 break;
             case DARK:
                 theme = R.style.Theme_MatLog;
+                if (isLightScheme(ctx)) {
+                    PreferenceHelper.setColorScheme(ctx, ColorScheme.Dark);
+                }
                 break;
             default:
                 // Force use the light theme
@@ -39,6 +48,10 @@ public abstract class ThemeWrapper {
 
     public static boolean isLightTheme() {
         return getThemeIndex() == Theme.LIGHT.ordinal();
+    }
+
+    public static  boolean isLightScheme(Context context) {
+        return PreferenceHelper.getColorScheme(context) == ColorScheme.Light;
     }
 
     /**
