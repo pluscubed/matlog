@@ -15,7 +15,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetStart="16dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="?popupTheme"
         tools:showIn="@layout/activity_logcat" />
 
     <FrameLayout
