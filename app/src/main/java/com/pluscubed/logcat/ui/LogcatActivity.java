@@ -140,6 +140,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private Handler mHandler;
     private MenuItem mSearchViewMenuItem;
 
+    private com.lapism.searchview.widget.SearchView searchView;
+
     public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 
         Intent actionSendIntent = new Intent(Intent.ACTION_SEND);
@@ -209,9 +211,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         findViewById(R.id.fab).setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
 
-//        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
-//        toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
-//        setSupportActionBar(toolbar);
+        searchView = findViewById(R.id.search_bar);
 
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -1545,9 +1545,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
 
-        //noinspection ConstantConditions
-//        getSupportActionBar().setSubtitle(logFileMode ? mCurrentlyOpenLog : "");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(logFileMode);
+        searchView.setHint(logFileMode ? mCurrentlyOpenLog : "");
+        searchView.setLogoHamburgerToLogoArrowWithoutAnimation(logFileMode);
         supportInvalidateOptionsMenu();
     }
 
