@@ -209,9 +209,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         findViewById(R.id.fab).setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
 
-        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
-        toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+//        toolbar.setOverflowIcon(AppCompatResources.getDrawable(this, R.drawable.ic_more_vert_24dp));
+//        setSupportActionBar(toolbar);
 
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -1546,8 +1546,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         boolean logFileMode = mCurrentlyOpenLog != null;
 
         //noinspection ConstantConditions
-        getSupportActionBar().setSubtitle(logFileMode ? mCurrentlyOpenLog : "");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(logFileMode);
+//        getSupportActionBar().setSubtitle(logFileMode ? mCurrentlyOpenLog : "");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(logFileMode);
         supportInvalidateOptionsMenu();
     }
 

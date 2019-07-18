@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/main_background"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_actionbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="?colorPrimary"
-        android:elevation="4dp"
-        app:contentInsetStart="16dp"
-        app:popupTheme="?popupTheme"
-        tools:showIn="@layout/activity_logcat" />
+        android:layout_height="wrap_content"
+        android:background="?colorPrimaryDark">
+    <com.lapism.searchview.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/search_behavior"
+        app:search_hint="Search for logs..."
+        app:search_hint_color="#647C7B7B" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -58,9 +64,21 @@
             app:srcCompat="@drawable/ic_stop_white_24dp"
             tools:visibility="visible" />
 
-        <View
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="?toolbarShadow" />
+            android:layout_height="56dp"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            android:layout_gravity="bottom">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
+                app:spanCount="5"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                />
+        </androidx.core.widget.NestedScrollView>
+
     </FrameLayout>
 </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
