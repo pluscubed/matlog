@@ -51,6 +51,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.pluscubed.logcat.BuildConfig;
@@ -139,6 +141,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private Handler mHandler;
     private MenuItem mSearchViewMenuItem;
+    private FloatingActionButton mFab;
+    private BottomAppBar mAppBar;
 
     private com.lapism.searchview.widget.SearchView searchView;
 
@@ -209,13 +213,14 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        findViewById(R.id.fab).setOnClickListener(v -> DialogHelper.stopRecordingLog(LogcatActivity.this));
-
         searchView = findViewById(R.id.search_bar);
 
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(null);
+
+        mFab = findViewById(R.id.fab);
+        mAppBar = findViewById(R.id.bottom_appbar);
 
         mCollapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
 
@@ -229,6 +234,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 new String[]{"suggestion"},
                 new int[]{android.R.id.text1},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        mAppBar.replaceMenu(R.menu.menu_main);
+        onPrepareOptionsMenu(mAppBar.getMenu());
 
         setUpAdapter();
         updateBackgroundColor();
@@ -366,7 +374,12 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         }
 
         boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
-        findViewById(R.id.fab).setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
+        mFab.setImageDrawable(AppCompatResources.getDrawable(this, recordingInProgress ?
+                R.drawable.ic_stop_fab : R.drawable.ic_record_fab));
+        mFab.setOnClickListener(v -> {
+            if (recordingInProgress) DialogHelper.stopRecordingLog(LogcatActivity.this);
+            else showRecordLogDialog();
+        });
     }
 
     private void restartMainLog() {
@@ -1718,7 +1731,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         //TODO:
         //mListView.setCacheColorHint(color);
         //mListView.setDivider(new ColorDrawable(color));
-
     }
 
 
