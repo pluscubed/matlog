@@ -140,7 +140,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private String mCurrentlyOpenLog = null;
 
     private Handler mHandler;
-    private MenuItem mSearchViewMenuItem;
+    //private MenuItem mSearchViewMenuItem;
     private FloatingActionButton mFab;
     private BottomAppBar mAppBar;
 
@@ -237,6 +237,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         mAppBar.replaceMenu(R.menu.menu_main);
         onPrepareOptionsMenu(mAppBar.getMenu());
+        mAppBar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
         setUpAdapter();
         updateBackgroundColor();
@@ -504,9 +505,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     @Override
     public void onBackPressed() {
-        if (mSearchViewMenuItem != null && mSearchViewMenuItem.isActionViewExpanded()) {
+        /*if (mSearchViewMenuItem != null && mSearchViewMenuItem.isActionViewExpanded()) {
             mSearchViewMenuItem.collapseActionView();
-        } else if (mCurrentlyOpenLog != null) {
+        } else */if (mCurrentlyOpenLog != null) {
             startMainLog();
         } else {
             super.onBackPressed();
@@ -567,47 +568,47 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         //used to workaround issue where the search text is cleared on expanding the SearchView
 
-        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) mSearchViewMenuItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (!mDynamicallyEnteringSearchText) {
-                    log.d("filtering: %s", newText);
-                    search(newText);
-                    populateSuggestionsAdapter(newText);
-                }
-                mDynamicallyEnteringSearchText = false;
-                return false;
-            }
-        });
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                if (!suggestions.isEmpty()) {
-                    searchView.setQuery(suggestions.get(position), true);
-                }
-                return false;
-            }
-        });
-        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
-        if (mSearchingString != null && !mSearchingString.isEmpty()) {
-            mDynamicallyEnteringSearchText = true;
-            mSearchViewMenuItem.expandActionView();
-            searchView.setQuery(mSearchingString, true);
-            searchView.clearFocus();
-        }
+//        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
+//        final SearchView searchView = (SearchView) mSearchViewMenuItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                if (!mDynamicallyEnteringSearchText) {
+//                    log.d("filtering: %s", newText);
+//                    search(newText);
+//                    populateSuggestionsAdapter(newText);
+//                }
+//                mDynamicallyEnteringSearchText = false;
+//                return false;
+//            }
+//        });
+//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//            @Override
+//            public boolean onSuggestionSelect(int position) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onSuggestionClick(int position) {
+//                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+//                if (!suggestions.isEmpty()) {
+//                    searchView.setQuery(suggestions.get(position), true);
+//                }
+//                return false;
+//            }
+//        });
+//        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+//        if (mSearchingString != null && !mSearchingString.isEmpty()) {
+//            mDynamicallyEnteringSearchText = true;
+//            mSearchViewMenuItem.expandActionView();
+//            searchView.setQuery(mSearchingString, true);
+//            searchView.clearFocus();
+//        }
 
         return true;
     }
@@ -1558,7 +1559,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
 
-        searchView.setHint(logFileMode ? mCurrentlyOpenLog : "");
+        searchView.setHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
         searchView.setLogoHamburgerToLogoArrowWithoutAnimation(logFileMode);
         supportInvalidateOptionsMenu();
     }

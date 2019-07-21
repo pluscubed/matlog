@@ -193,4 +193,5 @@
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
     <string name="pref_app_theme">Тема приложения</string>
+    <string name="search_hint">Поиск логов…</string>
 </resources>

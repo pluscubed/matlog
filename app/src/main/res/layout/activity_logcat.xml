@@ -52,7 +52,7 @@
         android:layout_gravity="bottom"
         app:fabCradleRoundedCornerRadius="4dp"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="?popupTheme"
         app:backgroundTint="?colorAccent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

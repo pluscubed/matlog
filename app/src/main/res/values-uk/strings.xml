@@ -191,4 +191,5 @@
     <string name="theme_light">Світла</string>
     <string name="theme_dark">Темна</string>
     <string name="pref_app_theme">Тема додатку</string>
+    <string name="search_hint">Search for logs…</string>
 </resources>
