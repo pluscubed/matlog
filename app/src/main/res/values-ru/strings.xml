@@ -10,10 +10,10 @@
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
 
     <plurals name="are_you_sure">
-        <item quantity="one">%d file will be deleted</item>
-        <item quantity="other">%d files will be deleted</item>
-        <item quantity="few">%d файлов будет удалёно</item>
-        <item quantity="many">%d файлов будет удалёно</item>
+        <item quantity="one">%d файл будет удалён</item>
+        <item quantity="other">%d файла будет удалено</item>
+        <item quantity="few">%d файлов будет удалено</item>
+        <item quantity="many">%d файлов будет удалено</item>
     </plurals>
 
     <string name="as_attachment">Как вложение</string>
