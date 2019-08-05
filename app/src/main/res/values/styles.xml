@@ -56,6 +56,5 @@
 
     <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:colorBackground">@color/primary_dark</item>
-
     </style>
 </resources>

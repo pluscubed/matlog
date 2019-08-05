@@ -40,6 +40,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -1517,7 +1518,17 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
         if (logFileMode) {
-            Snackbar.make(mAppBar, mCurrentlyOpenLog, Snackbar.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(mAppBar, mCurrentlyOpenLog, Snackbar.LENGTH_LONG);
+            View v = snackbar.getView();
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
+            params.setMargins(
+                    params.leftMargin,
+                    params.topMargin,
+                    params.rightMargin,
+                    params.bottomMargin + mAppBar.getHeight()
+            );
+            v.setLayoutParams(params);
+            snackbar.show();
         }
         searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
 //        searchView.setLogoHamburgerToLogoArrowWithAnimation(logFileMode);
