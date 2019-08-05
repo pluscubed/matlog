@@ -7,7 +7,7 @@
     <string name="about_matlog">О программе MatLog</string>
 
     <string name="add_filter">Добавить фильтр</string>
-    <string name="add_filter_ellipsis">Добавить фильр…</string>
+    <string name="add_filter_ellipsis">Добавить фильтр…</string>
 
     <plurals name="are_you_sure">
         <item quantity="one">%d file will be deleted</item>

@@ -452,7 +452,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         if (mTask != null) {
             // do only after current log is depleted, to avoid splicing the streams together
             // (Don't cross the streams!)
-            mTask.unpause();
+            mTask.unPause();
             mTask.setOnFinished(mainLogRunnable);
             mTask.killReader();
             mTask = null;
@@ -1484,7 +1484,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         if (mTask != null) {
             mTask.setOnFinished(() -> openFileTask.execute((Void) null));
-            mTask.unpause();
+            mTask.unPause();
             mTask.killReader();
             mTask = null;
         } else {
@@ -1671,7 +1671,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         if (currentTask != null) {
             if (currentTask.isPaused()) {
-                currentTask.unpause();
+                currentTask.unPause();
                 item.setIcon(R.drawable.ic_pause_white_24dp);
             } else {
                 currentTask.pause();
@@ -1876,7 +1876,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         private void doWhenFinished() {
             if (mPaused) {
-                unpause();
+                unPause();
             }
             if (mOnFinishedRunnable != null) {
                 mOnFinishedRunnable.run();
@@ -1889,7 +1889,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             }
         }
 
-        private void unpause() {
+        private void unPause() {
             synchronized (mLock) {
                 mPaused = false;
                 mLock.notify();
