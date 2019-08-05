@@ -47,10 +47,10 @@ import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -212,7 +212,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         handleShortcuts(getIntent().getStringExtra("shortcut_action"));
 
         mHandler = new Handler(Looper.getMainLooper());
-        
+
         searchView = findViewById(R.id.search_bar);
         initSearchView();
 
@@ -239,6 +239,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         mAppBar.replaceMenu(R.menu.menu_main);
         onPrepareOptionsMenu(mAppBar.getMenu());
         mAppBar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+        mAppBar.setOverflowIcon(VectorDrawableCompat.create(getResources(), R.drawable.ic_more_vert, getTheme()));
 
         setUpAdapter();
         updateBackgroundColor();
@@ -1515,7 +1516,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
-        //FIXME: Implement back tap methods
+        if (logFileMode) {
+            Snackbar.make(mAppBar, mCurrentlyOpenLog, Snackbar.LENGTH_SHORT).show();
+        }
         searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
 //        searchView.setLogoHamburgerToLogoArrowWithAnimation(logFileMode);
         supportInvalidateOptionsMenu();
@@ -1661,7 +1664,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 item.setIcon(R.drawable.ic_pause_white_24dp);
             } else {
                 currentTask.pause();
-                item.setIcon(R.drawable.ic_play_arrow_white_24dp);
+                item.setIcon(R.drawable.ic_play_arrow);
             }
         }
     }

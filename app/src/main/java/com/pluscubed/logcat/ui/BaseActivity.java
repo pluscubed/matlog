@@ -6,7 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -45,6 +47,18 @@ public class BaseActivity extends AppCompatActivity {
                 new IntentFilter("org.openintents.action.REFRESH_THEME"));
         // Применение текущей темы
         ThemeWrapper.applyTheme(this);
+
+        if (ThemeWrapper.isLightTheme()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                View decorView = getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                View decorView = getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+        }
+        getWindow().setNavigationBarColor(ThemeWrapper.resolveNavBarColor(this));
+
         super.onCreate(savedInstanceState);
     }
 

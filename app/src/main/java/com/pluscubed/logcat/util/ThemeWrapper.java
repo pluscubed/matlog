@@ -50,6 +50,10 @@ public abstract class ThemeWrapper {
         return getThemeIndex() == Theme.LIGHT.ordinal();
     }
 
+    public static int resolveNavBarColor(Context context) {
+        return App.getColorFromAttr(context, R.attr.colorPrimary);
+    }
+
     private static  boolean isLightScheme(Context context) {
         ColorScheme scheme = PreferenceHelper.getColorScheme(context);
         return scheme == ColorScheme.Light

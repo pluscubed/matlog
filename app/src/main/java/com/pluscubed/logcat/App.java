@@ -1,8 +1,14 @@
 package com.pluscubed.logcat;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
 
 import com.pluscubed.logcat.util.CrashlyticsWrapper;
 
@@ -33,5 +39,14 @@ public class App extends Application {
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
         }
         return preferences;
+    }
+
+    @ColorInt
+    public static int getColorFromAttr(Context context, @AttrRes int attr) {
+        TypedValue typedValue = new TypedValue();
+        if (context != null && context.getTheme().resolveAttribute(attr, typedValue, true))
+            return typedValue.data;
+        else
+            return Color.RED;
     }
 }

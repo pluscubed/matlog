@@ -5,7 +5,7 @@
         <item name="toolbarShadow">@drawable/shadow</item>
     </style>
 
-    <style name="Base.Theme.MatLog" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="Base.Theme.MatLog" parent="@style/Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -13,10 +13,11 @@
         <item name="android:selectableItemBackground">@drawable/item_background_light</item>-->
 
         <item name="android:textColor">?android:textColorPrimary</item>
-
         <item name="actionModeBackground">?colorPrimary</item>
-
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:windowBackground">@color/primary_dark</item>
 
         <!--<item name="activatedBackground">@drawable/activated_background_light</item>-->
     </style>
@@ -26,7 +27,7 @@
         <item name="toolbarShadow">@drawable/shadow</item>
     </style>
 
-    <style name="Base.Theme.MatLog.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="Base.Theme.MatLog.Light" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/light_primary</item>
         <item name="colorPrimaryDark">@color/light_primary_dark</item>
         <item name="colorAccent">@color/light_accent</item>
@@ -34,15 +35,13 @@
         <item name="android:selectableItemBackground">@drawable/item_background_light</item>-->
 
         <item name="android:textColor">?android:textColorPrimary</item>
-
         <item name="actionModeBackground">?colorPrimary</item>
-
         <item name="windowActionModeOverlay">true</item>
 
         <!--<item name="activatedBackground">@drawable/activated_background_light</item>-->
     </style>
 
-    <style name="Theme.MatLog.AlertDialog" parent="@style/Theme.AppCompat.Dialog.Alert">
+    <style name="Theme.MatLog.AlertDialog" parent="@style/Theme.MaterialComponents.Dialog.Alert">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -53,5 +52,10 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:colorBackground">@color/primary_dark</item>
+
     </style>
 </resources>
