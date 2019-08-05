@@ -8,18 +8,20 @@
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:fitsSystemWindows="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorAccent">
-
-    <com.lapism.searchview.widget.SearchView
-        android:id="@+id/search_bar"
-        app:layout_behavior="@string/search_behavior"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:search_hint="Search for logs..."
-        app:search_hint_color="#647C7B7B" />
+        android:background="?colorPrimary"
+        android:elevation="4dp"
+        android:fitsSystemWindows="false">
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            android:id="@+id/search_bar"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/search_background"/>
     </com.google.android.material.appbar.AppBarLayout>
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -61,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:src="@drawable/ic_stop_white_24dp"
+        android:tint="@android:color/white"
         app:backgroundTint="#F44336"
         app:layout_anchor="@id/bottom_appbar"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

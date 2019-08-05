@@ -40,7 +40,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -51,6 +50,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -140,11 +140,11 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     private String mCurrentlyOpenLog = null;
 
     private Handler mHandler;
-    //private MenuItem mSearchViewMenuItem;
+
     private FloatingActionButton mFab;
     private BottomAppBar mAppBar;
 
-    private com.lapism.searchview.widget.SearchView searchView;
+    private SearchView searchView;
 
     public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 
@@ -212,8 +212,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         handleShortcuts(getIntent().getStringExtra("shortcut_action"));
 
         mHandler = new Handler(Looper.getMainLooper());
-
+        
         searchView = findViewById(R.id.search_bar);
+        initSearchView();
 
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -505,9 +506,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     @Override
     public void onBackPressed() {
-        /*if (mSearchViewMenuItem != null && mSearchViewMenuItem.isActionViewExpanded()) {
-            mSearchViewMenuItem.collapseActionView();
-        } else */if (mCurrentlyOpenLog != null) {
+        if (searchView != null && !searchView.isIconified()) {
+            searchView.setIconified(true);
+        } else if (mCurrentlyOpenLog != null) {
             startMainLog();
         } else {
             super.onBackPressed();
@@ -565,50 +566,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-
-        //used to workaround issue where the search text is cleared on expanding the SearchView
-
-//        mSearchViewMenuItem = menu.findItem(R.id.menu_search);
-//        final SearchView searchView = (SearchView) mSearchViewMenuItem.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if (!mDynamicallyEnteringSearchText) {
-//                    log.d("filtering: %s", newText);
-//                    search(newText);
-//                    populateSuggestionsAdapter(newText);
-//                }
-//                mDynamicallyEnteringSearchText = false;
-//                return false;
-//            }
-//        });
-//        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-//            @Override
-//            public boolean onSuggestionSelect(int position) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onSuggestionClick(int position) {
-//                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-//                if (!suggestions.isEmpty()) {
-//                    searchView.setQuery(suggestions.get(position), true);
-//                }
-//                return false;
-//            }
-//        });
-//        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
-//        if (mSearchingString != null && !mSearchingString.isEmpty()) {
-//            mDynamicallyEnteringSearchText = true;
-//            mSearchViewMenuItem.expandActionView();
-//            searchView.setQuery(mSearchingString, true);
-//            searchView.clearFocus();
-//        }
 
         return true;
     }
@@ -1558,9 +1515,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
-
-        searchView.setHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
-        searchView.setLogoHamburgerToLogoArrowWithoutAnimation(logFileMode);
+        //FIXME: Implement back tap methods
+        searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
+//        searchView.setLogoHamburgerToLogoArrowWithAnimation(logFileMode);
         supportInvalidateOptionsMenu();
     }
 
@@ -1933,6 +1890,53 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             this.mOnFinishedRunnable = onFinished;
         }
 
+    }
 
+    private void initSearchView(){
+        searchView.setOnClickListener(view -> {
+            if (searchView.isIconified()){
+                searchView.setIconified(false);
+            }
+        });
+        //used to workaround issue where the search text is cleared on expanding the SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!mDynamicallyEnteringSearchText) {
+                    log.d("filtering: %s", newText);
+                    search(newText);
+                    populateSuggestionsAdapter(newText);
+                }
+                mDynamicallyEnteringSearchText = false;
+                return false;
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+                if (!suggestions.isEmpty()) {
+                    searchView.setQuery(suggestions.get(position), true);
+                }
+                return false;
+            }
+        });
+        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+        if (mSearchingString != null && !mSearchingString.isEmpty()) {
+            mDynamicallyEnteringSearchText = true;
+            //EXPAND ACTION VIEW
+            searchView.setQuery(mSearchingString, true);
+            searchView.clearFocus();
+        }
     }
 }
