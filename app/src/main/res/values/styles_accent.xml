@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Accent colors -->
+    <style name="AccentRed"><item name="colorAccent">@color/accent_red</item></style>
+    <style name="AccentPink"><item name="colorAccent">@color/accent_pink</item></style>
+    <style name="AccentPurple"><item name="colorAccent">@color/accent_purple</item></style>
+    <style name="AccentIndigo"><item name="colorAccent">@color/accent_indigo</item></style>
+    <style name="AccentBlue"><item name="colorAccent">@color/accent_blue</item></style>
+    <style name="AccentLBlue"><item name="colorAccent">@color/md_light_blue_500</item></style>
+    <style name="AccentCyan"><item name="colorAccent">@color/accent_cyan</item></style>
+    <style name="AccentTeal"><item name="colorAccent">@color/accent_teal</item></style>
+    <style name="AccentGreen"><item name="colorAccent">@color/accent_green</item></style>
+    <style name="AccentLGreen"><item name="colorAccent">@color/md_light_green_500</item></style>
+    <style name="AccentLime"><item name="colorAccent">@color/md_lime_500</item></style>
+    <style name="AccentYellow"><item name="colorAccent">@color/accent_yellow</item></style>
+    <style name="AccentAmber"><item name="colorAccent">@color/accent_amber</item></style>
+    <style name="AccentOrange"><item name="colorAccent">@color/accent_orange</item></style>
+    <style name="AccentDOrange"><item name="colorAccent">@color/md_deep_orange_500</item></style>
+    <style name="AccentBrown"><item name="colorAccent">@color/accent_brown</item></style>
+    <style name="AccentGrey"><item name="colorAccent">@color/accent_grey</item></style>
+    <style name="AccentBGrey"><item name="colorAccent">@color/md_blue_grey_500</item></style>
+
+</resources>

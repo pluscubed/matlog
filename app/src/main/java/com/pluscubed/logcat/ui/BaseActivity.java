@@ -58,7 +58,6 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
         getWindow().setNavigationBarColor(ThemeWrapper.resolveNavBarColor(this));
-
         super.onCreate(savedInstanceState);
     }
 

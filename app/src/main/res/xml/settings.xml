@@ -18,6 +18,13 @@
             android:persistent="true"
             android:title="@string/pref_theme_title" />
 
+        <ListPreference
+            android:defaultValue="4"
+            android:entries="@array/accent_names"
+            android:entryValues="@array/accent_values"
+            android:key="ui.accent"
+            android:title="@string/pref_ui_accent" />
+
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="@string/text_size_medium_value"
             android:entries="@array/text_sizes"
@@ -26,14 +33,14 @@
             android:persistent="true"
             android:title="@string/pref_text_size_title" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_expanded_by_default"
             android:persistent="true"
             android:summary="@string/pref_expanded_by_default_summary"
             android:title="@string/pref_expanded_by_default_title" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_show_timestamp"
             android:persistent="true"

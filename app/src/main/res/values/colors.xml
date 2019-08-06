@@ -120,6 +120,11 @@
     <color name="accent">#a86ffa</color>
     <color name="dark_dialog">#32313c</color>
 
+    <color name="primary_amoled">#000000</color>
+    <color name="primary_dark_amoled">#000000</color>
+    <color name="accent_amoled">#a86ffa</color>
+    <color name="dark_dialog_amoled">#181818</color>
+
     <color name="light_primary">#fff</color>
     <color name="light_primary_dark">#DDDDDD</color>
     <color name="light_accent">#448AFF</color>

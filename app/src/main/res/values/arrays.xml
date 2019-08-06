@@ -3,11 +3,13 @@
     <string-array name="theme_values" translatable="false">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="theme_names">
         <item>@string/theme_light</item>
         <item>@string/theme_dark</item>
+        <item>@string/theme_amoled</item>
     </string-array>
 
     <string-array name="pref_buffer_choices">
@@ -141,4 +143,46 @@
         <item>@color/android_theme_tag_color_16</item>
         <item>@color/android_theme_tag_color_17</item>
     </integer-array>
+
+    <string-array name="accent_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+    </string-array>
+
+    <string-array name="accent_names" translatable="false">
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Indigo</item>
+        <item>Blue</item>
+        <item>Light Blue</item>
+        <item>Cyan</item>
+        <item>Teal</item>
+        <item>Green</item>
+        <item>Light Green</item>
+        <item>Lime</item>
+        <item>Yellow</item>
+        <item>Amber</item>
+        <item>Orange</item>
+        <item>Deep Orange</item>
+        <item>Brown</item>
+        <item>Grey</item>
+        <item>Blue Grey</item>
+    </string-array>
 </resources>
