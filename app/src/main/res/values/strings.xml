@@ -43,6 +43,7 @@
     <string name="pref_theme" translatable="false">theme</string>
     <string name="pref_theme_choice_android_value" translatable="false">Android</string>
     <string name="pref_theme_choice_att_value" translatable="false">Ma Bell</string>
+    <string name="pref_theme_choice_amoled_value" translatable="false">Amoled</string>
     <string name="pref_theme_choice_dark_value" translatable="false">Dark</string>
     <string name="pref_theme_choice_light_value" translatable="false">Light</string>
     <string name="pref_theme_choice_sprint_value" translatable="false">Big Yellow</string>

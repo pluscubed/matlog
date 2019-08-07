@@ -35,7 +35,7 @@ public abstract class ThemeWrapper {
             case AMOLED:
                 theme = R.style.Theme_MatLog_Amoled;
                 if (isLightScheme(ctx)) {
-                    PreferenceHelper.setColorScheme(ctx, ColorScheme.Dark);
+                    PreferenceHelper.setColorScheme(ctx, ColorScheme.Amoled);
                 }
                 break;
             default:

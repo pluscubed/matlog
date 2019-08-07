@@ -37,6 +37,7 @@
     <color name="main_background_sprint">#FF000000</color>
     <color name="main_background_tmobile">#FFeaeff3</color>
 
+    <color name="main_background_amoled">#000000</color>
     <color name="main_foreground_dark">@android:color/darker_gray</color>
     <color name="main_foreground_light">@android:color/black</color>
     <color name="main_foreground_android">@android:color/black</color>

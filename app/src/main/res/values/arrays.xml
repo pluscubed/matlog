@@ -25,6 +25,7 @@
     </string-array>
 
     <string-array name="pref_theme_choices_values">
+        <item>@string/pref_theme_choice_amoled_value</item>
         <item>@string/pref_theme_choice_dark_value</item>
         <item>@string/pref_theme_choice_light_value</item>
         <item>@string/pref_theme_choice_android_value</item>
@@ -35,6 +36,7 @@
     </string-array>
 
     <string-array name="pref_theme_choices_names">
+        <item>@string/theme_amoled</item>
         <item>@string/pref_theme_choice_dark_name</item>
         <item>@string/pref_theme_choice_light_name</item>
         <item>@string/pref_theme_choice_android_name</item>
