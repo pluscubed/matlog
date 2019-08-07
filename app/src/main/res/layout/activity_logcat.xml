@@ -31,6 +31,7 @@
             android:layout_height="96dp"
             android:layout_gravity="center"
             app:cpb_indeterminate_mode="true"
+            app:cpb_progressbar_color="?colorAccent"
             android:layout_margin="8dp"
             android:visibility="gone"
             tools:visibility="visible" />

@@ -146,7 +146,8 @@ public abstract class ThemeWrapper {
         ColorScheme scheme = PreferenceHelper.getColorScheme(context);
         return  scheme == ColorScheme.Dark
                 || scheme == ColorScheme.Verizon
-                || scheme == ColorScheme.Sprint;
+                || scheme == ColorScheme.Sprint
+                || scheme == ColorScheme.Amoled;
     }
 
     /**

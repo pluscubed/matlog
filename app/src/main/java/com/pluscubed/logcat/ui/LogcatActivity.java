@@ -56,6 +56,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.pluscubed.logcat.App;
 import com.pluscubed.logcat.BuildConfig;
 import com.pluscubed.logcat.LogcatRecordingService;
 import com.pluscubed.logcat.R;
@@ -1501,7 +1502,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private void showProgressBar() {
         ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
-        ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setColor(colorScheme.getSelectedColor(this));
+        ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setColor(App.getColorFromAttr(this, R.attr.colorAccent));
         findViewById(R.id.main_progress_bar).setVisibility(View.VISIBLE);
     }
 

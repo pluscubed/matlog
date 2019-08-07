@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 public enum ColorScheme {
-    Amoled(R.string.pref_theme_choice_dark_value, R.color.main_background_amoled,
+    Amoled(R.string.pref_theme_choice_amoled_value, R.color.main_background_amoled,
             R.color.primary_text_default_material_dark, R.array.dark_theme_colors, R.color.spinner_droptown_dark,
             R.color.main_bubble_background_dark_2, false, R.color.accent),
     Dark(R.string.pref_theme_choice_dark_value, R.color.main_background_dark,
