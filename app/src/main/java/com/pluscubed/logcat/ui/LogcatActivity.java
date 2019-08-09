@@ -1912,7 +1912,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 searchView.setIconified(false);
             }
         });
-        
+
         //used to workaround issue where the search text is cleared on expanding the SearchView
         searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {

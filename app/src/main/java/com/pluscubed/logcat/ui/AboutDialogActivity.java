@@ -24,6 +24,8 @@ public class AboutDialogActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Fix window background overlay in dialog activities
+        getTheme().applyStyle(R.style.DialogOverlay, true);
 
         DialogFragment fragment = new AboutDialog();
         fragment.show(getFragmentManager(), "aboutDialog");
