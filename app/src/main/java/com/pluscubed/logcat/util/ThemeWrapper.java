@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
+import androidx.annotation.StyleRes;
+
 import com.pluscubed.logcat.App;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.data.ColorScheme;
@@ -109,6 +111,25 @@ public abstract class ThemeWrapper {
                 break;
         }
         ctx.getTheme().applyStyle(accent, true);
+    }
+
+    @StyleRes
+    public static int getDialogTheme(){
+        int theme;
+        switch (Theme.values()[getThemeIndex()]){
+            case LIGHT:
+                theme = R.style.Theme_MaterialComponents_Light_Dialog_Alert;
+                break;
+            case DARK:
+                theme = R.style.DarkAppTheme_Dialog;
+                break;
+            case AMOLED:
+                theme = R.style.AmoledAppTheme_Dialog;
+                break;
+            default:
+                theme = R.style.Theme_MaterialComponents_Light_Dialog_Alert;
+        }
+        return theme;
     }
 
     /**

@@ -20,6 +20,7 @@ import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
 import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.Callback;
+import com.pluscubed.logcat.widget.dialogs.SweetViewDialog;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -139,21 +140,20 @@ public class DialogHelper {
                 .onAny(callback);
 
         MaterialDialog show = builder.show();
-        initFilenameInputDialog(show);
+        //initFilenameInputDialog(show);
     }
 
-    public static void initFilenameInputDialog(MaterialDialog show) {
-        final EditText editText = show.getInputEditText();
-        editText.setSingleLine();
-        editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
-        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    public static void initFilenameInputDialog(EditText show) {
+        show.setSingleLine();
+        show.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+        show.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         // create an initial filename to suggest to the user
         String filename = createLogFilename();
-        editText.setText(filename);
+        show.setText(filename);
 
         // highlight everything but the .txt at the end
-        editText.setSelection(0, filename.length() - 4);
+        show.setSelection(0, filename.length() - 4);
     }
 
     public static String createLogFilename() {

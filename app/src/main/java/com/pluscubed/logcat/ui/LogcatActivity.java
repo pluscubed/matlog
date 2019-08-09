@@ -1501,7 +1501,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     }
 
     private void showProgressBar() {
-        ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
         ((CircularProgressBar) findViewById(R.id.main_progress_bar)).setColor(App.getColorFromAttr(this, R.attr.colorAccent));
         findViewById(R.id.main_progress_bar).setVisibility(View.VISIBLE);
     }
