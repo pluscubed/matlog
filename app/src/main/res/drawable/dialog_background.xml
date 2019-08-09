@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/bottom_sheet_background" android:insetBottom="16dip"
+    android:insetLeft="8dip" android:insetRight="8dip" android:insetTop="8dip"
+    android:visible="true" />
