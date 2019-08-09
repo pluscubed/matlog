@@ -21,6 +21,7 @@
         <activity
             android:name="com.pluscubed.logcat.ui.LogcatActivity"
             android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
