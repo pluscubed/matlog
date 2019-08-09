@@ -215,13 +215,11 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        searchView = findViewById(R.id.search_bar);
-        initSearchView();
-
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(null);
 
+        searchView = findViewById(R.id.search_bar);
         mFab = findViewById(R.id.fab);
         mAppBar = findViewById(R.id.bottom_appbar);
 
@@ -246,6 +244,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         setUpAdapter();
         updateBackgroundColor();
         runUpdatesIfNecessaryAndShowWelcomeMessage();
+
+        initSearchView();
     }
 
     private void handleShortcuts(String action) {
@@ -1912,7 +1912,24 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 searchView.setIconified(false);
             }
         });
+        
         //used to workaround issue where the search text is cleared on expanding the SearchView
+        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+                if (!suggestions.isEmpty()) {
+                    searchView.setQuery(suggestions.get(position), true);
+                }
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -1930,25 +1947,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 return false;
             }
         });
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                if (!suggestions.isEmpty()) {
-                    searchView.setQuery(suggestions.get(position), true);
-                }
-                return false;
-            }
-        });
-        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
         if (mSearchingString != null && !mSearchingString.isEmpty()) {
             mDynamicallyEnteringSearchText = true;
-            //EXPAND ACTION VIEW
+            searchView.setIconified(false);
             searchView.setQuery(mSearchingString, true);
             searchView.clearFocus();
         }

@@ -140,7 +140,11 @@ public class DialogHelper {
                 .onAny(callback);
 
         MaterialDialog show = builder.show();
-        initFilenameInputDialog(show.getInputEditText());
+
+        final EditText editText = show.getInputEditText();
+        if (editText != null) {
+            initFilenameInputDialog(editText);
+        }
     }
 
     public static void initFilenameInputDialog(EditText show) {
