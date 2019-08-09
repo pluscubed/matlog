@@ -98,15 +98,12 @@ public class RecordLogDialogActivity extends BaseActivity {
                 dialog.dismiss();
                 getActivity().finish();
             });
-            dialog.setNeutral(R.string.text_filter_ellipsis, view -> {
-                DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
-                        logLevelText.toString(), suggestions,
-                        result -> {
-                            queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
-                            logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
-                        });
-            });
-            //dialog.show();
+            dialog.setNeutral(R.string.text_filter_ellipsis, view -> DialogHelper.showFilterDialogForRecording(getActivity(), queryFilterText.toString(),
+                    logLevelText.toString(), suggestions,
+                    result -> {
+                        queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
+                        logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
+                    }));
             //noinspection ConstantConditions
             DialogHelper.initFilenameInputDialog(editText);
 
