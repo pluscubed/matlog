@@ -40,6 +40,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -512,6 +513,16 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         }
     }
 
+    /**
+     * It is the same method as of onPrepareOptionsMenu(Menu), but with different JVM signature
+     * Since we are replaced {@link androidx.appcompat.widget.Toolbar} with {@link BottomAppBar}/
+     * we need to manually manage options menu items visibility. BottomAppBar does not support
+     * @see androidx.appcompat.app.AppCompatActivity#setSupportActionBar(Toolbar)
+     *
+     * @param menu BottomAppBar menu
+     *
+     * see this method usages to understand
+     */
     public boolean flexOptionsMenu(Menu menu) {
         invalidateDarkOrLightMenuItems(this, menu);
 
@@ -1522,8 +1533,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             snackbar.show();
         }
         searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
-//        searchView.setLogoHamburgerToLogoArrowWithAnimation(logFileMode);
-        //supportInvalidateOptionsMenu();
+        // Hide useless menu items
         flexOptionsMenu(mAppBar.getMenu());
     }
 
