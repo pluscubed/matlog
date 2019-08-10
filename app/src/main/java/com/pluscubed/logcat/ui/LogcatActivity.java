@@ -237,7 +237,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         mAppBar.replaceMenu(R.menu.menu_main);
-        onPrepareOptionsMenu(mAppBar.getMenu());
+        flexOptionsMenu(mAppBar.getMenu());
         mAppBar.setOnMenuItemClickListener(this::onOptionsItemSelected);
         mAppBar.setOverflowIcon(VectorDrawableCompat.create(getResources(), R.drawable.ic_more_vert, getTheme()));
 
@@ -308,16 +308,10 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     }
 
     private void addFiltersToSuggestions() {
-        CatlogDBHelper dbHelper = null;
-        try {
-            dbHelper = new CatlogDBHelper(this);
+        try (CatlogDBHelper dbHelper = new CatlogDBHelper(this)) {
 
             for (FilterItem filterItem : dbHelper.findFilterItems()) {
                 addToAutocompleteSuggestions(filterItem.getText());
-            }
-        } finally {
-            if (dbHelper != null) {
-                dbHelper.close();
             }
         }
 
@@ -518,12 +512,10 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean flexOptionsMenu(Menu menu) {
         invalidateDarkOrLightMenuItems(this, menu);
 
         boolean showingMainLog = (mTask != null);
-
 
         MenuItem clear = menu.findItem(R.id.menu_clear);
         MenuItem pause = menu.findItem(R.id.menu_play_pause);
@@ -1531,7 +1523,8 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         }
         searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
 //        searchView.setLogoHamburgerToLogoArrowWithAnimation(logFileMode);
-        supportInvalidateOptionsMenu();
+        //supportInvalidateOptionsMenu();
+        flexOptionsMenu(mAppBar.getMenu());
     }
 
     private void resetFilter() {

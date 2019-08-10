@@ -147,3 +147,4 @@ $RECYCLE.BIN/
 
 app/play/
 app/fdroid/
+*.hprof
