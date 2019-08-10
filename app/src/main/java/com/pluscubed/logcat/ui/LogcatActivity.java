@@ -524,14 +524,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         boolean showingMainLog = (mTask != null);
 
-        MenuItem item = menu.findItem(R.id.menu_expand_all);
-        if (mCollapsedMode) {
-            item.setIcon(R.drawable.ic_expand_more_white_24dp);
-            item.setTitle(R.string.expand_all);
-        } else {
-            item.setIcon(R.drawable.ic_expand_less_white_24dp);
-            item.setTitle(R.string.collapse_all);
-        }
 
         MenuItem clear = menu.findItem(R.id.menu_clear);
         MenuItem pause = menu.findItem(R.id.menu_play_pause);
@@ -581,6 +573,13 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 return true;
             case R.id.menu_expand_all:
                 expandOrCollapseAll(true);
+                if (mCollapsedMode) {
+                    item.setIcon(R.drawable.ic_expand_more_white_24dp);
+                    item.setTitle(R.string.expand_all);
+                } else {
+                    item.setIcon(R.drawable.ic_expand_less_white_24dp);
+                    item.setTitle(R.string.collapse_all);
+                }
                 return true;
             case R.id.menu_clear:
                 if (mLogListAdapter != null) {
