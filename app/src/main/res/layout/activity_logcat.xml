@@ -36,19 +36,25 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <com.l4digital.fastscroll.FastScrollRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:clipToPadding="false"
             android:dividerHeight="0dp"
             android:paddingBottom="2dp"
             android:paddingTop="1dp"
             android:scrollbarSize="0dp"
-            android:scrollbars="vertical"
-            app:bubbleColor="?colorAccent"
-            app:handleColor="#999999"/>
+            android:scrollbars="vertical"/>
+    <com.pluscubed.logcat.widget.RecyclerViewFastScroller
+        android:id="@+id/fastScroller"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="32dp"
+        android:layout_gravity="end"
+        android:layout_centerHorizontal="true"/>
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_appbar"
         android:layout_width="match_parent"

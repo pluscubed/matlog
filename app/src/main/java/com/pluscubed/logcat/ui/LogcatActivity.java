@@ -87,6 +87,7 @@ import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
+import com.pluscubed.logcat.widget.RecyclerViewFastScroller;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -146,7 +147,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private FloatingActionButton mFab;
     private BottomAppBar mAppBar;
-
     private SearchView searchView;
 
     public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
@@ -219,6 +219,9 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         RecyclerView list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(null);
+
+        RecyclerViewFastScroller fastScroller = findViewById(R.id.fastScroller);
+        fastScroller.attachRecyclerView(list);
 
         searchView = findViewById(R.id.search_bar);
         mFab = findViewById(R.id.fab);
@@ -590,7 +593,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                 }
                 Snackbar.make(findViewById(android.R.id.content), R.string.log_cleared, Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.undo), v -> startMainLog())
-                        .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
+                        .setActionTextColor(App.getColorFromAttr(this, R.attr.colorAccent))
                         .show();
                 return true;
 
