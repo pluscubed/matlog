@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/pref_cat_appearance">
+    <PreferenceCategory android:title="@string/pref_cat_appearance"
+        android:layout="@layout/pref_category_custom">
 
         <ListPreference
             android:defaultValue="0"
@@ -49,7 +50,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_cat_configuration">
+    <PreferenceCategory android:title="@string/pref_cat_configuration"
+        android:layout="@layout/pref_category_custom">
 
         <!-- TODO: Switch to MultiSelectListPreference-->
         <com.pluscubed.logcat.widget.MultipleChoicePreference
@@ -70,7 +72,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_cat_advanced">
+    <PreferenceCategory android:title="@string/pref_cat_advanced"
+        android:layout="@layout/pref_category_custom">
 
         <com.pluscubed.logcat.widget.NonnegativeIntegerEditTextPreference
             android:defaultValue="@string/pref_log_line_period_default"
@@ -101,7 +104,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/about">
+    <PreferenceCategory android:title="@string/about"
+        android:layout="@layout/pref_category_custom">
 
         <Preference
             android:key="@string/pref_about"

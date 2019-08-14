@@ -18,7 +18,9 @@
         <item name="android:windowBackground">@color/primary_dark</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="dialog_style">@color/dark_dialog</item>
+        <item name="alertDialogTheme">@style/DarkAppTheme.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme.Dark</item>
+        <item name="prefCardsBackground">@color/pref_card</item>
     </style>
 
     <style name="Theme.MatLog.Amoled" parent="Base.Theme.MatLog">
@@ -39,7 +41,9 @@
         <item name="android:windowBackground">@color/primary_dark_amoled</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="dialog_style">@color/dark_dialog_amoled</item>
+        <item name="alertDialogTheme">@style/AmoledAppTheme.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme.Dark</item>
+        <item name="prefCardsBackground">@color/pref_card_amoled</item>
     </style>
 
     <style name="Theme.MatLog.Light" parent="Base.Theme.MatLog.Light">
@@ -58,6 +62,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="dialog_style">@android:color/white</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="prefCardsBackground">@color/light_pref_card</item>
     </style>
 
     <style name="Theme.MatLog.AlertDialog" parent="@style/Theme.MaterialComponents.Dialog.Alert">
@@ -80,13 +85,11 @@
     <style name="DarkAppTheme.Dialog" parent="Theme.MaterialComponents.Dialog.Alert">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:colorBackground">@color/dark_dialog</item>
-        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="AmoledAppTheme.Dialog" parent="Theme.MaterialComponents.Dialog.Alert">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:colorBackground">@color/dark_dialog_amoled</item>
-        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">

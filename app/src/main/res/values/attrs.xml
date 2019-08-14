@@ -2,4 +2,5 @@
 <resources>
     <attr name="toolbarShadow" format="reference" />
     <attr name="dialog_style" format="color"/>
+    <attr name="prefCardsBackground" format="color"/>
 </resources>
