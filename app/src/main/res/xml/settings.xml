@@ -34,14 +34,14 @@
             android:persistent="true"
             android:title="@string/pref_text_size_title" />
 
-        <SwitchPreference
+        <com.pluscubed.logcat.widget.SweetSwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_expanded_by_default"
             android:persistent="true"
             android:summary="@string/pref_expanded_by_default_summary"
             android:title="@string/pref_expanded_by_default_title" />
 
-        <SwitchPreference
+        <com.pluscubed.logcat.widget.SweetSwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_show_timestamp"
             android:persistent="true"
@@ -96,7 +96,7 @@
             android:summary="@string/pref_filter_pattern_summary"
             android:title="@string/pref_filter_pattern_title" />
 
-        <SwitchPreference
+        <com.pluscubed.logcat.widget.SweetSwitchPreference
             android:key="scrubber"
             android:title="@string/scrubber"
             android:summary="@string/scrubber_summary"

@@ -21,6 +21,7 @@
         <item name="alertDialogTheme">@style/DarkAppTheme.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme.Dark</item>
         <item name="prefCardsBackground">@color/pref_card</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.MatLog.Amoled" parent="Base.Theme.MatLog">
@@ -44,6 +45,7 @@
         <item name="alertDialogTheme">@style/AmoledAppTheme.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme.Dark</item>
         <item name="prefCardsBackground">@color/pref_card_amoled</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.MatLog.Light" parent="Base.Theme.MatLog.Light">
@@ -63,6 +65,7 @@
         <item name="dialog_style">@android:color/white</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="prefCardsBackground">@color/light_pref_card</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.MatLog.AlertDialog" parent="@style/Theme.MaterialComponents.Dialog.Alert">

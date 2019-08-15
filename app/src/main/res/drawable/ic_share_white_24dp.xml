@@ -1,24 +1,5 @@
-<!--
-Copyright (C) 2014 The Android Open Source Project
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-         http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--->
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24.0"
-    android:viewportHeight="24.0">
-    <path
-        android:pathData="M18,16.1c-0.8,0 -1.5,0.3 -2,0.8l-7.1,-4.2C9,12.5 9,12.2 9,12s0,-0.5 -0.1,-0.7L16,7.2C16.5,7.7 17.200001,8 18,8c1.7,0 3,-1.3 3,-3s-1.3,-3 -3,-3s-3,1.3 -3,3c0,0.2 0,0.5 0.1,0.7L8,9.8C7.5,9.3 6.8,9 6,9c-1.7,0 -2.9,1.2 -2.9,2.9s1.3,3 3,3c0.8,0 1.5,-0.3 2,-0.8l7.1,4.2c-0.1,0.3 -0.1,0.5 -0.1,0.7c0,1.6 1.3,2.9 2.9,2.9s2.9,-1.3 2.9,-2.9S19.6,16.1 18,16.1z"
-        android:fillColor="#757575"/>
+<vector android:height="24dp" android:viewportHeight="96"
+    android:viewportWidth="96" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#757575"
+        android:pathData="M72,56c-4.812,0 -9.12,2.137 -12.055,5.501L39.643,51.35C39.873,50.27 40,49.148 40,48s-0.127,-2.27 -0.357,-3.35l20.303,-10.151C62.879,37.864 67.188,40 72,40c8.836,0 16,-7.164 16,-16S80.836,8 72,8s-16,7.164 -16,16c0,1.148 0.127,2.27 0.357,3.35L36.055,37.501C33.121,34.136 28.814,32 24,32c-8.836,0 -16,7.164 -16,16s7.164,16 16,16c4.814,0 9.12,-2.137 12.055,-5.501L56.357,68.65C56.127,69.73 56,70.852 56,72c0,8.836 7.164,16 16,16s16,-7.164 16,-16S80.836,56 72,56zM72,16c4.418,0 8,3.582 8,8s-3.582,8 -8,8s-8,-3.582 -8,-8S67.582,16 72,16zM24,56c-4.418,0 -8,-3.582 -8,-8s3.582,-8 8,-8s8,3.582 8,8S28.418,56 24,56zM72,80c-4.418,0 -8,-3.582 -8,-8s3.582,-8 8,-8s8,3.582 8,8S76.418,80 72,80z"/>
 </vector>
