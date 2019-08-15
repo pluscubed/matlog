@@ -15,6 +15,7 @@
         android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.MatLog"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <!--TODO: REMOVE THIS CONFIGCHANGES ATROCITY-->
