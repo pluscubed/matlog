@@ -20,7 +20,7 @@ public class LogLine {
             "(\\w)" +
                     "/" +
                     // tag
-                    "([^(]+)" +
+                    "([^(].+)" +
                     "\\(\\s*" +
                     // pid
                     "(\\d+)" +
@@ -49,7 +49,7 @@ public class LogLine {
 
         // if the first char is a digit, then this starts out with a timestamp
         // otherwise, it's a legacy log or the beginning of the log output or something
-        if (!TextUtils.isEmpty(originalLine)
+             if (!TextUtils.isEmpty(originalLine)
                 && Character.isDigit(originalLine.charAt(0))
                 && originalLine.length() >= TIMESTAMP_LENGTH) {
             String timestamp = originalLine.substring(0, TIMESTAMP_LENGTH - 1);
