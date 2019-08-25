@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- translateable strings-->
-
-
     <string name="about">О программе</string>
     <string name="about_matlog">О программе MatLog</string>
 
     <string name="add_filter">Добавить фильтр</string>
-    <string name="add_filter_ellipsis">Добавить фильр…</string>
+    <string name="add_filter_ellipsis">Добавить фильтр…</string>
 
     <plurals name="are_you_sure">
         <item quantity="one">%d file will be deleted</item>
@@ -48,7 +46,7 @@
         <item quantity="many">%d файлов будет удалёно</item>
     </plurals>
 
-    <string name="filter_choice">Поиск по...</string>
+    <string name="filter_choice">Поиск по…</string>
     <string name="filter_choice_pid">PID</string>
     <string name="filter_choice_tag">Тег</string>
     <string name="filter_text_colon">Фильтр текста:</string>
@@ -127,7 +125,7 @@
 
     <string name="settings">Настройки</string>
 
-    <string name="simultaneous"> (Simultaneous)</string>
+    <string name="simultaneous"> (Одновременный)</string>
 
     <string name="start_recording_log">Запись</string>
 
@@ -183,8 +181,8 @@
 
     <string name="permission_not_granted">Эта функция не будет работать без разрешения на запись во внутр. накопитель</string>
     <string name="search">Поиск</string>
-    <string name="scrubber">Omit sensitive info</string>
-    <string name="scrubber_summary">Omit sensitive info like web urls, phone numbers or emails</string>
+    <string name="scrubber">Скрыть личные данные</string>
+    <string name="scrubber_summary">Исключать из лога конфиденциальную информацию (URL, IP адреса, Email)</string>
     <string name="text_include_dmesg">Добавить лог ядра</string>
     <string name="save_log_zip">Сохранить в ZIP</string>
     <string name="share_log">Поделиться</string>
