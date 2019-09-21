@@ -507,9 +507,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     @Override
     public void onBackPressed() {
-        if (searchView != null && !searchView.isIconified()) {
-            searchView.setIconified(true);
-        } else if (mCurrentlyOpenLog != null) {
+        if (mCurrentlyOpenLog != null) {
             startMainLog();
         } else {
             super.onBackPressed();
@@ -1535,7 +1533,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 //            v.setLayoutParams(params);
 //            snackbar.show();
 //        }
-        
+
         if (logFileMode){
             Toast.makeText(this, mCurrentlyOpenLog, Toast.LENGTH_SHORT).show();
         }
