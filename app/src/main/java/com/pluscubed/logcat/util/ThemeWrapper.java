@@ -140,7 +140,7 @@ public abstract class ThemeWrapper {
     }
 
     private static int getAccentIndex() {
-        return  Integer.parseInt(App.get().getPreferences().getString("ui.accent",  String.valueOf(Accent.PURPLE.ordinal())));
+        return  Integer.parseInt(App.get().getPreferences().getString("ui.accent",  String.valueOf(Accent.BLUE.ordinal())));
     }
 
     public static boolean isLightTheme() {
