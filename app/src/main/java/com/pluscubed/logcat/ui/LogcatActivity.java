@@ -1522,18 +1522,22 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     private void updateUiForFilename() {
         boolean logFileMode = mCurrentlyOpenLog != null;
-        if (logFileMode) {
-            Snackbar snackbar = Snackbar.make(mAppBar, mCurrentlyOpenLog, Snackbar.LENGTH_LONG);
-            View v = snackbar.getView();
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
-            params.setMargins(
-                    params.leftMargin,
-                    params.topMargin,
-                    params.rightMargin,
-                    params.bottomMargin + mAppBar.getHeight()
-            );
-            v.setLayoutParams(params);
-            snackbar.show();
+//        if (logFileMode) {
+//            Snackbar snackbar = Snackbar.make(mAppBar, mCurrentlyOpenLog, Snackbar.LENGTH_LONG);
+//            View v = snackbar.getView();
+//            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) v.getLayoutParams();
+//            params.setMargins(
+//                    params.leftMargin,
+//                    params.topMargin,
+//                    params.rightMargin,
+//                    params.bottomMargin + mAppBar.getHeight()
+//            );
+//            v.setLayoutParams(params);
+//            snackbar.show();
+//        }
+        
+        if (logFileMode){
+            Toast.makeText(this, mCurrentlyOpenLog, Toast.LENGTH_SHORT).show();
         }
         searchView.setQueryHint(logFileMode ? mCurrentlyOpenLog : getString(R.string.search_hint));
         // Hide useless menu items
@@ -1912,12 +1916,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
     }
 
     private void initSearchView(){
-        searchView.setOnClickListener(view -> {
-            if (searchView.isIconified()){
-                searchView.setIconified(false);
-            }
-        });
-
         //used to workaround issue where the search text is cleared on expanding the SearchView
         searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {

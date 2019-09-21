@@ -22,6 +22,10 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@null"
+            app:searchIcon="@drawable/ic_search"
+            app:searchHintIcon="@drawable/ic_search"
             android:background="@drawable/search_background"/>
     </com.google.android.material.appbar.AppBarLayout>
 
