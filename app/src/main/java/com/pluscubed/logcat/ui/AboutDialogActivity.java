@@ -52,13 +52,12 @@ public class AboutDialogActivity extends BaseActivity {
             // Match webview style with application theme
             String textColor = ThemeWrapper.isLightTheme() ? "#212121" : "#fff";
             String bgColor = ThemeWrapper.isLightTheme() ? "#fff" : "#212121";
-            
+
             String text = loadTextFile(R.raw.about_body);
             String version = PackageHelper.getVersionName(getActivity());
             String changelog = loadTextFile(R.raw.changelog);
 
-            String css = String.format(Locale.ENGLISH, loadTextFile(R.raw.about_css),
-                    bgColor, textColor);
+            String css = String.format(Locale.ENGLISH, loadTextFile(R.raw.about_css), bgColor, textColor);
 
             text = String.format(text, version, changelog, css);
 
