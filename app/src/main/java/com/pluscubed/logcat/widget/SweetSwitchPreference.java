@@ -1,12 +1,8 @@
 package com.pluscubed.logcat.widget;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.util.AttributeSet;
-import android.util.Log;
-
-import com.pluscubed.logcat.R;
 
 public class SweetSwitchPreference extends SwitchPreference {
     public SweetSwitchPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

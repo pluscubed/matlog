@@ -20,7 +20,6 @@ import com.pluscubed.logcat.data.FilterQueryWithLevel;
 import com.pluscubed.logcat.data.SortedFilterArrayAdapter;
 import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.Callback;
-import com.pluscubed.logcat.widget.dialogs.SweetViewDialog;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;

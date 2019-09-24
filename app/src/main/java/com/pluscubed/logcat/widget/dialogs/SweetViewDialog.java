@@ -12,7 +12,6 @@ import androidx.annotation.StringRes;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.pluscubed.logcat.R;
-import com.pluscubed.logcat.util.ThemeWrapper;
 
 
 public class SweetViewDialog extends BottomSheetDialog {

@@ -4,14 +4,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import androidx.core.content.ContextCompat;
-
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.pluscubed.logcat.App;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.PackageHelper;
 import com.pluscubed.logcat.util.ThemeWrapper;

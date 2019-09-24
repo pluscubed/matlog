@@ -1,15 +1,12 @@
 package com.pluscubed.logcat.widget;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -184,7 +181,6 @@ public class RecyclerViewFastScroller extends FrameLayout {
         @Override public void onChanged() {
             super.onChanged();
             hideShow();
-
         }
     };
 

@@ -2,7 +2,6 @@ package com.pluscubed.logcat.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,13 +10,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.pluscubed.logcat.R;
 import com.pluscubed.logcat.helper.DialogHelper;
 import com.pluscubed.logcat.helper.PreferenceHelper;
-import com.pluscubed.logcat.helper.WidgetHelper;
-import com.pluscubed.logcat.util.ThemeWrapper;
 import com.pluscubed.logcat.widget.dialogs.SweetViewDialog;
 
 import java.util.Arrays;
