@@ -1,6 +1,6 @@
 body {
-    background-color: #424242;
-    color: #fff;
+    background-color: %1$s;
+    color: %2$s;
 }
 
 table {

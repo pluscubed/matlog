@@ -130,7 +130,6 @@ public class RecyclerViewFastScroller extends FrameLayout {
     }
 
     private void setRecyclerViewPosition(float y) {
-        Log.d(TAG, "setRecyclerViewPosition() called with: y = [" + y + "]");
         if (recyclerView != null) {
             int itemCount = recyclerView.getAdapter().getItemCount();
             float proportion;
@@ -191,7 +190,7 @@ public class RecyclerViewFastScroller extends FrameLayout {
 
     protected void hideShow() {
         if (recyclerView != null && recyclerView.getAdapter() != null) {
-            setVisibility(recyclerView.getAdapter().getItemCount() > 300 ? VISIBLE : GONE);
+            setVisibility(recyclerView.getAdapter().getItemCount() > 2000 ? VISIBLE : GONE);
         } else {
             //setVisibility(GONE);
         }
