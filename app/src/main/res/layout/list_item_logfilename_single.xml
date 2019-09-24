@@ -28,7 +28,6 @@
         android:layout_marginTop="16dp"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
-        android:textColor="@color/primary_text_default_material_dark"
         android:textSize="16sp"
         tools:text="TEST"
         android:singleLine="true" />
