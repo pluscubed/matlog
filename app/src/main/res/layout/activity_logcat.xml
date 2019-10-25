@@ -14,6 +14,7 @@
         android:elevation="4dp"
         android:fitsSystemWindows="false"
         app:layout_scrollFlags="scroll|enterAlways">
+
         <androidx.appcompat.widget.SearchView
             android:layout_width="match_parent"
             android:id="@+id/search_bar"
@@ -51,6 +52,7 @@
             android:paddingTop="1dp"
             android:scrollbarSize="0dp"
             android:scrollbars="vertical"/>
+
     <com.pluscubed.logcat.widget.RecyclerViewFastScroller
         android:id="@+id/fastScroller"
         android:layout_width="wrap_content"
@@ -59,6 +61,7 @@
         android:layout_marginBottom="32dp"
         android:layout_gravity="end"
         android:layout_centerHorizontal="true"/>
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_appbar"
         android:layout_width="match_parent"

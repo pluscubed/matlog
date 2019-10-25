@@ -185,10 +185,10 @@ public class RecyclerViewFastScroller extends FrameLayout {
     };
 
     protected void hideShow() {
+        // handle hide/show events
         if (recyclerView != null && recyclerView.getAdapter() != null) {
+            // set fast scroller invisible until items > 2000
             setVisibility(recyclerView.getAdapter().getItemCount() > 2000 ? VISIBLE : GONE);
-        } else {
-            //setVisibility(GONE);
         }
     }
 }
