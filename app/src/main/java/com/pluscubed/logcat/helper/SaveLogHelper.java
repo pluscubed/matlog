@@ -1,6 +1,7 @@
 package com.pluscubed.logcat.helper;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -170,6 +171,39 @@ public class SaveLogHelper {
         try {
 
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)), BUFFER);
+
+            while (bufferedReader.ready()) {
+                logLines.add(bufferedReader.readLine());
+                if (logLines.size() > maxLines) {
+                    logLines.removeFirst();
+                    truncated = true;
+                }
+            }
+        } catch (IOException ex) {
+            log.e(ex, "couldn't read file");
+
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    log.e(e, "couldn't close buffered reader");
+                }
+            }
+        }
+
+        return new SavedLog(logLines, truncated);
+    }
+
+    public static SavedLog openLogFromUri(Uri uri, int maxLines, Context context) {
+        LinkedList<String> logLines = new LinkedList<>();
+        boolean truncated = false;
+
+        BufferedReader bufferedReader = null;
+
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream), BUFFER);
 
             while (bufferedReader.ready()) {
                 logLines.add(bufferedReader.readLine());
