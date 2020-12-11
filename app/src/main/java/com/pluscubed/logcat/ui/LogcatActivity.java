@@ -260,8 +260,16 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
     @SuppressLint("StaticFieldLeak")
     private void runUpdatesIfNecessaryAndShowWelcomeMessage() {
-
-        if (UpdateHelper.areUpdatesNecessary(this)) {
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction()) && intent.getType() != null) {
+            if (intent.getType().startsWith("text/")) {
+                if (intent.getData() != null) {
+                    openLogFile(null, intent.getData());
+                }
+            }
+        } else if (intent.getData() != null) {
+            openLogFile(null, intent.getData());
+        } else if (UpdateHelper.areUpdatesNecessary(this)) {
             // show progress dialog while updates are running
 
             final MaterialDialog dialog = new MaterialDialog.Builder(this)
@@ -319,7 +327,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             startMainLog();
         } else {
             String filename = intent.getStringExtra(INTENT_FILENAME);
-            openLogFile(filename);
+            openLogFile(filename, null);
         }
 
         doAfterInitialMessage(getIntent());
@@ -385,7 +393,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         // launched from the widget or notification
         if (intent != null && !Intents.ACTION_LAUNCH.equals(intent.getAction()) && intent.hasExtra(INTENT_FILENAME)) {
             String filename = intent.getStringExtra(INTENT_FILENAME);
-            openLogFile(filename);
+            openLogFile(filename, null);
         }
     }
 
@@ -1376,7 +1384,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             mHandler.post(() -> {
                 if (saved) {
                     Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLogFile(filename);
+                    openLogFile(filename, null);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
                 }
@@ -1398,7 +1406,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             mHandler.post(() -> {
                 if (saved) {
                     Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLogFile(filename);
+                    openLogFile(filename, null);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
                 }
@@ -1445,12 +1453,12 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         view.setOnItemClickListener((parent, view1, position, id) -> {
             dialog.dismiss();
             String filename = filenames.get(position).toString();
-            openLogFile(filename);
+            openLogFile(filename, null);
         });
 
     }
 
-    private void openLogFile(final String filename) {
+    private void openLogFile(final String filename, final Uri uri) {
 
         // do in background to avoid jank
 
@@ -1459,7 +1467,10 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                resetDisplayedLog(filename);
+                if (uri != null)
+                    resetDisplayedLog(DialogHelper.createLogFilename());
+                else
+                    resetDisplayedLog(filename);
 
                 showProgressBar();
                 ((CircularProgressBar) findViewById(R.id.main_progress_bar)).enableIndeterminateMode(false);
@@ -1470,7 +1481,11 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
                 // remove any lines at the beginning if necessary
                 final int maxLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
-                SavedLog savedLog = SaveLogHelper.openLog(filename, maxLines);
+                SavedLog savedLog;
+                if(uri != null)
+                    savedLog = SaveLogHelper.openLogFromUri(uri, maxLines, LogcatActivity.this);
+                else
+                    savedLog = SaveLogHelper.openLog(filename, maxLines);
                 List<String> lines = savedLog.getLogLines();
                 List<LogLine> logLines = new ArrayList<>();
                 for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {
