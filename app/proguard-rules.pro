@@ -23,7 +23,6 @@
 -keep class com.crashlytics.** { *; }
 -keep class io.fabric.** { *; }
 -dontwarn com.crashlytics.**
--dontwarn io.fabric.**
 
 -keep class android.support.v7.widget.SearchView {*;}
 -keep class com.pluscubed.logcat.RecordingWidgetProvider {*;}

@@ -86,7 +86,6 @@ import com.pluscubed.logcat.util.ArrayUtil;
 import com.pluscubed.logcat.util.LogLineAdapterUtil;
 import com.pluscubed.logcat.util.StringUtil;
 import com.pluscubed.logcat.util.UtilLogger;
-import com.pluscubed.logcat.widget.RecyclerViewFastScroller;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,6 +99,7 @@ import java.util.Set;
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_COPY_ID;
 import static com.pluscubed.logcat.data.LogLineViewHolder.CONTEXT_MENU_FILTER_ID;
 
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class LogcatActivity extends BaseActivity implements FilterListener, LogLineViewHolder.OnClickListener {
     private static final int REQUEST_CODE_SETTINGS = 1;
@@ -219,9 +219,13 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(null);
 
-        RecyclerViewFastScroller fastScroller = findViewById(R.id.fastScroller);
-        fastScroller.attachRecyclerView(list);
+        //RecyclerViewFastScroller fastScroller = findViewById(R.id.fastScroller);
+        //fastScroller.attachRecyclerView(list);
 
+        FastScrollerBuilder fastScrollerBuilder = new FastScrollerBuilder(list);
+        fastScrollerBuilder.disableScrollbarAutoHide();
+        fastScrollerBuilder.build();
+        
         searchView = findViewById(R.id.search_bar);
         mFab = findViewById(R.id.fab);
         mAppBar = findViewById(R.id.bottom_appbar);
@@ -1576,19 +1580,18 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
         mLogListAdapter = new LogLineAdapter();
         mLogListAdapter.setClickListener(this);
+        RecyclerView mActivityLogcatList = findViewById(R.id.list);
+        mActivityLogcatList.setAdapter(mLogListAdapter);
 
-        ((RecyclerView) findViewById(R.id.list)).setAdapter(mLogListAdapter);
-
-        ((RecyclerView) findViewById(R.id.list)).addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mActivityLogcatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
 
                 // update what the first viewable item is
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -1604,7 +1607,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             }
         });
 
-        ((RecyclerView) findViewById(R.id.list)).setHasFixedSize(true);
+        //((RecyclerView) findViewById(R.id.list)).setHasFixedSize(true);
     }
 
     private void completePartialSelect() {
@@ -1848,6 +1851,7 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
             doWhenFinished();
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onProgressUpdate(LogLine... values) {
             super.onProgressUpdate(values);
@@ -1861,7 +1865,6 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
 
                 addToAutocompleteSuggestions(logLine);
             }
-            mLogListAdapter.notifyDataSetChanged();
 
             // how many logs to keep in memory?  this avoids OutOfMemoryErrors
             int maxNumLogLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
@@ -1871,8 +1874,10 @@ public class LogcatActivity extends BaseActivity implements FilterListener, LogL
                     && mLogListAdapter.getTrueValues().size() > maxNumLogLines) {
                 int numItemsToRemove = mLogListAdapter.getTrueValues().size() - maxNumLogLines;
                 mLogListAdapter.removeFirst(numItemsToRemove);
-                log.d("truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
+                log.e("truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
             }
+
+            mLogListAdapter.notifyDataSetChanged();
 
             if (mAutoscrollToBottom) {
                 scrollToBottom();

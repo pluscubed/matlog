@@ -53,15 +53,6 @@
             android:scrollbarSize="0dp"
             android:scrollbars="vertical"/>
 
-    <com.pluscubed.logcat.widget.RecyclerViewFastScroller
-        android:id="@+id/fastScroller"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:layout_marginBottom="32dp"
-        android:layout_gravity="end"
-        android:layout_centerHorizontal="true"/>
-
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_appbar"
         android:layout_width="match_parent"
@@ -71,7 +62,7 @@
         app:popupTheme="?popupMenuStyle"
         app:backgroundTint="?colorPrimary"
         app:hideOnScroll="true"
-        android:elevation="4dp"
+        app:elevation="4dp"
         app:layout_scrollFlags="scroll|enterAlways"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
