@@ -1,6 +1,7 @@
 package com.pluscubed.logcat.helper;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -270,7 +271,10 @@ public class SaveLogHelper {
     }
 
     private static File getCatlogDirectory() {
+
         File sdcardDir = Environment.getExternalStorageDirectory();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            sdcardDir = new File("/sdcard/Documents");
 
         File catlogDir = new File(sdcardDir, CATLOG_DIR);
 
@@ -279,6 +283,7 @@ public class SaveLogHelper {
         }
         return catlogDir;
     }
+
 
     /**
      * I used to save logs to /sdcard/catlog_saved_logs.  Now it's /sdcard/matlog/saved_logs.  Move any files that
