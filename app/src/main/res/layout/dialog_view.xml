@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:textColor="?android:textColorPrimary"
             tools:text="Neutral"/>
 
         <com.google.android.material.button.MaterialButton
@@ -47,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/positive"
+            android:textColor="?android:textColorPrimary"
             tools:text="Negative"/>
 
         <Space
@@ -59,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:textColor="?android:textColorPrimary"
             tools:text="Positive" />
 
     </RelativeLayout>

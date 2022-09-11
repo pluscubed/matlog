@@ -140,23 +140,21 @@ public class DialogHelper {
 
         MaterialDialog show = builder.show();
 
-        final EditText editText = show.getInputEditText();
-        if (editText != null) {
-            initFilenameInputDialog(editText);
-        }
+        initFilenameInputDialog(show);
     }
 
-    public static void initFilenameInputDialog(EditText show) {
-        show.setSingleLine();
-        show.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
-        show.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    public static void initFilenameInputDialog(MaterialDialog show) {
+        final EditText editText = show.getInputEditText();
+        editText.setSingleLine();
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         // create an initial filename to suggest to the user
         String filename = createLogFilename();
-        show.setText(filename);
+        editText.setText(filename);
 
         // highlight everything but the .txt at the end
-        show.setSelection(0, filename.length() - 4);
+        editText.setSelection(0, filename.length() - 4);
     }
 
     public static String createLogFilename() {
@@ -176,5 +174,4 @@ public class DialogHelper {
 
         return year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second + ".txt";
     }
-
 }
